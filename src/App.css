@@ -1,0 +1,52 @@
+#root {
+  display: flex;
+}
+
+#navbar{
+  width: 100%;
+  height: auto;
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+
+.nav.sidebar{
+  position: fixed;
+  top: 4.2rem;
+  left: 0;
+}
+
+nav .logo{
+  width: 40px;
+  margin: 0 5px;
+}
+
+.nav.sidebar{
+  width: 15rem;
+  height: 91.6vh;
+  background-color: whitesmoke;
+  display: block;
+  border-right: 1px solid #888;
+}
+
+.nav.sidebar li a{
+  color: #212529;
+  margin-bottom: 0.2rem;
+}
+
+.nav.sidebar li a:hover {
+  color: #212529db;
+  font-weight: bold;
+  zoom: 1.02;
+}
+
+.flex{
+  position: fixed;
+  top: 5rem;
+  left: 15rem;
+  right: 0;
+  bottom: 0;
+  overflow-y: auto;
+}
+
+
