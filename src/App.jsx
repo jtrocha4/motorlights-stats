@@ -95,7 +95,7 @@ function App () {
   const rowsCollectionFile = excelDataCollection.slice(3)
   const formattedDataCollectionFile = formatDataCollectionFile(headersCollectionFile, rowsCollectionFile)
 
-  const howAreYouDoing = (formattedData, SalesGoalBySeller = {}) => {
+  const howAreYouDoing = (formattedData, SalesGoalBySeller = {}, collectionGoalBySeller = {}) => {
     const sellerData = []
     const totalSales = []
     let currentSeller
@@ -110,17 +110,6 @@ function App () {
     let pendingSalesTarget
     let pendingCollectionTarget
 
-    // Mes Julio
-    const collectionGoalBySeller = {
-      'CARLOS ALONSO VESGA ORTIZ': 92652788,
-      'HERNANDO JAVIER NOVA NARVAEZ': 53992361,
-      'JOSE ANDRES MONTENEGRO GUEVARA': 31465638,
-      'JULIAN ANDRES POSADA SALAZAR': 12501019,
-      'MARIA VICTORIA MOLINA': 39531092,
-      'MELANY JOHANNA RAMIREZ QUINTERO': 33454267,
-      'SERGIO ANDRES BARCELO TRESPALACIOS': 37009536,
-      'MOTORLIGHTS S.A.S': 47043982
-    }
     let collectionTarget
     let percentageCollected
 
@@ -131,13 +120,13 @@ function App () {
             // Calculo de operaciones
             billCounter = Object.keys(uniqueDocs[currentSeller] || {}).length
             averageSale = total / Object.keys(uniqueDocs[currentSeller] || {}).length
-            goalSale = SalesGoalBySeller[currentSeller]
-            percetageSale = (total * 100) / goalSale
+            goalSale = SalesGoalBySeller[currentSeller] || 0
+            percetageSale = (goalSale !== 0) ? ((total * 100) / goalSale) : (0)
             pendingSalesTarget = goalSale - total
 
-            collectionTarget = collectionGoalBySeller[currentSeller]
+            collectionTarget = collectionGoalBySeller[currentSeller] || 0
             percentageCollected = 100
-            pendingCollectionTarget = collectionGoalBySeller[currentSeller]
+            pendingCollectionTarget = collectionGoalBySeller[currentSeller] || 0
 
             // Aproximacion de los datos
             averageSale = toFixed(averageSale, 2)
@@ -182,32 +171,12 @@ function App () {
     setData(totalSales)
   }
 
-  const howAreYouDoingCollection = (formattedData) => {
+  const howAreYouDoingCollection = (formattedData, collectionGoalBySeller = {}) => {
     const totalCollection = []
     let sellerCollection = []
     let currentSeller
     let total
 
-    // const collectionGoalBySeller = {
-    //   'CARLOS ALONSO VESGA ORTIZ': 81790197,
-    //   'DEIVER JOSE ZUÑIGA VASQUEZ': 46092816,
-    //   'HERNANDO JAVIER NOVA NARVAEZ': 73101897,
-    //   'JOSE ANDRES MONTENEGRO GUEVARA': 14660847,
-    //   'MARIA VICTORIA MOLINA': 42858353,
-    //   'MELANY JOHANNA RAMIREZ QUINTERO': 27524761,
-    //   'SERGIO ANDRES BARCELO TRESPALACIOS': 46036555,
-    //   'MOTORLIGHTS S.A.S': 0
-    // }
-    const collectionGoalBySeller = {
-      'CARLOS ALONSO VESGA ORTIZ': 92652788,
-      'HERNANDO JAVIER NOVA NARVAEZ': 53992361,
-      'JOSE ANDRES MONTENEGRO GUEVARA': 31465638,
-      'JULIAN ANDRES POSADA SALAZAR': 12501019,
-      'MARIA VICTORIA MOLINA': 39531092,
-      'MELANY JOHANNA RAMIREZ QUINTERO': 33454267,
-      'SERGIO ANDRES BARCELO TRESPALACIOS': 37009536,
-      'MOTORLIGHTS S.A.S': 47043982
-    }
     let collectionTarget
     let percentageCollected
     let pendingCollectionTarget
@@ -270,14 +239,16 @@ function App () {
   joinData(dataCollection, data)
 
   const [SalesGoalBySeller, setSalesGoalBySeller] = useState({})
+  const [collectionGoalBySeller, setCollectionGoalBySeller] = useState({})
 
   useEffect(() => {
-    howAreYouDoing(formattedData, SalesGoalBySeller)
-    howAreYouDoingCollection(formattedDataCollectionFile)
-  }, [excelData, excelDataCollection, SalesGoalBySeller])
+    howAreYouDoing(formattedData, SalesGoalBySeller, collectionGoalBySeller)
+    howAreYouDoingCollection(formattedDataCollectionFile, collectionGoalBySeller)
+  }, [excelData, excelDataCollection, SalesGoalBySeller, collectionGoalBySeller])
 
-  const sendForm = (formData) => {
-    setSalesGoalBySeller(formData)
+  const sendForm = (salesGoalsFormData, collectionGoalsFormData) => {
+    setSalesGoalBySeller(salesGoalsFormData)
+    setCollectionGoalBySeller(collectionGoalsFormData)
   }
 
   return (
@@ -297,7 +268,7 @@ function App () {
           </div>
           <div>
             <h2>Como vamos</h2>
-            <Table headers={['Vendedor', 'Total ventas', 'Cantidad de facturas', 'Promedio de ventas', 'Meta de ventas', 'Porcentaje de ventas', 'Ventas pendiente', 'Recaudo', 'Meta recaudo sin iva', 'Porcentaje de recaudo', 'Recaudo pendiente']} data={data} currencyFormat={currencyFormat} />
+            <Table headers={['Vendedor', 'Total ventas', 'Cantidad de facturas', 'Promedio de ventas', 'Meta de ventas', 'Porcentaje de ventas', 'Ventas pendiente', 'Recaudo', 'Meta recaudo sin iva', 'Porcentaje de recaudo', 'Recaudo pendiente']} data={data} currencyFormat={currencyFormat} toFixed={toFixed} />
           </div>
         </div>
       </div>

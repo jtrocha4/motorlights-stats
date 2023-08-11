@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 
 const ModalGoals = ({ title, buttonBackground = 'dark', data = [], sendForm }) => {
   const [saleGoalsForm, setSaleGoalsForm] = useState({
-    // Mes Julio
+    // Mes Julio. Datos por defecto
     'CARLOS ALONSO VESGA ORTIZ': 85000000,
     'HERNANDO JAVIER NOVA NARVAEZ': 70000000,
     'JOSE ANDRES MONTENEGRO GUEVARA': 35000000,
@@ -12,6 +12,17 @@ const ModalGoals = ({ title, buttonBackground = 'dark', data = [], sendForm }) =
     'SERGIO ANDRES BARCELO TRESPALACIOS': 65000000,
     'MOTORLIGHTS S.A.S': 0
   })
+  const [collectionGoalForm, setCollectionGoalForm] = useState({
+    // Mes Julio. Datos por defecto
+    'CARLOS ALONSO VESGA ORTIZ': 92652788,
+    'HERNANDO JAVIER NOVA NARVAEZ': 53992361,
+    'JOSE ANDRES MONTENEGRO GUEVARA': 31465638,
+    'JULIAN ANDRES POSADA SALAZAR': 12501019,
+    'MARIA VICTORIA MOLINA': 39531092,
+    'MELANY JOHANNA RAMIREZ QUINTERO': 33454267,
+    'SERGIO ANDRES BARCELO TRESPALACIOS': 37009536,
+    'MOTORLIGHTS S.A.S': 47043982
+  })
 
   const handleChange = (event) => {
     setSaleGoalsForm({
@@ -20,9 +31,16 @@ const ModalGoals = ({ title, buttonBackground = 'dark', data = [], sendForm }) =
     })
   }
 
+  const handleChangeCollectionGoal = (event) => {
+    setCollectionGoalForm({
+      ...collectionGoalForm,
+      [event.target.name]: parseFloat(event.target.value)
+    })
+  }
+
   const handleSubmit = (event) => {
     event.preventDefault()
-    sendForm(saleGoalsForm)
+    sendForm(saleGoalsForm, collectionGoalForm)
   }
 
   return (
@@ -45,7 +63,8 @@ const ModalGoals = ({ title, buttonBackground = 'dark', data = [], sendForm }) =
                           data.map(({ vendedor }) => (
                             <div className='mb-3' key={vendedor}>
                               <label htmlFor={vendedor} className='form-label'>{vendedor}</label>
-                              <input name={`${vendedor}`} type='number' className='form-control ' placeholder='Meta de venta' onChange={handleChange} value={saleGoalsForm[`${vendedor}`]} />
+                              <input name={`${vendedor}`} type='number' className='form-control mb-2' placeholder='Meta de venta' onChange={handleChange} value={saleGoalsForm[`${vendedor}`]} />
+                              <input name={`${vendedor}`} type='number' className='form-control' placeholder='Meta de venta' onChange={handleChangeCollectionGoal} value={collectionGoalForm[`${vendedor}`]} />
                             </div>
                           ))
                         )
