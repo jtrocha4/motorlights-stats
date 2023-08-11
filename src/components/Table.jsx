@@ -1,7 +1,6 @@
 import React from 'react'
 
 const Table = ({ headers, data, currencyFormat, toFixed }) => {
-  console.log(data)
   const grandTotal = (data) => {
     const grandTotal = {
       sales: 0,
