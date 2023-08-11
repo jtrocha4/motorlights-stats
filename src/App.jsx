@@ -95,7 +95,7 @@ function App () {
   const rowsCollectionFile = excelDataCollection.slice(3)
   const formattedDataCollectionFile = formatDataCollectionFile(headersCollectionFile, rowsCollectionFile)
 
-  const howAreYouDoing = (formattedData) => {
+  const howAreYouDoing = (formattedData, SalesGoalBySeller = {}) => {
     const sellerData = []
     const totalSales = []
     let currentSeller
@@ -105,45 +105,10 @@ function App () {
     let billCounter
     let averageSale
 
-    // Meta de ventas de cada vendedor
-    // const SalesGoalBySeller = {
-    //   'CARLOS ALONSO VESGA ORTIZ': 85000000,
-    //   'DEIVER JOSE ZUÑIGA VASQUEZ': 35000000,
-    //   'HERNANDO JAVIER NOVA NARVAEZ': 70000000,
-    //   'JOSE ANDRES MONTENEGRO GUEVARA': 30000000,
-    //   'MARIA VICTORIA MOLINA': 50000000,
-    //   'MELANY JOHANNA RAMIREZ QUINTERO': 30000000,
-    //   'SERGIO ANDRES BARCELO TRESPALACIOS': 65000000,
-    //   'MOTORLIGHTS S.A.S': 0
-    // }
-
-    // Mes Julio
-    const SalesGoalBySeller = {
-      'CARLOS ALONSO VESGA ORTIZ': 85000000,
-      'HERNANDO JAVIER NOVA NARVAEZ': 70000000,
-      'JOSE ANDRES MONTENEGRO GUEVARA': 35000000,
-      'JULIAN ANDRES POSADA SALAZAR': 30000000,
-      'MARIA VICTORIA MOLINA': 50000000,
-      'MELANY JOHANNA RAMIREZ QUINTERO': 30000000,
-      'SERGIO ANDRES BARCELO TRESPALACIOS': 65000000,
-      'MOTORLIGHTS S.A.S': 0
-    }
     let goalSale
     let percetageSale
     let pendingSalesTarget
     let pendingCollectionTarget
-
-    // Meta de recaudo sin iva de cada vendedor
-    // const collectionGoalBySeller = {
-    //   'CARLOS ALONSO VESGA ORTIZ': 81790197,
-    //   'DEIVER JOSE ZUÑIGA VASQUEZ': 46092816,
-    //   'HERNANDO JAVIER NOVA NARVAEZ': 73101897,
-    //   'JOSE ANDRES MONTENEGRO GUEVARA': 14660847,
-    //   'MARIA VICTORIA MOLINA': 42858353,
-    //   'MELANY JOHANNA RAMIREZ QUINTERO': 27524761,
-    //   'SERGIO ANDRES BARCELO TRESPALACIOS': 46036555,
-    //   'MOTORLIGHTS S.A.S': 0
-    // }
 
     // Mes Julio
     const collectionGoalBySeller = {
@@ -304,13 +269,15 @@ function App () {
 
   joinData(dataCollection, data)
 
+  const [SalesGoalBySeller, setSalesGoalBySeller] = useState({})
+
   useEffect(() => {
-    howAreYouDoing(formattedData)
+    howAreYouDoing(formattedData, SalesGoalBySeller)
     howAreYouDoingCollection(formattedDataCollectionFile)
-  }, [excelData, excelDataCollection])
+  }, [excelData, excelDataCollection, SalesGoalBySeller])
 
   const sendForm = (formData) => {
-    console.log(formData)
+    setSalesGoalBySeller(formData)
   }
 
   return (
