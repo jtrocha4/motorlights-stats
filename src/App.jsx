@@ -5,6 +5,7 @@ import Navbar from './components/Navbar'
 import Sidebar from './components/Sidebar'
 import { useEffect, useState } from 'react'
 import Table from './components/Table'
+import ModalGoals from './components/ModalGoals'
 
 function App () {
   const [excelData, setExcelData] = useState([])
@@ -308,6 +309,10 @@ function App () {
     howAreYouDoingCollection(formattedDataCollectionFile)
   }, [excelData, excelDataCollection])
 
+  const sendForm = (formData) => {
+    console.log(formData)
+  }
+
   return (
     <>
       <Navbar />
@@ -319,6 +324,9 @@ function App () {
           <div className='inputFile-group'>
             <InputFile label='Informe de Costo' handleChange={handleReadCostFile} />
             <InputFile label='Informe de Recaudo' handleChange={handleReadCollectionFile} />
+            <div className='button-group'>
+              <ModalGoals title='Modificar metas' data={data} sendForm={sendForm} />
+            </div>
           </div>
           <div>
             <h2>Como vamos</h2>

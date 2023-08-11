@@ -41,15 +41,20 @@ nav .logo{
 }
 
 .flex{
-  position: fixed;
-  top: 5rem;
-  left: 15rem;
-  right: 0;
-  bottom: 0;
+  flex: 1;
+  margin-top: 5rem;
+  margin-left: 15rem;
+  margin-right: 0;
+  margin-bottom: 0;
   overflow-y: auto;
+  overflow-x: auto;
 }
 
 .inputFile-group{
+  margin: 25px 0;
+}
+
+.button-group{
   margin: 25px 0;
 }
 

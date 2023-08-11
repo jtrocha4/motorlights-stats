@@ -1,7 +1,6 @@
 import React from 'react'
 
 const Table = ({ headers, data, currencyFormat }) => {
-  console.log(data)
   return (
     <>
       <table className='table table-hover'>
