@@ -62,7 +62,7 @@ const ModalGoals = ({ title, buttonBackground = 'dark', data = [], sendForm }) =
                       : (
                           data.map(({ vendedor }) => (
                             <div className='mb-3' key={vendedor}>
-                              <label htmlFor={vendedor} className='form-label'>{vendedor}</label>
+                              <label htmlFor={vendedor} className='form-label'><b>{vendedor}</b></label>
                               <input name={`${vendedor}`} type='number' className='form-control mb-2' placeholder='Meta de venta' onChange={handleChange} value={saleGoalsForm[`${vendedor}`]} />
                               <input name={`${vendedor}`} type='number' className='form-control' placeholder='Meta de recaudo' onChange={handleChangeCollectionGoal} value={collectionGoalForm[`${vendedor}`]} />
                             </div>

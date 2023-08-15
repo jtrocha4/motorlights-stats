@@ -1,6 +1,6 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 
-const Table = ({ headers, data, currencyFormat, toFixed }) => {
+const Table = ({ headers, data, currencyFormat, toFixed, sendGrandTotal }) => {
   const grandTotal = (data) => {
     const grandTotal = {
       sales: 0,
@@ -20,7 +20,7 @@ const Table = ({ headers, data, currencyFormat, toFixed }) => {
       grandTotal.amountBills += element.cantidadFacturas
       grandTotal.averageSales = grandTotal.sales / grandTotal.amountBills
       grandTotal.goalSales += element.metaVentas
-      grandTotal.pendingGoalSales += element.metaVentasPendiente
+      grandTotal.pendingGoalSales += element.ventasPendiente
       grandTotal.percentageSales = 100 - (grandTotal.pendingGoalSales * 100) / grandTotal.goalSales
 
       grandTotal.collection += element.totalRecaudo
@@ -32,9 +32,13 @@ const Table = ({ headers, data, currencyFormat, toFixed }) => {
       grandTotal.percentageSales = toFixed(grandTotal.percentageSales, 1)
       grandTotal.percentageCollection = toFixed(grandTotal.percentageCollection, 1)
     })
+    useEffect(() => {
+      sendGrandTotal(grandTotal)
+    }, [data])
     return grandTotal
   }
   const { sales, amountBills, averageSales, goalSales, percentageSales, pendingGoalSales, collection, collectionTarget, percentageCollection, pendingCollectionGoal } = grandTotal(data)
+
   return (
     <>
       <table className='table table-hover'>
@@ -52,7 +56,7 @@ const Table = ({ headers, data, currencyFormat, toFixed }) => {
             (data.length === 0)
               ? (<tr><td colSpan={11} className='text-center'>No hay datos para mostrar, por favor cargue todos los informes</td></tr>)
               : (
-                  data.map(({ vendedor, totalVenta, cantidadFacturas, promedioVentas, metaVentas, porcentajeVentas, metaVentasPendiente, totalRecaudo, metaRecaudoSinIva, porcentajeRecaudo, recaudoPendiente }, index) => (
+                  data.map(({ vendedor, totalVenta, cantidadFacturas, promedioVentas, metaVentas, porcentajeVentas, ventasPendiente, totalRecaudo, metaRecaudoSinIva, porcentajeRecaudo, recaudoPendiente }, index) => (
                     <tr key={index}>
                       <td>{vendedor}</td>
                       <td>{currencyFormat(totalVenta)}</td>
@@ -60,7 +64,7 @@ const Table = ({ headers, data, currencyFormat, toFixed }) => {
                       <td>{currencyFormat(promedioVentas)}</td>
                       <td>{currencyFormat(metaVentas)}</td>
                       <td>{porcentajeVentas}</td>
-                      <td>{currencyFormat(metaVentasPendiente)}</td>
+                      <td>{currencyFormat(ventasPendiente)}</td>
                       <td>{currencyFormat(totalRecaudo)}</td>
                       <td>{currencyFormat(metaRecaudoSinIva)}</td>
                       <td>{porcentajeRecaudo}</td>

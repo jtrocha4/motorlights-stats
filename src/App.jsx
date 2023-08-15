@@ -6,6 +6,7 @@ import Sidebar from './components/Sidebar'
 import { useEffect, useState } from 'react'
 import Table from './components/Table'
 import ModalGoals from './components/ModalGoals'
+import ButtonDownloadExcel from './components/buttonDownloadExcel'
 
 function App () {
   const [excelData, setExcelData] = useState([])
@@ -29,6 +30,7 @@ function App () {
 
   const handleReadCostFile = (event) => {
     const file = event.target.files[0]
+    // eslint-disable-next-line no-undef
     const reader = new FileReader()
 
     reader.onload = (e) => {
@@ -44,6 +46,7 @@ function App () {
 
   const handleReadCollectionFile = (event) => {
     const file = event.target.files[0]
+    // eslint-disable-next-line no-undef
     const reader = new FileReader()
 
     reader.onload = (e) => {
@@ -142,7 +145,7 @@ function App () {
                 promedioVentas: averageSale,
                 metaVentas: goalSale,
                 porcentajeVentas: percetageSale,
-                metaVentasPendiente: pendingSalesTarget,
+                ventasPendiente: pendingSalesTarget,
                 totalRecaudo: 0,
                 metaRecaudoSinIva: collectionTarget,
                 porcentajeRecaudo: percentageCollected,
@@ -251,6 +254,13 @@ function App () {
     setCollectionGoalBySeller(collectionGoalsFormData)
   }
 
+  const [grandTotal, setGrandTotal] = useState({})
+
+  const sendGrandTotal = (grandTotal) => {
+    // console.log(grandTotal)
+    return setGrandTotal(grandTotal)
+  }
+
   return (
     <>
       <Navbar />
@@ -268,7 +278,10 @@ function App () {
           </div>
           <div>
             <h2>Como vamos</h2>
-            <Table headers={['Vendedor', 'Total ventas', 'Cantidad de facturas', 'Promedio de ventas', 'Meta de ventas', 'Porcentaje de ventas', 'Ventas pendiente', 'Recaudo', 'Meta recaudo sin iva', 'Porcentaje de recaudo', 'Recaudo pendiente']} data={data} currencyFormat={currencyFormat} toFixed={toFixed} />
+            <div className='d-grid gap-2 d-md-flex justify-content-md-end mb-2'>
+              <ButtonDownloadExcel title='Descargar informe' data={data} currencyFormat={currencyFormat} />
+            </div>
+            <Table headers={['Vendedor', 'Total ventas', 'Cantidad de facturas', 'Promedio de ventas', 'Meta de ventas', 'Porcentaje de ventas', 'Ventas pendiente', 'Recaudo', 'Meta recaudo sin iva', 'Porcentaje de recaudo', 'Recaudo pendiente']} data={data} currencyFormat={currencyFormat} toFixed={toFixed} sendGrandTotal={sendGrandTotal} />
           </div>
         </div>
       </div>

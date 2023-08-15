@@ -58,4 +58,8 @@ nav .logo{
   margin: 25px 0;
 }
 
+button i {
+  padding-right: 0.2rem;
+}
+
 
