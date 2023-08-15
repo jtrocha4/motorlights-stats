@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
-import * as XLSX from 'xlsx'
+import XLSX from 'xlsx-js-style'
 
-const ButtonDownloadExcel = ({ title, data, currencyFormat }) => {
+const ButtonDownloadExcel = ({ title, data, currencyFormat, toFixed }) => {
   // const [loading, setLoading] = useState(false)
 
   const handleDownload = () => {
@@ -10,43 +10,156 @@ const ButtonDownloadExcel = ({ title, data, currencyFormat }) => {
 
     const wsData = [headers]
 
+    const yellowStyle = {
+      fill: { fgColor: { rgb: 'FFFF00' } },
+      alignment: { horizontal: 'right' },
+      font: {
+        bold: true
+      },
+      border: {
+        right: {
+          style: 'thin',
+          color: '000000'
+        },
+        left: {
+          style: 'thin',
+          color: '000000'
+        },
+        top: {
+          style: 'thin',
+          color: '000000'
+        },
+        bottom: {
+          style: 'thin',
+          color: '000000'
+        }
+      }
+    }
+
+    const grayStyle = {
+      fill: { fgColor: { rgb: 'BFBFBF' } },
+      alignment: { horizontal: 'right' },
+      font: {
+        bold: true
+      },
+      border: {
+        right: {
+          style: 'thin',
+          color: '000000'
+        },
+        left: {
+          style: 'thin',
+          color: '000000'
+        },
+        top: {
+          style: 'thin',
+          color: '000000'
+        },
+        bottom: {
+          style: 'thin',
+          color: '000000'
+        }
+      }
+    }
+
+    const whiteStyle = {
+      fill: { fgColor: { rgb: 'FFFFFF' } },
+      alignment: { horizontal: 'right' },
+      font: {
+        bold: true
+      },
+      border: {
+        right: {
+          style: 'thin',
+          color: '000000'
+        },
+        left: {
+          style: 'thin',
+          color: '000000'
+        },
+        top: {
+          style: 'thin',
+          color: '000000'
+        },
+        bottom: {
+          style: 'thin',
+          color: '000000'
+        }
+      }
+    }
+
+    const blackStyle = {
+      fill: { fgColor: { rgb: '000000' } },
+      alignment: { horizontal: 'right' },
+      font: {
+        bold: true,
+        color: { rgb: 'FFFFFF' }
+      },
+      border: {
+        right: {
+          style: 'thin',
+          color: '000000'
+        },
+        left: {
+          style: 'thin',
+          color: '000000'
+        },
+        top: {
+          style: 'thin',
+          color: '000000'
+        },
+        bottom: {
+          style: 'thin',
+          color: '000000'
+        }
+      }
+    }
+
     values.forEach(value => {
       const row = [value]
       data.forEach(item => {
-        switch (value) {
-          case 'Total ventas':
-            row.push([currencyFormat(item.totalVenta)])
-            break
-          case 'Cantidad de facturas':
-            row.push(item.cantidadFacturas)
-            break
-          case 'Promedio de ventas':
-            row.push(currencyFormat(item.promedioVentas))
-            break
-          case 'Meta ventas':
-            row.push(currencyFormat(item.metaVentas))
-            break
-          case '% Venta':
-            row.push(item.porcentajeVentas)
-            break
-          case 'Ventas pendiente':
-            row.push(currencyFormat(item.ventasPendiente))
-            break
-          case 'Total recaudo':
-            row.push(currencyFormat(item.totalRecaudo))
-            break
-          case 'Meta recaudo sin iva':
-            row.push(currencyFormat(item.metaRecaudoSinIva))
-            break
-          case '% Recaudo':
-            row.push(item.porcentajeRecaudo)
-            break
-          case 'Recaudo pendiente':
-            row.push(currencyFormat(item.recaudoPendiente))
-            break
-          default:
-            break
+        const cell = { v: '', s: {} }
+        if (value === 'Total ventas') {
+          cell.v = currencyFormat(item.totalVenta)
+          cell.s = yellowStyle
         }
+        if (value === 'Cantidad de facturas') {
+          cell.v = item.cantidadFacturas
+          cell.s = grayStyle
+        }
+        if (value === 'Promedio de ventas') {
+          cell.v = currencyFormat(item.promedioVentas)
+          cell.s = grayStyle
+        }
+        if (value === 'Meta ventas') {
+          cell.v = currencyFormat(item.metaVentas)
+          cell.s = blackStyle
+        }
+        if (value === '% Venta') {
+          cell.v = item.porcentajeVentas
+          cell.s = whiteStyle
+        }
+        if (value === 'Ventas pendiente') {
+          cell.v = currencyFormat(item.ventasPendiente)
+          cell.s = whiteStyle
+        }
+        if (value === 'Total recaudo') {
+          cell.v = currencyFormat(item.totalRecaudo)
+          cell.s = yellowStyle
+        }
+        if (value === 'Meta recaudo sin iva') {
+          cell.v = currencyFormat(item.metaRecaudoSinIva)
+          cell.s = blackStyle
+        }
+        if (value === '% Recaudo') {
+          cell.v = item.porcentajeRecaudo
+          cell.s = whiteStyle
+        }
+        if (value === 'Recaudo pendiente') {
+          cell.v = currencyFormat(item.recaudoPendiente)
+          cell.s = whiteStyle
+        }
+        row.push(cell)
       })
 
       const total = {
@@ -75,35 +188,60 @@ const ButtonDownloadExcel = ({ title, data, currencyFormat }) => {
       total.porcentajeRecaudo = (total.recaudo * 100) / total.metaRecaudoSinIva
       total.recaudoPendiente = data.reduce((acc, item) => acc + item.recaudoPendiente, 0)
 
+      // Aproximaciones
+      total.porcentajeVentas = toFixed(total.porcentajeVentas, 1)
+      total.porcentajeRecaudo = toFixed(total.porcentajeRecaudo, 1)
+
+      const cell = { v: '', s: {} }
       if (value === 'Total ventas') {
-        row.push(currencyFormat(total.ventas))
+        cell.v = currencyFormat(total.ventas)
+        cell.s = yellowStyle
+        row.push(cell)
       }
       if (value === 'Cantidad de facturas') {
-        row.push(total.facturas)
+        cell.v = currencyFormat(total.facturas)
+        cell.s = grayStyle
+        row.push(cell)
       }
       if (value === 'Promedio de ventas') {
-        row.push(currencyFormat(total.promedioVentas))
+        cell.v = currencyFormat(total.promedioVentas)
+        cell.s = grayStyle
+        row.push(cell)
       }
       if (value === 'Meta ventas') {
-        row.push(currencyFormat(total.metaVentas))
+        cell.v = currencyFormat(total.metaVentas)
+        cell.s = blackStyle
+        row.push(cell)
       }
       if (value === '% Venta') {
-        row.push(currencyFormat(total.porcentajeVentas))
+        cell.v = total.porcentajeVentas
+        cell.s = whiteStyle
+        row.push(cell)
       }
       if (value === 'Ventas pendiente') {
-        row.push(currencyFormat(total.ventasPendiente))
+        cell.v = currencyFormat(total.ventasPendiente)
+        cell.s = whiteStyle
+        row.push(cell)
       }
       if (value === 'Total recaudo') {
-        row.push(currencyFormat(total.recaudo))
+        cell.v = currencyFormat(total.recaudo)
+        cell.s = yellowStyle
+        row.push(cell)
       }
       if (value === 'Meta recaudo sin iva') {
-        row.push(currencyFormat(total.metaRecaudoSinIva))
+        cell.v = currencyFormat(total.metaRecaudoSinIva)
+        cell.s = blackStyle
+        row.push(cell)
       }
       if (value === '% Recaudo') {
-        row.push(currencyFormat(total.porcentajeRecaudo))
+        cell.v = total.porcentajeRecaudo
+        cell.s = whiteStyle
+        row.push(cell)
       }
       if (value === 'Recaudo pendiente') {
-        row.push(currencyFormat(total.recaudoPendiente))
+        cell.v = currencyFormat(total.recaudoPendiente)
+        cell.s = whiteStyle
+        row.push(cell)
       }
       wsData.push(row)
     })
@@ -111,6 +249,18 @@ const ButtonDownloadExcel = ({ title, data, currencyFormat }) => {
     const workbook = XLSX.utils.book_new()
     const sheetName = 'Resumen'
     const ws = XLSX.utils.aoa_to_sheet(wsData)
+
+    console.log(ws)
+
+    const columnWidths = wsData.reduce((acc, row) => {
+      row.forEach((cell, colIndex) => {
+        const cellValue = cell ? cell.toString() : ''
+        acc[colIndex] = Math.max(acc[colIndex] || 0, cellValue.length)
+      })
+      return acc
+    }, [])
+
+    ws['!cols'] = columnWidths.map(width => ({ wch: width + 2 }))
 
     XLSX.utils.book_append_sheet(workbook, ws, sheetName)
 

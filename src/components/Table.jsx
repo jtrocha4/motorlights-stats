@@ -1,6 +1,6 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 
-const Table = ({ headers, data, currencyFormat, toFixed, sendGrandTotal }) => {
+const Table = ({ headers, data, currencyFormat, toFixed }) => {
   const grandTotal = (data) => {
     const grandTotal = {
       sales: 0,
@@ -32,9 +32,6 @@ const Table = ({ headers, data, currencyFormat, toFixed, sendGrandTotal }) => {
       grandTotal.percentageSales = toFixed(grandTotal.percentageSales, 1)
       grandTotal.percentageCollection = toFixed(grandTotal.percentageCollection, 1)
     })
-    useEffect(() => {
-      sendGrandTotal(grandTotal)
-    }, [data])
     return grandTotal
   }
   const { sales, amountBills, averageSales, goalSales, percentageSales, pendingGoalSales, collection, collectionTarget, percentageCollection, pendingCollectionGoal } = grandTotal(data)
