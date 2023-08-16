@@ -5,10 +5,113 @@ const ButtonDownloadExcel = ({ title, data, currencyFormat, toFixed }) => {
   // const [loading, setLoading] = useState(false)
 
   const handleDownload = () => {
-    const headers = ['Vendedor', ...data.map(item => item.vendedor), 'Total']
+    const headers = ['Vendedor']
     const values = ['Total ventas', 'Cantidad de facturas', 'Promedio de ventas', 'Meta ventas', '% Venta', 'Ventas pendiente', 'Total recaudo', 'Meta recaudo sin iva', '% Recaudo', 'Recaudo pendiente']
 
-    const wsData = [headers]
+    // const wsData = [headers]
+    const wsData = []
+
+    const headerBlackStyle = {
+      fill: { fgColor: { rgb: '000000' } },
+      alignment: { horizontal: 'left' },
+      font: {
+        bold: true,
+        color: { rgb: 'FFFFFF' }
+      },
+      border: {
+        right: {
+          style: 'thin',
+          color: '000000'
+        },
+        left: {
+          style: 'thin',
+          color: '000000'
+        },
+        top: {
+          style: 'thin',
+          color: '000000'
+        },
+        bottom: {
+          style: 'thin',
+          color: '000000'
+        }
+      }
+    }
+    const headerYellowStyle = {
+      fill: { fgColor: { rgb: 'FFFF00' } },
+      alignment: { horizontal: 'left' },
+      font: {
+        bold: true
+      },
+      border: {
+        right: {
+          style: 'thin',
+          color: '000000'
+        },
+        left: {
+          style: 'thin',
+          color: '000000'
+        },
+        top: {
+          style: 'thin',
+          color: '000000'
+        },
+        bottom: {
+          style: 'thin',
+          color: '000000'
+        }
+      }
+    }
+    const headerWhiteStyle = {
+      fill: { fgColor: { rgb: 'FFFFFF' } },
+      alignment: { horizontal: 'left' },
+      font: {
+        bold: true
+      },
+      border: {
+        right: {
+          style: 'thin',
+          color: '000000'
+        },
+        left: {
+          style: 'thin',
+          color: '000000'
+        },
+        top: {
+          style: 'thin',
+          color: '000000'
+        },
+        bottom: {
+          style: 'thin',
+          color: '000000'
+        }
+      }
+    }
+    const headerGrayStyle = {
+      fill: { fgColor: { rgb: 'BFBFBF' } },
+      alignment: { horizontal: 'left' },
+      font: {
+        bold: true
+      },
+      border: {
+        right: {
+          style: 'thin',
+          color: '000000'
+        },
+        left: {
+          style: 'thin',
+          color: '000000'
+        },
+        top: {
+          style: 'thin',
+          color: '000000'
+        },
+        bottom: {
+          style: 'thin',
+          color: '000000'
+        }
+      }
+    }
 
     const yellowStyle = {
       fill: { fgColor: { rgb: 'FFFF00' } },
@@ -115,8 +218,76 @@ const ButtonDownloadExcel = ({ title, data, currencyFormat, toFixed }) => {
       }
     }
 
+    headers.forEach(header => {
+      const cell = { v: '', s: {} }
+      let row = [header]
+      if (header === 'Vendedor') {
+        cell.v = header
+        cell.s = headerBlackStyle
+      }
+      row = [cell]
+      data.forEach(element => {
+        const cell = { v: '', s: {} }
+        if (header === 'Vendedor') {
+          cell.v = element.vendedor
+          cell.s = headerBlackStyle
+        }
+        row.push(cell)
+      })
+      wsData.push([...row, {
+        v: 'Total',
+        s: headerBlackStyle
+      }])
+    })
+
     values.forEach(value => {
-      const row = [value]
+      let row = [value]
+      const cellValue = { v: '', s: {} }
+      if (value === 'Total ventas') {
+        cellValue.v = value
+        cellValue.s = headerYellowStyle
+      }
+      if (value === 'Cantidad de facturas') {
+        cellValue.v = value
+        cellValue.s = headerGrayStyle
+      }
+      if (value === 'Promedio de ventas') {
+        cellValue.v = value
+        cellValue.s = headerGrayStyle
+      }
+      if (value === 'Meta ventas') {
+        cellValue.v = value
+        cellValue.s = headerBlackStyle
+      }
+      if (value === '% Venta') {
+        cellValue.v = value
+        cellValue.s = headerWhiteStyle
+      }
+      if (value === '% Venta') {
+        cellValue.v = value
+        cellValue.s = headerWhiteStyle
+      }
+      if (value === 'Ventas pendiente') {
+        cellValue.v = value
+        cellValue.s = headerWhiteStyle
+      }
+      if (value === 'Total recaudo') {
+        cellValue.v = value
+        cellValue.s = headerYellowStyle
+      }
+      if (value === 'Meta recaudo sin iva') {
+        cellValue.v = value
+        cellValue.s = headerBlackStyle
+      }
+      if (value === '% Recaudo') {
+        cellValue.v = value
+        cellValue.s = headerWhiteStyle
+      }
+      if (value === 'Recaudo pendiente') {
+        cellValue.v = value
+        cellValue.s = headerWhiteStyle
+      }
+      row = [cellValue]
       data.forEach(item => {
         const cell = { v: '', s: {} }
         if (value === 'Total ventas') {
@@ -199,7 +370,7 @@ const ButtonDownloadExcel = ({ title, data, currencyFormat, toFixed }) => {
         row.push(cell)
       }
       if (value === 'Cantidad de facturas') {
-        cell.v = currencyFormat(total.facturas)
+        cell.v = total.facturas
         cell.s = grayStyle
         row.push(cell)
       }
@@ -248,9 +419,8 @@ const ButtonDownloadExcel = ({ title, data, currencyFormat, toFixed }) => {
 
     const workbook = XLSX.utils.book_new()
     const sheetName = 'Resumen'
-    const ws = XLSX.utils.aoa_to_sheet(wsData)
 
-    console.log(ws)
+    const ws = XLSX.utils.aoa_to_sheet(wsData)
 
     const columnWidths = wsData.reduce((acc, row) => {
       row.forEach((cell, colIndex) => {
@@ -260,7 +430,7 @@ const ButtonDownloadExcel = ({ title, data, currencyFormat, toFixed }) => {
       return acc
     }, [])
 
-    ws['!cols'] = columnWidths.map(width => ({ wch: width + 2 }))
+    ws['!cols'] = columnWidths.map(width => ({ wch: width }))
 
     XLSX.utils.book_append_sheet(workbook, ws, sheetName)
 
