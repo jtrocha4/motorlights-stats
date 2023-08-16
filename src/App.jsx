@@ -6,7 +6,7 @@ import Sidebar from './components/Sidebar'
 import { useEffect, useState } from 'react'
 import Table from './components/Table'
 import ModalGoals from './components/ModalGoals'
-import ButtonDownloadExcel from './components/buttonDownloadExcel'
+import ButtonDownloadExcel from './components/ButtonDownloadExcel'
 
 function App () {
   const [excelData, setExcelData] = useState([])
