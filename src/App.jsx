@@ -65,14 +65,10 @@ function App () {
       const rowData = {}
       headers.forEach((header, index) => {
         // Filtrado de columnas, las columnas que estan dentro de la condicion no aparecen
-        if (header !== 'Ventas' && header !== 'Total Costo' && header !== 'PorMargen' && header !== 'Costo Unitario' && header !== 'Margen') {
+        if (header !== 'Total Costo' && header !== 'PorMargen' && header !== 'Costo Unitario' && header !== 'Margen') {
           rowData[header] = row[index]
         }
       })
-      // Calculo de columnas Ventas
-      const units = parseInt(row[headers.indexOf('Unidades')])
-      const unitSale = parseFloat(row[headers.indexOf('Unitario Venta')])
-      rowData.Ventas = parseFloat((units * unitSale).toFixed(2))
       return rowData
     })
   }

@@ -8,6 +8,7 @@ const ButtonDownloadExcel = ({ title, data, currencyFormat, toFixed }) => {
 
     // const wsData = [headers]
     const wsData = []
+    const wsDataPercentaje = []
 
     const headerBlackStyle = {
       fill: { fgColor: { rgb: '000000' } },
@@ -415,10 +416,18 @@ const ButtonDownloadExcel = ({ title, data, currencyFormat, toFixed }) => {
       wsData.push(row)
     })
 
+    // Data para la tabla de porcentajes
+    wsDataPercentaje.push(wsData[0])
+    wsDataPercentaje.push(wsData[5])
+    wsDataPercentaje.push(wsData[9])
+
+    console.log(wsDataPercentaje)
+
     const workbook = XLSX.utils.book_new()
     const sheetName = 'Resumen'
 
     const ws = XLSX.utils.aoa_to_sheet(wsData)
+    XLSX.utils.sheet_add_aoa(ws, wsDataPercentaje, { origin: 'A21' })
 
     const columnWidths = wsData.reduce((acc, row) => {
       row.forEach((cell, colIndex) => {
