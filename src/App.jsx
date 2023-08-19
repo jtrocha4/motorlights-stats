@@ -12,9 +12,11 @@ function App () {
   const [excelData, setExcelData] = useState([])
   const [data, setData] = useState([])
   const [dataCollection, setDataCollection] = useState([])
+  const [dataAuxiliaryBook, setDataAuxiliaryBook] = useState([])
 
   // Data informe de recaudo
   const [excelDataCollection, setExcelDataCollection] = useState([])
+  const [excelDataAuxiliaryBook, setExcelDataAuxiliaryBook] = useState([])
 
   const currencyFormat = (number) => {
     if (number) {
@@ -60,6 +62,22 @@ function App () {
     reader.readAsArrayBuffer(file)
   }
 
+  const handleReadAuxiliaryBookFile = (event) => {
+    const file = event.target.files[0]
+    // eslint-disable-next-line no-undef
+    const reader = new FileReader()
+
+    reader.onload = (e) => {
+      const fileContent = e.target.result
+      const workbook = XLSX.read(new Uint8Array(fileContent), { type: 'array' })
+      const sheetName = workbook.SheetNames[0]
+      const worksheet = workbook.Sheets[sheetName]
+      const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 })
+      setExcelDataAuxiliaryBook(jsonData)
+    }
+    reader.readAsArrayBuffer(file)
+  }
+
   const formatData = (headers = [], rows = []) => {
     return rows.map(row => {
       const rowData = {}
@@ -85,14 +103,33 @@ function App () {
     })
   }
 
-  // Todo: tal vez guardar los datos formateados dentro de un hooks
-  const headers = excelData[3]
-  const rows = excelData.slice(4)
-  const formattedData = formatData(headers, rows)
+  const formatDataAuxiliaryBookFile = (headers = [], rows = []) => {
+    return rows.map(row => {
+      const rowData = {}
+      headers.forEach((header, index) => {
+        if (header !== 'Creditos' && header !== 'Cheque' && header !== 'Tercero' && header !== 'Saldo' && header !== 'Nota') {
+          rowData[header] = row[index]
+        }
+      })
+      return rowData
+    })
+  }
+
+  // TODO: guardar la fecha de los informes en una variable, siempre se encuentra en la posicion [1] del array
+  const headersCostFile = excelData[3]
+  const rowsCostFile = excelData.slice(4)
+  const formattedData = formatData(headersCostFile, rowsCostFile)
 
   const headersCollectionFile = excelDataCollection[2]
   const rowsCollectionFile = excelDataCollection.slice(3)
   const formattedDataCollectionFile = formatDataCollectionFile(headersCollectionFile, rowsCollectionFile)
+
+  const headersAuxiliaryBookFile = excelDataAuxiliaryBook[3]
+  const rowsAuxiliaryBookFile = excelDataAuxiliaryBook.slice(4)
+  const formattedDataAuxiliaryBookFile = formatDataAuxiliaryBookFile(headersAuxiliaryBookFile, rowsAuxiliaryBookFile)
+
+  // console.log(formattedDataAuxiliaryBookFile)
+  // console.log(formattedDataCollectionFile)
 
   const howAreYouDoing = (formattedData, SalesGoalBySeller = {}, collectionGoalBySeller = {}) => {
     const sellerData = []
@@ -220,6 +257,80 @@ function App () {
     setDataCollection(totalCollection)
   }
 
+  const howAreYouDoingRecaudo = async (formattedDataCollectionFile) => {
+    const sellerData = {}
+    const sellerCollection = []
+    let currentSeller
+    let sellerSales
+
+    formattedDataCollectionFile.forEach(row => {
+      if (row.Vendedor) {
+        if (row.Vendedor.startsWith('Total')) {
+          if (currentSeller) {
+            sellerData[currentSeller] = sellerSales
+            sellerCollection.push({ vendedor: currentSeller, recaudo: sellerData[currentSeller] })
+          }
+          currentSeller = null
+          sellerSales = null
+        } else {
+          currentSeller = row.Vendedor
+          sellerSales = []
+        }
+      }
+      if (currentSeller && sellerSales) {
+        sellerSales.push(row)
+      }
+    })
+    setDataCollection(sellerCollection)
+  }
+
+  const howAreYouDoingAuxiliaryBook = async (formattedDataAuxiliaryBookFile) => {
+    const sellerCollection = []
+    let currentSeller
+    let sellerSales
+    formattedDataAuxiliaryBookFile.forEach(row => {
+      if (row.Cuenta) {
+        if (row.Cuenta.startsWith('Total')) {
+          if (currentSeller) {
+            const filterDoc = sellerSales.filter(el => el['Doc Num'] !== undefined)
+            filterDoc.forEach(el => {
+              const numberDoc = el['Doc Num'].match(/\d+/g).join('')
+              el['Doc Num'] = numberDoc
+            })
+            sellerCollection.push(filterDoc)
+          }
+          currentSeller = null
+          sellerSales = null
+        } else {
+          currentSeller = row.Cuenta
+          sellerSales = []
+        }
+      }
+      if (currentSeller && sellerSales) {
+        sellerSales.push(row)
+      }
+    })
+    const sellerCollectionFilter = sellerCollection.filter(el => el.length > 0)
+    setDataAuxiliaryBook(sellerCollectionFilter)
+  }
+  dataCollection.forEach(element => {
+    const recaudo = element.recaudo
+    const debitosPorDocNum = {}
+    recaudo.forEach(it => {
+      dataAuxiliaryBook.forEach(item => {
+        item.forEach(el => {
+          const docNum = el['Doc Num']
+          console.log(docNum)
+          console.log(debitosPorDocNum[docNum])
+        })
+      })
+    })
+    console.log(debitosPorDocNum)
+  })
+
+  console.log(dataCollection)
+  console.log(dataAuxiliaryBook)
+
   const joinData = (dataCollection = [], dataCost = []) => {
     const collectionBySeller = []
     dataCollection.forEach(({ vendedor, totalRecaudo, metaRecaudoSinIva, porcentajeRecaudo, recaudoPendiente }) => {
@@ -242,8 +353,10 @@ function App () {
 
   useEffect(() => {
     howAreYouDoing(formattedData, SalesGoalBySeller, collectionGoalBySeller)
-    howAreYouDoingCollection(formattedDataCollectionFile, collectionGoalBySeller)
-  }, [excelData, excelDataCollection, SalesGoalBySeller, collectionGoalBySeller])
+    // howAreYouDoingCollection(formattedDataCollectionFile, collectionGoalBySeller)
+    howAreYouDoingRecaudo(formattedDataCollectionFile)
+    howAreYouDoingAuxiliaryBook(formattedDataAuxiliaryBookFile)
+  }, [excelData, excelDataCollection, excelDataAuxiliaryBook, SalesGoalBySeller, collectionGoalBySeller])
 
   const sendForm = (salesGoalsFormData, collectionGoalsFormData) => {
     setSalesGoalBySeller(salesGoalsFormData)
@@ -261,6 +374,7 @@ function App () {
           <div className='inputFile-group'>
             <InputFile label='Informe de Costo' handleChange={handleReadCostFile} />
             <InputFile label='Informe de Recaudo' handleChange={handleReadCollectionFile} />
+            <InputFile label='Informe Libro auxiliar' handleChange={handleReadAuxiliaryBookFile} />
             <div className='button-group'>
               <ModalGoals title='Modificar metas' data={data} sendForm={sendForm} />
             </div>
