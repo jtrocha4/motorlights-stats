@@ -128,10 +128,7 @@ function App () {
   const rowsAuxiliaryBookFile = excelDataAuxiliaryBook.slice(4)
   const formattedDataAuxiliaryBookFile = formatDataAuxiliaryBookFile(headersAuxiliaryBookFile, rowsAuxiliaryBookFile)
 
-  // console.log(formattedDataAuxiliaryBookFile)
-  // console.log(formattedDataCollectionFile)
-
-  const howAreYouDoing = (formattedData, SalesGoalBySeller = {}, collectionGoalBySeller = {}) => {
+  const howAreWeDoing = (formattedData, SalesGoalBySeller = {}, collectionGoalBySeller = {}) => {
     const sellerData = []
     const totalSales = []
     let currentSeller
@@ -207,87 +204,66 @@ function App () {
     setData(totalSales)
   }
 
-  const howAreYouDoingCollection = (formattedData, collectionGoalBySeller = {}) => {
-    const totalCollection = []
-    let sellerCollection = []
-    let currentSeller
-    let total
-
-    let collectionTarget
-    let percentageCollected
-    let pendingCollectionTarget
-
-    formattedData.forEach(row => {
-      if (row.Vendedor) {
-        if (row.Vendedor.startsWith('Total')) {
-          if (currentSeller) {
-            // Calculo de operaciones
-            collectionTarget = collectionGoalBySeller[currentSeller]
-            percentageCollected = (total * 100) / collectionTarget
-            pendingCollectionTarget = collectionTarget - total
-
-            // Aproximacion de los datos
-            percentageCollected = toFixed(percentageCollected, 1)
-
-            sellerCollection.push({ vendedor: currentSeller, recaudo: [sellerCollection] })
-            totalCollection.push(
-              {
-                vendedor: currentSeller,
-                totalRecaudo: total,
-                metaRecaudoSinIva: 0,
-                porcentajeRecaudo: percentageCollected,
-                recaudoPendiente: pendingCollectionTarget
-              }
-            )
-          }
-          sellerCollection = null
-          currentSeller = null
-          total = 0
-        } else {
-          currentSeller = row.Vendedor
-          sellerCollection = []
-          total = 0
-        }
-      }
-      if (currentSeller && sellerCollection) {
-        sellerCollection.push(row)
-        total += row.Recaudo || 0
-      }
-    })
-    setDataCollection(totalCollection)
-  }
-
-  const howAreYouDoingRecaudo = async (formattedDataCollectionFile) => {
+  const howAreWeDoingCollection = async (formattedDataCollectionFile, debitForDocNum, collectionGoalBySeller = {}) => {
     const sellerData = {}
     const sellerCollection = []
     let currentSeller
     let sellerSales
 
+    const uniqueRC = {}
+    let total
+    let collectionTarget
+    let percentageCollected
+    let pendingCollectionTarget
+
     formattedDataCollectionFile.forEach(row => {
+      if (row.RC in debitForDocNum) {
+        row.Recaudo = debitForDocNum[row.RC]
+      }
       if (row.Vendedor) {
         if (row.Vendedor.startsWith('Total')) {
           if (currentSeller) {
+            collectionTarget = collectionGoalBySeller[currentSeller]
+            percentageCollected = (total * 100) / collectionTarget
+            pendingCollectionTarget = collectionTarget - total
+
+            percentageCollected = toFixed(percentageCollected, 1)
+
             sellerData[currentSeller] = sellerSales
-            sellerCollection.push({ vendedor: currentSeller, recaudo: sellerData[currentSeller] })
+            sellerCollection.push({
+              vendedor: currentSeller,
+              recaudo: sellerData[currentSeller],
+              totalRecaudo: total,
+              metaRecaudoSinIva: 0,
+              porcentajeRecaudo: percentageCollected,
+              recaudoPendiente: pendingCollectionTarget
+            })
           }
           currentSeller = null
           sellerSales = null
+          total = 0
         } else {
           currentSeller = row.Vendedor
           sellerSales = []
+          total = 0
         }
       }
       if (currentSeller && sellerSales) {
         sellerSales.push(row)
+        if (!uniqueRC[row.RC]) {
+          uniqueRC[row.RC] = row.Recaudo
+          total += uniqueRC[row.RC]
+        }
       }
     })
     setDataCollection(sellerCollection)
   }
 
-  const howAreYouDoingAuxiliaryBook = async (formattedDataAuxiliaryBookFile) => {
+  const howAreWeDoingAuxiliaryBook = async (formattedDataAuxiliaryBookFile) => {
     const sellerCollection = []
     let currentSeller
     let sellerSales
+
     formattedDataAuxiliaryBookFile.forEach(row => {
       if (row.Cuenta) {
         if (row.Cuenta.startsWith('Total')) {
@@ -311,25 +287,23 @@ function App () {
       }
     })
     const sellerCollectionFilter = sellerCollection.filter(el => el.length > 0)
-    setDataAuxiliaryBook(sellerCollectionFilter)
-  }
-  dataCollection.forEach(element => {
-    const recaudo = element.recaudo
-    const debitosPorDocNum = {}
-    recaudo.forEach(it => {
-      dataAuxiliaryBook.forEach(item => {
-        item.forEach(el => {
-          const docNum = el['Doc Num']
-          console.log(docNum)
-          console.log(debitosPorDocNum[docNum])
-        })
+    const debitForDocNum = {}
+    sellerCollectionFilter.forEach(collection => {
+      collection.forEach(el => {
+        const docNum = el['Doc Num']
+        const debit = parseFloat(el.Debitos)
+        if (debitForDocNum[docNum]) {
+          debitForDocNum[docNum] += debit
+        } else {
+          debitForDocNum[docNum] = debit
+        }
       })
     })
-    console.log(debitosPorDocNum)
-  })
+    setTotalDebitByDocNum(debitForDocNum)
+    setDataAuxiliaryBook(sellerCollectionFilter)
+  }
 
-  console.log(dataCollection)
-  console.log(dataAuxiliaryBook)
+  const [totalDebitByDocNum, setTotalDebitByDocNum] = useState({})
 
   const joinData = (dataCollection = [], dataCost = []) => {
     const collectionBySeller = []
@@ -352,11 +326,13 @@ function App () {
   const [collectionGoalBySeller, setCollectionGoalBySeller] = useState({})
 
   useEffect(() => {
-    howAreYouDoing(formattedData, SalesGoalBySeller, collectionGoalBySeller)
-    // howAreYouDoingCollection(formattedDataCollectionFile, collectionGoalBySeller)
-    howAreYouDoingRecaudo(formattedDataCollectionFile)
-    howAreYouDoingAuxiliaryBook(formattedDataAuxiliaryBookFile)
+    howAreWeDoing(formattedData, SalesGoalBySeller, collectionGoalBySeller)
+    howAreWeDoingAuxiliaryBook(formattedDataAuxiliaryBookFile)
   }, [excelData, excelDataCollection, excelDataAuxiliaryBook, SalesGoalBySeller, collectionGoalBySeller])
+
+  useEffect(() => {
+    howAreWeDoingCollection(formattedDataCollectionFile, totalDebitByDocNum, collectionGoalBySeller)
+  }, [totalDebitByDocNum, dataAuxiliaryBook])
 
   const sendForm = (salesGoalsFormData, collectionGoalsFormData) => {
     setSalesGoalBySeller(salesGoalsFormData)

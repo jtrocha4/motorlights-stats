@@ -2,10 +2,11 @@ import React, { useState } from 'react'
 
 const ModalGoals = ({ title, buttonBackground = 'dark', data = [], sendForm }) => {
   const [saleGoalsForm, setSaleGoalsForm] = useState({
-    // Mes Julio. Datos por defecto
+    // Mes Agosto. Datos por defecto
     'CARLOS ALONSO VESGA ORTIZ': 85000000,
+    'DEIVER JOSE ZUÑIGA VASQUEZ': 35000000,
     'HERNANDO JAVIER NOVA NARVAEZ': 70000000,
-    'JOSE ANDRES MONTENEGRO GUEVARA': 35000000,
+    'JOSE ANDRES MONTENEGRO GUEVARA': 0,
     'JULIAN ANDRES POSADA SALAZAR': 30000000,
     'MARIA VICTORIA MOLINA': 50000000,
     'MELANY JOHANNA RAMIREZ QUINTERO': 30000000,
@@ -13,15 +14,16 @@ const ModalGoals = ({ title, buttonBackground = 'dark', data = [], sendForm }) =
     'MOTORLIGHTS S.A.S': 0
   })
   const [collectionGoalForm, setCollectionGoalForm] = useState({
-    // Mes Julio. Datos por defecto
-    'CARLOS ALONSO VESGA ORTIZ': 92652788,
-    'HERNANDO JAVIER NOVA NARVAEZ': 53992361,
-    'JOSE ANDRES MONTENEGRO GUEVARA': 31465638,
-    'JULIAN ANDRES POSADA SALAZAR': 12501019,
-    'MARIA VICTORIA MOLINA': 39531092,
-    'MELANY JOHANNA RAMIREZ QUINTERO': 33454267,
-    'SERGIO ANDRES BARCELO TRESPALACIOS': 37009536,
-    'MOTORLIGHTS S.A.S': 47043982
+    // Mes Agosto. Datos por defecto
+    'CARLOS ALONSO VESGA ORTIZ': 81790197,
+    'DEIVER JOSE ZUÑIGA VASQUEZ': 46092813,
+    'HERNANDO JAVIER NOVA NARVAEZ': 73101897,
+    'JOSE ANDRES MONTENEGRO GUEVARA': 0,
+    'JULIAN ANDRES POSADA SALAZAR': 14660847,
+    'MARIA VICTORIA MOLINA': 42858353,
+    'MELANY JOHANNA RAMIREZ QUINTERO': 27524761,
+    'SERGIO ANDRES BARCELO TRESPALACIOS': 46036555,
+    'MOTORLIGHTS S.A.S': 12277167
   })
 
   const handleChange = (event) => {
@@ -63,7 +65,7 @@ const ModalGoals = ({ title, buttonBackground = 'dark', data = [], sendForm }) =
                           data.map(({ vendedor }) => (
                             <div className='mb-3' key={vendedor}>
                               <label htmlFor={vendedor} className='form-label'><b>{vendedor}</b></label>
-                              <input name={`${vendedor}`} type='number' className='form-control mb-2' placeholder='Meta de venta' onChange={handleChange} value={saleGoalsForm[`${vendedor}`]} />
+                              <input name={`${vendedor}`} type='number' className='form-control mb-2' placeholder='Meta de venta' onChange={handleChange} value={saleGoalsForm[`${vendedor}`]} id={vendedor} />
                               <input name={`${vendedor}`} type='number' className='form-control' placeholder='Meta de recaudo' onChange={handleChangeCollectionGoal} value={collectionGoalForm[`${vendedor}`]} />
                             </div>
                           ))

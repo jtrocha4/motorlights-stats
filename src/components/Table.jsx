@@ -60,11 +60,11 @@ const Table = ({ headers, data, currencyFormat, toFixed }) => {
                       <td>{cantidadFacturas}</td>
                       <td>{currencyFormat(promedioVentas)}</td>
                       <td>{currencyFormat(metaVentas)}</td>
-                      <td>{porcentajeVentas}</td>
+                      <td>{porcentajeVentas}%</td>
                       <td>{currencyFormat(ventasPendiente)}</td>
                       <td>{currencyFormat(totalRecaudo)}</td>
                       <td>{currencyFormat(metaRecaudoSinIva)}</td>
-                      <td>{porcentajeRecaudo}</td>
+                      <td>{porcentajeRecaudo}%</td>
                       <td>{currencyFormat(recaudoPendiente)}</td>
                     </tr>
                   ))
@@ -76,11 +76,11 @@ const Table = ({ headers, data, currencyFormat, toFixed }) => {
             <td><strong>{amountBills}</strong></td>
             <td><strong>{currencyFormat(averageSales)}</strong></td>
             <td><strong>{currencyFormat(goalSales)}</strong></td>
-            <td><strong>{percentageSales}</strong></td>
+            <td><strong>{percentageSales}%</strong></td>
             <td><strong>{currencyFormat(pendingGoalSales)}</strong></td>
             <td><strong>{currencyFormat(collection)}</strong></td>
             <td><strong>{currencyFormat(collectionTarget)}</strong></td>
-            <td><strong>{percentageCollection}</strong></td>
+            <td><strong>{percentageCollection}%</strong></td>
             <td><strong>{currencyFormat(pendingCollectionGoal)}</strong></td>
           </tr>
         </tbody>

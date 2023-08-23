@@ -421,8 +421,6 @@ const ButtonDownloadExcel = ({ title, data, currencyFormat, toFixed }) => {
     wsDataPercentaje.push(wsData[5])
     wsDataPercentaje.push(wsData[9])
 
-    console.log(wsDataPercentaje)
-
     const workbook = XLSX.utils.book_new()
     const sheetName = 'Resumen'
 
