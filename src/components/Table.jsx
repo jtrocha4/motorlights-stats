@@ -38,7 +38,7 @@ const Table = ({ headers, data, currencyFormat, toFixed }) => {
 
   return (
     <>
-      <table className='table table-hover'>
+      <table className='table table-hover table-sm'>
         <thead>
           <tr>
             {

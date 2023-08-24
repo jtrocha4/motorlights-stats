@@ -360,7 +360,9 @@ function App () {
             <div className='d-grid gap-2 d-md-flex justify-content-md-end mb-2'>
               <ButtonDownloadExcel title='Descargar informe' data={data} currencyFormat={currencyFormat} toFixed={toFixed} />
             </div>
-            <Table headers={['Vendedor', 'Total ventas', 'Cantidad de facturas', 'Promedio de ventas', 'Meta de ventas', 'Porcentaje de ventas', 'Ventas pendiente', 'Recaudo', 'Meta recaudo sin iva', 'Porcentaje de recaudo', 'Recaudo pendiente']} data={data} currencyFormat={currencyFormat} toFixed={toFixed} />
+            <div>
+              <Table headers={['Vendedor', 'Total ventas', 'Cantidad de facturas', 'Promedio de ventas', 'Meta de ventas', 'Porcentaje de ventas', 'Ventas pendiente', 'Recaudo', 'Meta recaudo sin iva', 'Porcentaje de recaudo', 'Recaudo pendiente']} data={data} currencyFormat={currencyFormat} toFixed={toFixed} />
+            </div>
           </div>
         </div>
       </div>
