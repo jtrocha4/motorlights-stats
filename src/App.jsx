@@ -82,8 +82,7 @@ function App () {
     return rows.map(row => {
       const rowData = {}
       headers.forEach((header, index) => {
-        // Filtrado de columnas, las columnas que estan dentro de la condicion no aparecen
-        if (header !== 'Total Costo' && header !== 'PorMargen' && header !== 'Costo Unitario' && header !== 'Margen') {
+        if (header !== 'Total Costo' && header !== 'PorMargen' && header !== 'Costo Unitario' && header !== 'Margen') { // Filtrado de columnas, las columnas que estan dentro de la condicion no aparecen
           rowData[header] = row[index]
         }
       })
@@ -115,7 +114,79 @@ function App () {
     })
   }
 
-  // TODO: guardar la fecha de los informes en una variable, siempre se encuentra en la posicion [1] del array
+  const [dateExcel, setDateExcel] = useState({})
+  const extractDateFromExcel = (dateRow = []) => {
+    if (dateRow.length) {
+      const date = dateRow.join()
+      const dateFormat = /\b(?:0?[1-9]|[12][0-9]|3[01])\/(?:0?[1-9]|1[0-2])\/\d{4}\b/g
+      const dateExcel = date.match(dateFormat)
+
+      //
+      const months = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre']
+
+      const initialDate = dateExcel[0]
+      const finalDate = dateExcel[1]
+
+      const parts = finalDate.split('/')
+      const month = parseInt(parts[1] - 1)
+      const days = parseInt(parts[0])
+      const year = parseInt(parts[2])
+
+      const daysOfTheMonth = new Date(2023, month, 0).getDate()
+
+      const countSundays = (year, month) => {
+        const firstDay = new Date(year, month, 1)
+        const lastDay = new Date(year, month + 1, 0)
+
+        let count = 0
+
+        for (let day = firstDay.getDate(); day <= lastDay.getDate(); day++) {
+          const currentDay = new Date(year, month, day)
+          if (currentDay.getDay() === 0) { // 0 representa domingo en getDay()
+            count++
+          }
+        }
+
+        return count
+      }
+
+      const daysElapsed = (year, month, day) => {
+        const firstDay = new Date(year, month, 1)
+        const lastDay = new Date(year, month, day)
+        let countSunday = 0
+        let countDays = 0
+        for (let day = firstDay.getDate(); day <= lastDay.getDate(); day++) {
+          const currentDay = new Date(year, month, day)
+          if (currentDay.getDay() === 0) { // 0 representa domingo en getDay()
+            countSunday++
+          }
+          countDays++
+        }
+
+        return countDays - countSunday
+      }
+
+      const sundays = countSundays(year, month)
+
+      const workDays = daysOfTheMonth - sundays
+
+      const daysPassed = daysElapsed(year, month, days)
+      let percentageDaysPassed = parseFloat((daysPassed * 100) / workDays)
+      percentageDaysPassed = toFixed(percentageDaysPassed, 1)
+
+      setDateExcel({
+        fechaInicial: initialDate,
+        fechaFinal: finalDate,
+        mes: months[month],
+        diasLaborales: workDays,
+        diasTranscurridos: daysPassed,
+        PorcentajeDiasTranscurridos: percentageDaysPassed
+      })
+    }
+  }
+
+  const dateRow = excelData[2]
+
   const headersCostFile = excelData[3]
   const rowsCostFile = excelData.slice(4)
   const formattedData = formatData(headersCostFile, rowsCostFile)
@@ -328,6 +399,7 @@ function App () {
   useEffect(() => {
     howAreWeDoing(formattedData, SalesGoalBySeller, collectionGoalBySeller)
     howAreWeDoingAuxiliaryBook(formattedDataAuxiliaryBookFile)
+    extractDateFromExcel(dateRow)
   }, [excelData, excelDataCollection, excelDataAuxiliaryBook, SalesGoalBySeller, collectionGoalBySeller])
 
   useEffect(() => {
@@ -358,7 +430,7 @@ function App () {
           <div>
             <h2>Como vamos</h2>
             <div className='d-grid gap-2 d-md-flex justify-content-md-end mb-2'>
-              <ButtonDownloadExcel title='Descargar informe' data={data} currencyFormat={currencyFormat} toFixed={toFixed} />
+              <ButtonDownloadExcel title='Descargar informe' data={data} currencyFormat={currencyFormat} toFixed={toFixed} dateExcel={dateExcel} />
             </div>
             <div>
               <Table headers={['Vendedor', 'Total ventas', 'Cantidad de facturas', 'Promedio de ventas', 'Meta de ventas', 'Porcentaje de ventas', 'Ventas pendiente', 'Recaudo', 'Meta recaudo sin iva', 'Porcentaje de recaudo', 'Recaudo pendiente']} data={data} currencyFormat={currencyFormat} toFixed={toFixed} />

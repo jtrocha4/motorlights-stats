@@ -1,12 +1,11 @@
 import React from 'react'
 import XLSX from 'xlsx-js-style'
 
-const ButtonDownloadExcel = ({ title, data, currencyFormat, toFixed }) => {
+const ButtonDownloadExcel = ({ title, data, currencyFormat, toFixed, dateExcel }) => {
   const handleDownload = () => {
     const headers = ['Vendedor']
     const values = ['Total ventas', 'Cantidad de facturas', 'Promedio de ventas', 'Meta ventas', '% Venta', 'Ventas pendiente', 'Total recaudo', 'Meta recaudo sin iva', '% Recaudo', 'Recaudo pendiente']
 
-    // const wsData = [headers]
     const wsData = []
     const wsDataPercentaje = []
 
@@ -220,7 +219,7 @@ const ButtonDownloadExcel = ({ title, data, currencyFormat, toFixed }) => {
     headers.forEach(header => {
       const cell = { v: '', s: {} }
       let row = [header]
-      if (header === 'Vendedor') {
+      if (header) {
         cell.v = header
         cell.s = headerBlackStyle
       }
