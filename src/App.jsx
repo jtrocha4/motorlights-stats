@@ -177,6 +177,7 @@ function App () {
       setDateExcel({
         fechaInicial: initialDate,
         fechaFinal: finalDate,
+        dia: days,
         mes: months[month],
         diasLaborales: workDays,
         diasTranscurridos: daysPassed,

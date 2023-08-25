@@ -222,7 +222,7 @@ const ButtonDownloadExcel = ({ title, data, currencyFormat, toFixed, dateExcel }
       const cell = { v: '', s: {} }
       let row = [date]
       if (date === 'Mes') {
-        cell.v = `Avance del mes ${dateExcel.mes}`
+        cell.v = `${dateExcel.mes}`
         cell.s = headerYellowStyle
       }
       row = [cell]
@@ -233,7 +233,7 @@ const ButtonDownloadExcel = ({ title, data, currencyFormat, toFixed, dateExcel }
       const cell = { v: '', s: {} }
       let row = [header]
       if (header === 'Vendedor') {
-        cell.v = dateExcel.PorcentajeDiasTranscurridos
+        cell.v = `${dateExcel.PorcentajeDiasTranscurridos}%`
         cell.s = yellowStyle
       }
       row = [cell]
@@ -428,17 +428,54 @@ const ButtonDownloadExcel = ({ title, data, currencyFormat, toFixed, dateExcel }
       wsData.push(row)
     })
 
-    const newDataHeaderStyle = _.cloneDeep(wsData[0][0])
+    const wsDateData = []
+    const workDays = []
+    const daysElapsed = []
+    const PercentageDaysElapsed = []
+    workDays.push({
+      v: 'Dias habiles del mes',
+      s: headerWhiteStyle
+    }, {
+      v: dateExcel.diasLaborales,
+      s: whiteStyle
+    }, {
+      v: `Desde ${dateExcel.fechaInicial} hasta ${dateExcel.fechaFinal}`,
+      s: whiteStyle
+    })
+    daysElapsed.push({
+      v: 'Dias transcurridos',
+      s: headerWhiteStyle
+    }, {
+      v: dateExcel.diasTranscurridos,
+      s: whiteStyle
+    })
+    PercentageDaysElapsed.push({
+      v: '',
+      s: {}
+    }, {
+      v: `${dateExcel.PorcentajeDiasTranscurridos}%`,
+      s: grayStyle
+    })
+    wsDateData.push(workDays)
+    wsDateData.push(daysElapsed)
+    wsDateData.push(PercentageDaysElapsed)
+
+    const newDataHeaderStyle = {}
+    newDataHeaderStyle.v = 'Avance del Mes'
     newDataHeaderStyle.s = headerYellowStyle
 
     const newWsData = []
     newWsData.push(newDataHeaderStyle)
     newWsData.push({
-      v: dateExcel.PorcentajeDiasTranscurridos,
+      v: `${dateExcel.PorcentajeDiasTranscurridos}%`,
       s: yellowStyle
     })
 
     wsDataPercentaje.push(newWsData)
+    const wsSellerData = _.cloneDeep(wsData[1])
+    wsSellerData[0].v = 'Vendedores'
+    wsSellerData[0].s = headerBlackStyle
+    wsDataPercentaje.push(wsSellerData)
     wsDataPercentaje.push(wsData[6])
     wsDataPercentaje.push(wsData[10])
 
@@ -446,6 +483,7 @@ const ButtonDownloadExcel = ({ title, data, currencyFormat, toFixed, dateExcel }
     const sheetName = 'Resumen'
 
     const ws = XLSX.utils.aoa_to_sheet(wsData, { origin: 'A2' })
+    XLSX.utils.sheet_add_aoa(ws, wsDateData, { origin: 'A17' })
     XLSX.utils.sheet_add_aoa(ws, wsDataPercentaje, { origin: 'A22' })
 
     const columnWidths = wsData.reduce((acc, row) => {
@@ -460,10 +498,8 @@ const ButtonDownloadExcel = ({ title, data, currencyFormat, toFixed, dateExcel }
 
     XLSX.utils.book_append_sheet(workbook, ws, sheetName)
 
-    const excelFileName = 'Informe Como Vamos.xlsx'
+    const excelFileName = `Informe Como Vamos ${dateExcel.dia} ${dateExcel.mes}.xlsx`
     XLSX.writeFile(workbook, excelFileName)
-
-    console.log(`Archivo "${excelFileName}" generado exitosamente.`)
   }
   return (
     <div>
