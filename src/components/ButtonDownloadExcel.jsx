@@ -1,8 +1,10 @@
 import React from 'react'
 import XLSX from 'xlsx-js-style'
+import _ from 'lodash'
 
 const ButtonDownloadExcel = ({ title, data, currencyFormat, toFixed, dateExcel }) => {
   const handleDownload = () => {
+    const dates = ['Mes']
     const headers = ['Vendedor']
     const values = ['Total ventas', 'Cantidad de facturas', 'Promedio de ventas', 'Meta ventas', '% Venta', 'Ventas pendiente', 'Total recaudo', 'Meta recaudo sin iva', '% Recaudo', 'Recaudo pendiente']
 
@@ -216,12 +218,23 @@ const ButtonDownloadExcel = ({ title, data, currencyFormat, toFixed, dateExcel }
       }
     }
 
+    dates.forEach(date => {
+      const cell = { v: '', s: {} }
+      let row = [date]
+      if (date === 'Mes') {
+        cell.v = `Avance del mes ${dateExcel.mes}`
+        cell.s = headerYellowStyle
+      }
+      row = [cell]
+      wsData.push(row)
+    })
+
     headers.forEach(header => {
       const cell = { v: '', s: {} }
       let row = [header]
-      if (header) {
-        cell.v = header
-        cell.s = headerBlackStyle
+      if (header === 'Vendedor') {
+        cell.v = dateExcel.PorcentajeDiasTranscurridos
+        cell.s = yellowStyle
       }
       row = [cell]
       data.forEach(element => {
@@ -415,20 +428,29 @@ const ButtonDownloadExcel = ({ title, data, currencyFormat, toFixed, dateExcel }
       wsData.push(row)
     })
 
-    // Data para la tabla de porcentajes
-    wsDataPercentaje.push(wsData[0])
-    wsDataPercentaje.push(wsData[5])
-    wsDataPercentaje.push(wsData[9])
+    const newDataHeaderStyle = _.cloneDeep(wsData[0][0])
+    newDataHeaderStyle.s = headerYellowStyle
+
+    const newWsData = []
+    newWsData.push(newDataHeaderStyle)
+    newWsData.push({
+      v: dateExcel.PorcentajeDiasTranscurridos,
+      s: yellowStyle
+    })
+
+    wsDataPercentaje.push(newWsData)
+    wsDataPercentaje.push(wsData[6])
+    wsDataPercentaje.push(wsData[10])
 
     const workbook = XLSX.utils.book_new()
     const sheetName = 'Resumen'
 
-    const ws = XLSX.utils.aoa_to_sheet(wsData)
-    XLSX.utils.sheet_add_aoa(ws, wsDataPercentaje, { origin: 'A21' })
+    const ws = XLSX.utils.aoa_to_sheet(wsData, { origin: 'A2' })
+    XLSX.utils.sheet_add_aoa(ws, wsDataPercentaje, { origin: 'A22' })
 
     const columnWidths = wsData.reduce((acc, row) => {
       row.forEach((cell, colIndex) => {
-        const cellValue = cell ? cell.toString() : ''
+        const cellValue = cell.v ? cell.toString() : ''
         acc[colIndex] = Math.max(acc[colIndex] || 0, cellValue.length)
       })
       return acc
