@@ -25,8 +25,8 @@ const Table = ({ headers, data, currencyFormat, toFixed }) => {
 
       grandTotal.collection += element.totalRecaudo
       grandTotal.collectionTarget += element.metaRecaudoSinIva
-      grandTotal.percentageCollection = (grandTotal.collection * 100) / grandTotal.collectionTarget
       grandTotal.pendingCollectionGoal += element.recaudoPendiente
+      grandTotal.percentageCollection = 100 - (grandTotal.pendingCollectionGoal * 100) / grandTotal.collectionTarget
 
       // Aproximacion
       grandTotal.percentageSales = toFixed(grandTotal.percentageSales, 1)

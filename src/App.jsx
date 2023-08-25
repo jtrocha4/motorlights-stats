@@ -200,6 +200,7 @@ function App () {
   const rowsAuxiliaryBookFile = excelDataAuxiliaryBook.slice(4)
   const formattedDataAuxiliaryBookFile = formatDataAuxiliaryBookFile(headersAuxiliaryBookFile, rowsAuxiliaryBookFile)
 
+  // TODO: No tener en cuenta el flete en las ventas y solo contar las facturas FV
   const howAreWeDoing = (formattedData, SalesGoalBySeller = {}, collectionGoalBySeller = {}) => {
     const sellerData = []
     const totalSales = []
