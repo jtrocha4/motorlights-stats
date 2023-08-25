@@ -283,7 +283,9 @@ function App () {
     let sellerSales
 
     const uniqueRC = {}
+    const iva = 1.19
     let total
+    let totalWithoutVAT
     let collectionTarget
     let percentageCollected
     let pendingCollectionTarget
@@ -295,9 +297,10 @@ function App () {
       if (row.Vendedor) {
         if (row.Vendedor.startsWith('Total')) {
           if (currentSeller) {
+            totalWithoutVAT = total / iva
             collectionTarget = collectionGoalBySeller[currentSeller]
-            percentageCollected = (total * 100) / collectionTarget
-            pendingCollectionTarget = collectionTarget - total
+            percentageCollected = (totalWithoutVAT * 100) / collectionTarget
+            pendingCollectionTarget = collectionTarget - totalWithoutVAT
 
             percentageCollected = toFixed(percentageCollected, 1)
 
@@ -305,7 +308,7 @@ function App () {
             sellerCollection.push({
               vendedor: currentSeller,
               recaudo: sellerData[currentSeller],
-              totalRecaudo: total,
+              totalRecaudo: totalWithoutVAT,
               metaRecaudoSinIva: 0,
               porcentajeRecaudo: percentageCollected,
               recaudoPendiente: pendingCollectionTarget
