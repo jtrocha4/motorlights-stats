@@ -124,6 +124,11 @@ function App () {
       //
       const months = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre']
 
+      if (!dateExcel) {
+        console.log('Date excel undefined, El informe de costo no es el correcto')
+        return
+      }
+
       const initialDate = dateExcel[0]
       const finalDate = dateExcel[1]
 
