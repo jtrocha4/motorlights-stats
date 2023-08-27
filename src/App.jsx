@@ -125,7 +125,7 @@ function App () {
       const months = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre']
 
       if (!dateExcel) {
-        console.log('Date excel undefined, El informe de costo no es el correcto')
+        // console.log('Date excel undefined, El informe de costo no es el correcto')
         return
       }
 
@@ -205,7 +205,6 @@ function App () {
   const rowsAuxiliaryBookFile = excelDataAuxiliaryBook.slice(4)
   const formattedDataAuxiliaryBookFile = formatDataAuxiliaryBookFile(headersAuxiliaryBookFile, rowsAuxiliaryBookFile)
 
-  // TODO: Omitir el flete en las ventas
   const howAreWeDoing = (formattedData, SalesGoalBySeller = {}, collectionGoalBySeller = {}) => {
     const sellerData = []
     const totalSales = []
@@ -224,7 +223,12 @@ function App () {
     let collectionTarget
     let percentageCollected
 
+    let splitChain
+
     formattedData.forEach(row => {
+      if (row['CódigoInventario'] !== undefined) {
+        splitChain = row['CódigoInventario'].split(' ')
+      }
       if (row.Vendedor) {
         if (row.Vendedor.startsWith('Total')) {
           if (currentSeller) {
@@ -270,13 +274,12 @@ function App () {
           total = 0
         }
       }
-      if (currentSeller && sellerSales) {
+      if (currentSeller && sellerSales && !splitChain[1].startsWith('Flete')) {
         sellerSales.push(row)
         total += row.Ventas || 0
         if (!uniqueDocs[currentSeller]) {
           uniqueDocs[currentSeller] = {}
         }
-        // uniqueDocs[currentSeller][row.Doc] = true
         if (row.Doc.startsWith('FV')) {
           uniqueDocs[currentSeller][row.Doc] = true
         }
