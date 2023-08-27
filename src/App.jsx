@@ -205,7 +205,7 @@ function App () {
   const rowsAuxiliaryBookFile = excelDataAuxiliaryBook.slice(4)
   const formattedDataAuxiliaryBookFile = formatDataAuxiliaryBookFile(headersAuxiliaryBookFile, rowsAuxiliaryBookFile)
 
-  // TODO: No tener en cuenta el flete en las ventas y solo contar las facturas FV
+  // TODO: Omitir el flete en las ventas
   const howAreWeDoing = (formattedData, SalesGoalBySeller = {}, collectionGoalBySeller = {}) => {
     const sellerData = []
     const totalSales = []
@@ -276,7 +276,10 @@ function App () {
         if (!uniqueDocs[currentSeller]) {
           uniqueDocs[currentSeller] = {}
         }
-        uniqueDocs[currentSeller][row.Doc] = true
+        // uniqueDocs[currentSeller][row.Doc] = true
+        if (row.Doc.startsWith('FV')) {
+          uniqueDocs[currentSeller][row.Doc] = true
+        }
       }
     })
     setData(totalSales)
