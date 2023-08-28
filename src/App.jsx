@@ -251,17 +251,17 @@ function App () {
             sellerData.push({ vendedor: currentSeller, productosVendidos: [sellerSales] })
             totalSales.push(
               {
-                vendedor: currentSeller,
-                totalVenta: total,
                 cantidadFacturas: billCounter,
-                promedioVentas: averageSale,
-                metaVentas: goalSale,
-                porcentajeVentas: percetageSale,
-                ventasPendiente: pendingSalesTarget,
-                totalRecaudo: 0,
                 metaRecaudoSinIva: collectionTarget,
+                metaVentas: goalSale,
                 porcentajeRecaudo: percentageCollected,
-                recaudoPendiente: pendingCollectionTarget
+                porcentajeVentas: percetageSale,
+                promedioVentas: averageSale,
+                recaudoPendiente: pendingCollectionTarget,
+                totalRecaudo: 0,
+                totalVenta: total,
+                vendedor: currentSeller,
+                ventasPendiente: pendingSalesTarget
               }
             )
           }
@@ -285,6 +285,26 @@ function App () {
         }
       }
     })
+    const motorlightsObject = {
+      cantidadFacturas: 0,
+      metaRecaudoSinIva: 0,
+      metaVentas: 0,
+      porcentajeRecaudo: 0,
+      porcentajeVentas: 0,
+      promedioVentas: 0,
+      recaudoPendiente: 0,
+      totalRecaudo: 0,
+      totalVenta: total,
+      vendedor: 'MOTORLIGHTS S.A.S',
+      ventasPendiente: 0
+    }
+
+    if (totalSales.length) {
+      const found = totalSales.find(el => el.vendedor === 'MOTORLIGHTS S.A.S')
+      if (found === undefined) {
+        totalSales.push(motorlightsObject)
+      }
+    }
     setData(totalSales)
   }
 
