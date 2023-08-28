@@ -225,6 +225,20 @@ function App () {
 
     let splitChain
 
+    const motorlightsObject = {
+      cantidadFacturas: 0,
+      metaRecaudoSinIva: collectionGoalBySeller['MOTORLIGHTS S.A.S'],
+      metaVentas: SalesGoalBySeller['MOTORLIGHTS S.A.S'],
+      porcentajeRecaudo: 0,
+      porcentajeVentas: 0,
+      promedioVentas: 0,
+      recaudoPendiente: 0,
+      totalRecaudo: 0,
+      totalVenta: 0,
+      vendedor: 'MOTORLIGHTS S.A.S',
+      ventasPendiente: 0
+    }
+
     formattedData.forEach(row => {
       if (row['CódigoInventario'] !== undefined) {
         splitChain = row['CódigoInventario'].split(' ')
@@ -285,20 +299,6 @@ function App () {
         }
       }
     })
-    const motorlightsObject = {
-      cantidadFacturas: 0,
-      metaRecaudoSinIva: 0,
-      metaVentas: 0,
-      porcentajeRecaudo: 0,
-      porcentajeVentas: 0,
-      promedioVentas: 0,
-      recaudoPendiente: 0,
-      totalRecaudo: 0,
-      totalVenta: total,
-      vendedor: 'MOTORLIGHTS S.A.S',
-      ventasPendiente: 0
-    }
-
     if (totalSales.length) {
       const found = totalSales.find(el => el.vendedor === 'MOTORLIGHTS S.A.S')
       if (found === undefined) {
