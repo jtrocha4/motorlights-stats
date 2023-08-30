@@ -1,6 +1,7 @@
 import React from 'react'
 import XLSX from 'xlsx-js-style'
 import _ from 'lodash'
+import excelStyles from '../styles/excelStyles'
 
 const ButtonDownloadExcel = ({ title, data, currencyFormat, toFixed, dateExcel }) => {
   const handleDownload = () => {
@@ -11,219 +12,12 @@ const ButtonDownloadExcel = ({ title, data, currencyFormat, toFixed, dateExcel }
     const wsData = []
     const wsDataPercentaje = []
 
-    const headerBlackStyle = {
-      fill: { fgColor: { rgb: '000000' } },
-      alignment: { horizontal: 'left' },
-      font: {
-        bold: true,
-        color: { rgb: 'FFFFFF' }
-      },
-      border: {
-        right: {
-          style: 'thin',
-          color: '000000'
-        },
-        left: {
-          style: 'thin',
-          color: '000000'
-        },
-        top: {
-          style: 'thin',
-          color: '000000'
-        },
-        bottom: {
-          style: 'thin',
-          color: '000000'
-        }
-      }
-    }
-    const headerYellowStyle = {
-      fill: { fgColor: { rgb: 'FFFF00' } },
-      alignment: { horizontal: 'left' },
-      font: {
-        bold: true
-      },
-      border: {
-        right: {
-          style: 'thin',
-          color: '000000'
-        },
-        left: {
-          style: 'thin',
-          color: '000000'
-        },
-        top: {
-          style: 'thin',
-          color: '000000'
-        },
-        bottom: {
-          style: 'thin',
-          color: '000000'
-        }
-      }
-    }
-    const headerWhiteStyle = {
-      fill: { fgColor: { rgb: 'FFFFFF' } },
-      alignment: { horizontal: 'left' },
-      font: {
-        bold: true
-      },
-      border: {
-        right: {
-          style: 'thin',
-          color: '000000'
-        },
-        left: {
-          style: 'thin',
-          color: '000000'
-        },
-        top: {
-          style: 'thin',
-          color: '000000'
-        },
-        bottom: {
-          style: 'thin',
-          color: '000000'
-        }
-      }
-    }
-    const headerGrayStyle = {
-      fill: { fgColor: { rgb: 'BFBFBF' } },
-      alignment: { horizontal: 'left' },
-      font: {
-        bold: true
-      },
-      border: {
-        right: {
-          style: 'thin',
-          color: '000000'
-        },
-        left: {
-          style: 'thin',
-          color: '000000'
-        },
-        top: {
-          style: 'thin',
-          color: '000000'
-        },
-        bottom: {
-          style: 'thin',
-          color: '000000'
-        }
-      }
-    }
-
-    const yellowStyle = {
-      fill: { fgColor: { rgb: 'FFFF00' } },
-      alignment: { horizontal: 'right' },
-      font: {
-        bold: true
-      },
-      border: {
-        right: {
-          style: 'thin',
-          color: '000000'
-        },
-        left: {
-          style: 'thin',
-          color: '000000'
-        },
-        top: {
-          style: 'thin',
-          color: '000000'
-        },
-        bottom: {
-          style: 'thin',
-          color: '000000'
-        }
-      }
-    }
-
-    const grayStyle = {
-      fill: { fgColor: { rgb: 'BFBFBF' } },
-      alignment: { horizontal: 'right' },
-      font: {
-        bold: true
-      },
-      border: {
-        right: {
-          style: 'thin',
-          color: '000000'
-        },
-        left: {
-          style: 'thin',
-          color: '000000'
-        },
-        top: {
-          style: 'thin',
-          color: '000000'
-        },
-        bottom: {
-          style: 'thin',
-          color: '000000'
-        }
-      }
-    }
-
-    const whiteStyle = {
-      fill: { fgColor: { rgb: 'FFFFFF' } },
-      alignment: { horizontal: 'right' },
-      font: {
-        bold: true
-      },
-      border: {
-        right: {
-          style: 'thin',
-          color: '000000'
-        },
-        left: {
-          style: 'thin',
-          color: '000000'
-        },
-        top: {
-          style: 'thin',
-          color: '000000'
-        },
-        bottom: {
-          style: 'thin',
-          color: '000000'
-        }
-      }
-    }
-
-    const blackStyle = {
-      fill: { fgColor: { rgb: '000000' } },
-      alignment: { horizontal: 'right' },
-      font: {
-        bold: true,
-        color: { rgb: 'FFFFFF' }
-      },
-      border: {
-        right: {
-          style: 'thin',
-          color: '000000'
-        },
-        left: {
-          style: 'thin',
-          color: '000000'
-        },
-        top: {
-          style: 'thin',
-          color: '000000'
-        },
-        bottom: {
-          style: 'thin',
-          color: '000000'
-        }
-      }
-    }
-
     dates.forEach(date => {
       const cell = { v: '', s: {} }
       let row = [date]
       if (date === 'Mes') {
         cell.v = `${dateExcel.mes}`
-        cell.s = headerYellowStyle
+        cell.s = excelStyles.headerYellowStyle
       }
       row = [cell]
       wsData.push(row)
@@ -234,20 +28,20 @@ const ButtonDownloadExcel = ({ title, data, currencyFormat, toFixed, dateExcel }
       let row = [header]
       if (header === 'Vendedor') {
         cell.v = `${dateExcel.PorcentajeDiasTranscurridos}%`
-        cell.s = yellowStyle
+        cell.s = excelStyles.yellowStyle
       }
       row = [cell]
       data.forEach(element => {
         const cell = { v: '', s: {} }
         if (header === 'Vendedor') {
           cell.v = element.vendedor
-          cell.s = headerBlackStyle
+          cell.s = excelStyles.headerBlackStyle
         }
         row.push(cell)
       })
       wsData.push([...row, {
         v: 'Total',
-        s: headerBlackStyle
+        s: excelStyles.headerBlackStyle
       }])
     })
 
@@ -256,90 +50,90 @@ const ButtonDownloadExcel = ({ title, data, currencyFormat, toFixed, dateExcel }
       const cellValue = { v: '', s: {} }
       if (value === 'Total ventas') {
         cellValue.v = value
-        cellValue.s = headerYellowStyle
+        cellValue.s = excelStyles.headerYellowStyle
       }
       if (value === 'Cantidad de facturas') {
         cellValue.v = value
-        cellValue.s = headerGrayStyle
+        cellValue.s = excelStyles.headerGrayStyle
       }
       if (value === 'Promedio de ventas') {
         cellValue.v = value
-        cellValue.s = headerGrayStyle
+        cellValue.s = excelStyles.headerGrayStyle
       }
       if (value === 'Meta ventas') {
         cellValue.v = value
-        cellValue.s = headerBlackStyle
+        cellValue.s = excelStyles.headerBlackStyle
       }
       if (value === '% Venta') {
         cellValue.v = value
-        cellValue.s = headerWhiteStyle
+        cellValue.s = excelStyles.headerWhiteStyle
       }
       if (value === '% Venta') {
         cellValue.v = value
-        cellValue.s = headerWhiteStyle
+        cellValue.s = excelStyles.headerWhiteStyle
       }
       if (value === 'Ventas pendiente') {
         cellValue.v = value
-        cellValue.s = headerWhiteStyle
+        cellValue.s = excelStyles.headerWhiteStyle
       }
       if (value === 'Total recaudo') {
         cellValue.v = value
-        cellValue.s = headerYellowStyle
+        cellValue.s = excelStyles.headerYellowStyle
       }
       if (value === 'Meta recaudo sin iva') {
         cellValue.v = value
-        cellValue.s = headerBlackStyle
+        cellValue.s = excelStyles.headerBlackStyle
       }
       if (value === '% Recaudo') {
         cellValue.v = value
-        cellValue.s = headerWhiteStyle
+        cellValue.s = excelStyles.headerWhiteStyle
       }
       if (value === 'Recaudo pendiente') {
         cellValue.v = value
-        cellValue.s = headerWhiteStyle
+        cellValue.s = excelStyles.headerWhiteStyle
       }
       row = [cellValue]
       data.forEach(item => {
         const cell = { v: '', s: {} }
         if (value === 'Total ventas') {
           cell.v = currencyFormat(item.totalVenta)
-          cell.s = yellowStyle
+          cell.s = excelStyles.yellowStyle
         }
         if (value === 'Cantidad de facturas') {
           cell.v = item.cantidadFacturas
-          cell.s = grayStyle
+          cell.s = excelStyles.grayStyle
         }
         if (value === 'Promedio de ventas') {
           cell.v = currencyFormat(item.promedioVentas)
-          cell.s = grayStyle
+          cell.s = excelStyles.grayStyle
         }
         if (value === 'Meta ventas') {
           cell.v = currencyFormat(item.metaVentas)
-          cell.s = blackStyle
+          cell.s = excelStyles.blackStyle
         }
         if (value === '% Venta') {
           cell.v = item.porcentajeVentas
-          cell.s = whiteStyle
+          cell.s = excelStyles.whiteStyle
         }
         if (value === 'Ventas pendiente') {
           cell.v = currencyFormat(item.ventasPendiente)
-          cell.s = whiteStyle
+          cell.s = excelStyles.whiteStyle
         }
         if (value === 'Total recaudo') {
           cell.v = currencyFormat(item.totalRecaudo)
-          cell.s = yellowStyle
+          cell.s = excelStyles.yellowStyle
         }
         if (value === 'Meta recaudo sin iva') {
           cell.v = currencyFormat(item.metaRecaudoSinIva)
-          cell.s = blackStyle
+          cell.s = excelStyles.blackStyle
         }
         if (value === '% Recaudo') {
           cell.v = item.porcentajeRecaudo
-          cell.s = whiteStyle
+          cell.s = excelStyles.whiteStyle
         }
         if (value === 'Recaudo pendiente') {
           cell.v = currencyFormat(item.recaudoPendiente)
-          cell.s = whiteStyle
+          cell.s = excelStyles.whiteStyle
         }
         row.push(cell)
       })
@@ -377,52 +171,52 @@ const ButtonDownloadExcel = ({ title, data, currencyFormat, toFixed, dateExcel }
       const cell = { v: '', s: {} }
       if (value === 'Total ventas') {
         cell.v = currencyFormat(total.ventas)
-        cell.s = yellowStyle
+        cell.s = excelStyles.yellowStyle
         row.push(cell)
       }
       if (value === 'Cantidad de facturas') {
         cell.v = total.facturas
-        cell.s = grayStyle
+        cell.s = excelStyles.grayStyle
         row.push(cell)
       }
       if (value === 'Promedio de ventas') {
         cell.v = currencyFormat(total.promedioVentas)
-        cell.s = grayStyle
+        cell.s = excelStyles.grayStyle
         row.push(cell)
       }
       if (value === 'Meta ventas') {
         cell.v = currencyFormat(total.metaVentas)
-        cell.s = blackStyle
+        cell.s = excelStyles.blackStyle
         row.push(cell)
       }
       if (value === '% Venta') {
         cell.v = total.porcentajeVentas
-        cell.s = whiteStyle
+        cell.s = excelStyles.whiteStyle
         row.push(cell)
       }
       if (value === 'Ventas pendiente') {
         cell.v = currencyFormat(total.ventasPendiente)
-        cell.s = whiteStyle
+        cell.s = excelStyles.whiteStyle
         row.push(cell)
       }
       if (value === 'Total recaudo') {
         cell.v = currencyFormat(total.recaudo)
-        cell.s = yellowStyle
+        cell.s = excelStyles.yellowStyle
         row.push(cell)
       }
       if (value === 'Meta recaudo sin iva') {
         cell.v = currencyFormat(total.metaRecaudoSinIva)
-        cell.s = blackStyle
+        cell.s = excelStyles.blackStyle
         row.push(cell)
       }
       if (value === '% Recaudo') {
         cell.v = total.porcentajeRecaudo
-        cell.s = whiteStyle
+        cell.s = excelStyles.whiteStyle
         row.push(cell)
       }
       if (value === 'Recaudo pendiente') {
         cell.v = currencyFormat(total.recaudoPendiente)
-        cell.s = whiteStyle
+        cell.s = excelStyles.whiteStyle
         row.push(cell)
       }
       wsData.push(row)
@@ -434,27 +228,27 @@ const ButtonDownloadExcel = ({ title, data, currencyFormat, toFixed, dateExcel }
     const PercentageDaysElapsed = []
     workDays.push({
       v: 'Dias habiles del mes',
-      s: headerWhiteStyle
+      s: excelStyles.headerWhiteStyle
     }, {
       v: dateExcel.diasLaborales,
-      s: whiteStyle
+      s: excelStyles.whiteStyle
     }, {
       v: `Desde ${dateExcel.fechaInicial} hasta ${dateExcel.fechaFinal}`,
-      s: whiteStyle
+      s: excelStyles.whiteStyle
     })
     daysElapsed.push({
       v: 'Dias transcurridos',
-      s: headerWhiteStyle
+      s: excelStyles.headerWhiteStyle
     }, {
       v: dateExcel.diasTranscurridos,
-      s: whiteStyle
+      s: excelStyles.whiteStyle
     })
     PercentageDaysElapsed.push({
       v: '',
       s: {}
     }, {
       v: `${dateExcel.PorcentajeDiasTranscurridos}%`,
-      s: grayStyle
+      s: excelStyles.grayStyle
     })
     wsDateData.push(workDays)
     wsDateData.push(daysElapsed)
@@ -462,19 +256,19 @@ const ButtonDownloadExcel = ({ title, data, currencyFormat, toFixed, dateExcel }
 
     const newDataHeaderStyle = {}
     newDataHeaderStyle.v = 'Avance del Mes'
-    newDataHeaderStyle.s = headerYellowStyle
+    newDataHeaderStyle.s = excelStyles.headerYellowStyle
 
     const newWsData = []
     newWsData.push(newDataHeaderStyle)
     newWsData.push({
       v: `${dateExcel.PorcentajeDiasTranscurridos}%`,
-      s: yellowStyle
+      s: excelStyles.yellowStyle
     })
 
     wsDataPercentaje.push(newWsData)
     const wsSellerData = _.cloneDeep(wsData[1])
     wsSellerData[0].v = 'Vendedores'
-    wsSellerData[0].s = headerBlackStyle
+    wsSellerData[0].s = excelStyles.headerBlackStyle
     wsDataPercentaje.push(wsSellerData)
     wsDataPercentaje.push(wsData[6])
     wsDataPercentaje.push(wsData[10])
