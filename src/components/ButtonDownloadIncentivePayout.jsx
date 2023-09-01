@@ -2,117 +2,150 @@ import React from 'react'
 import XLSX from 'xlsx-js-style'
 import excelStyles from '../styles/excelStyles'
 
-const ButtonDownloadIncentivePayout = ({ title, data }) => {
+const ButtonDownloadIncentivePayout = ({ title, data, currencyFormat, toFixed }) => {
   const handleDownload = () => {
     const values = ['Vendedor', 'Facturas', 'Meta de Venta', 'Venta (Sin flete)', '% Venta', 'Meta de Recaudo', 'Recaudo', '% Recaudo']
     const wsData = []
 
-    // console.log(excelStyles.headerYellowStyle)
-
     values.forEach(value => {
       let row = [value]
-      const cellValue = { v: '', s: {} }
+      const cellValue = { v: '' }
       if (value === 'Vendedor') {
         cellValue.v = value
-        cellValue.s = excelStyles.headerYellowStyle
-      }
-      if (value === 'Facturas') {
-        cellValue.v = value
-        cellValue.s = excelStyles.headerYellowStyle
-      }
-      if (value === 'Meta de Venta') {
-        cellValue.v = value
-        cellValue.s = excelStyles.headerYellowStyle
-      }
-      if (value === 'Venta (Sin flete)') {
-        cellValue.v = value
-        cellValue.s = excelStyles.headerYellowStyle
-      }
-      if (value === '% Venta') {
-        cellValue.v = value
-        cellValue.s = excelStyles.headerYellowStyle
-      }
-      if (value === 'Meta de Recaudo') {
-        cellValue.v = value
-        cellValue.s = excelStyles.headerYellowStyle
-      }
-      if (value === 'Recaudo') {
-        cellValue.v = value
-        cellValue.s = excelStyles.headerYellowStyle
-      }
-      if (value === '% Recaudo') {
-        cellValue.v = value
-        cellValue.s = excelStyles.headerYellowStyle
       }
       row = [cellValue]
       data.forEach(element => {
-        const cell = { v: '', s: {} }
+        const cellElement = { v: '' }
         if (value === 'Vendedor') {
-          cell.v = element.vendedor
+          cellElement.v = element.vendedor
         }
-        if (value === 'Facturas') {
-          cell.v = element.cantidadFacturas
-        }
-        if (value === 'Meta de Venta') {
-          cell.v = element.metaVentas
-        }
-        if (value === 'Venta (Sin flete)') {
-          cell.v = element.totalVenta
-        }
-        if (value === '% Venta') {
-          cell.v = element.porcentajeVentas
-        }
-        if (value === 'Meta de Recaudo') {
-          cell.v = element.metaRecaudoSinIva
-        }
-        if (value === 'Recaudo') {
-          cell.v = element.totalRecaudo
-        }
-        if (value === '% Recaudo') {
-          cell.v = element.porcentajeRecaudo
-        }
-        row.push(cell)
+        row.push(cellElement)
       })
       wsData.push(row)
     })
 
-    // const newData = wsData.map(element => {
-    //   const data = []
-    //   const headers = element[0]
-    //   const values = element[1]
-    //   data.push(headers, values)
-    //   return data
-    // })
+    const sellerData = {}
+    const sellerWsData = {}
+    const sellerName = wsData[0].map(el => el.v)
 
-    const newArray = wsData.map(element => [
-      element.map(el => [
-        el
-      ])
-    ])
+    sellerName.forEach(seller => {
+      if (seller !== 'Vendedor') {
+        sellerData[seller] = []
+        sellerWsData[seller] = []
+      }
+    })
 
-    // console.log(newArray)
+    for (const key in data) {
+      const seller = data[key].vendedor
+      if (sellerData[seller]) {
+        sellerData[seller].push(data[key])
+      }
+    }
 
-    const newData2 = newArray.map(el =>
-      el[0][0]
-    )
-
-    console.log(newData2)
+    for (const key in data) {
+      const seller = data[key].vendedor
+      if (sellerWsData[seller]) {
+        values.forEach(value => {
+          let row = [value]
+          const cellValue = { v: '', s: {} }
+          if (value === 'Vendedor') {
+            cellValue.v = value
+            cellValue.s = excelStyles.headerYellowStyle
+          }
+          if (value === 'Facturas') {
+            cellValue.v = value
+            cellValue.s = excelStyles.headerYellowStyle
+          }
+          if (value === 'Meta de Venta') {
+            cellValue.v = value
+            cellValue.s = excelStyles.headerYellowStyle
+          }
+          if (value === 'Venta (Sin flete)') {
+            cellValue.v = value
+            cellValue.s = excelStyles.headerYellowStyle
+          }
+          if (value === '% Venta') {
+            cellValue.v = value
+            cellValue.s = excelStyles.headerYellowStyle
+          }
+          if (value === 'Meta de Recaudo') {
+            cellValue.v = value
+            cellValue.s = excelStyles.headerYellowStyle
+          }
+          if (value === 'Recaudo') {
+            cellValue.v = value
+            cellValue.s = excelStyles.headerYellowStyle
+          }
+          if (value === '% Recaudo') {
+            cellValue.v = value
+            cellValue.s = excelStyles.headerYellowStyle
+          }
+          row = [cellValue]
+          sellerData[seller].forEach(element => {
+            const cellElement = { v: '', s: {} }
+            if (value === 'Vendedor') {
+              cellElement.v = element.vendedor
+              cellElement.s = excelStyles.whiteStyle
+            }
+            if (value === 'Facturas') {
+              cellElement.v = element.cantidadFacturas
+              cellElement.s = excelStyles.whiteStyle
+            }
+            if (value === 'Meta de Venta') {
+              cellElement.v = currencyFormat(element.metaVentas)
+              cellElement.s = excelStyles.whiteStyle
+            }
+            if (value === 'Venta (Sin flete)') {
+              cellElement.v = currencyFormat(element.totalVenta)
+              cellElement.s = excelStyles.whiteStyle
+            }
+            if (value === '% Venta') {
+              cellElement.v = element.porcentajeVentas
+              cellElement.s = excelStyles.grayStyle
+            }
+            if (value === 'Meta de Recaudo') {
+              cellElement.v = currencyFormat(element.metaRecaudoSinIva)
+              cellElement.s = excelStyles.whiteStyle
+            }
+            if (value === 'Recaudo') {
+              cellElement.v = currencyFormat(element.totalRecaudo)
+              cellElement.s = excelStyles.whiteStyle
+            }
+            if (value === '% Recaudo') {
+              cellElement.v = element.porcentajeRecaudo
+              cellElement.s = excelStyles.grayStyle
+            }
+            row.push(cellElement)
+          })
+          sellerWsData[seller].push(row)
+        })
+      }
+    }
 
     const workbook = XLSX.utils.book_new()
-    const sheetName = []
 
-    const ws = XLSX.utils.aoa_to_sheet(newData2, { origin: 'A2' })
-
-    const name = data.map(element => {
+    data.map(element => {
       const sellerName = []
       const splitChain = element.vendedor.split(' ')
-      sellerName.push(`INCENTIVO ${splitChain[0]} ${splitChain[1]}`)
-      sheetName.push(`INCENTIVO ${splitChain[0]} ${splitChain[1]}`)
+      sellerName.push(`${splitChain[0]} ${splitChain[1]} ${splitChain[2]} ${splitChain[3]}`)
       return sellerName
     })
 
-    name.forEach(sellerName => {
-      XLSX.utils.book_append_sheet(workbook, ws, sellerName[0])
+    const columnWidths = wsData.reduce((acc, row) => {
+      row.forEach((cell, colIndex) => {
+        const cellValue = cell.v ? cell.toString() : ''
+        acc[colIndex] = Math.max(acc[colIndex] || 0, cellValue.length)
+      })
+      return acc
+    }, [])
+
+    sellerName.forEach(seller => {
+      if (sellerWsData[seller]) {
+        const sheetName = seller.split(' ')
+        const ws = XLSX.utils.aoa_to_sheet(sellerWsData[seller], { origin: 'A2' })
+        ws['!cols'] = columnWidths.map(width => ({ wch: width + 1 }))
+        XLSX.utils.book_append_sheet(workbook, ws, `INCENTIVO ${sheetName[0]} ${sheetName[1]}`)
+      }
     })
 
     const excelFileName = 'Liq Incentivos.xlsx'

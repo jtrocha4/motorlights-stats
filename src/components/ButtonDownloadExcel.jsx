@@ -288,7 +288,7 @@ const ButtonDownloadExcel = ({ title, data, currencyFormat, toFixed, dateExcel }
       return acc
     }, [])
 
-    ws['!cols'] = columnWidths.map(width => ({ wch: width }))
+    ws['!cols'] = columnWidths.map(width => ({ wch: width + 4 }))
 
     XLSX.utils.book_append_sheet(workbook, ws, sheetName)
 

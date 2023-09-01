@@ -228,8 +228,8 @@ function App () {
 
     const motorlightsObject = {
       cantidadFacturas: 0,
-      metaRecaudoSinIva: collectionGoalBySeller['MOTORLIGHTS S.A.S'],
-      metaVentas: SalesGoalBySeller['MOTORLIGHTS S.A.S'],
+      metaRecaudoSinIva: (collectionGoalBySeller['MOTORLIGHTS S.A.S'] === undefined) ? (0) : (collectionGoalBySeller['MOTORLIGHTS S.A.S']),
+      metaVentas: (SalesGoalBySeller['MOTORLIGHTS S.A.S'] === undefined) ? (0) : (SalesGoalBySeller['MOTORLIGHTS S.A.S']),
       porcentajeRecaudo: 0,
       porcentajeVentas: 0,
       promedioVentas: 0,
@@ -468,7 +468,7 @@ function App () {
             <h2>Como vamos</h2>
             <div className='d-grid gap-2 d-md-flex justify-content-md-end mb-2'>
               <ButtonDownloadExcel title='Descargar informe' data={data} currencyFormat={currencyFormat} toFixed={toFixed} dateExcel={dateExcel} />
-              <ButtonDownloadIncentivePayout title='Descargar Liq. de incentivos' data={data} />
+              <ButtonDownloadIncentivePayout title='Descargar Liq. de incentivos' data={data} currencyFormat={currencyFormat} toFixed={toFixed} />
             </div>
             <div>
               <Table headers={['Vendedor', 'Total ventas', 'Cantidad de facturas', 'Promedio de ventas', 'Meta de ventas', 'Porcentaje de ventas', 'Ventas pendiente', 'Recaudo', 'Meta recaudo sin iva', 'Porcentaje de recaudo', 'Recaudo pendiente']} data={data} currencyFormat={currencyFormat} toFixed={toFixed} />
