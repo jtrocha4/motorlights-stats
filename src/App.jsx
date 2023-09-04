@@ -226,6 +226,8 @@ function App () {
 
     let splitChain
 
+    let commission
+
     const motorlightsObject = {
       cantidadFacturas: 0,
       metaRecaudoSinIva: (collectionGoalBySeller['MOTORLIGHTS S.A.S'] === undefined) ? (0) : (collectionGoalBySeller['MOTORLIGHTS S.A.S']),
@@ -237,7 +239,8 @@ function App () {
       totalRecaudo: 0,
       totalVenta: 0,
       vendedor: 'MOTORLIGHTS S.A.S',
-      ventasPendiente: 0
+      ventasPendiente: 0,
+      comisionTotal: 0
     }
 
     formattedData.forEach(row => {
@@ -263,6 +266,13 @@ function App () {
             percetageSale = toFixed(percetageSale, 1)
             pendingSalesTarget = toFixed(pendingSalesTarget, 2)
 
+            // Comisiones
+            let salesBonus
+            if (percetageSale >= 100) {
+              salesBonus = total * 0.01
+              commission = salesBonus
+            }
+
             sellerData.push({ vendedor: currentSeller, productosVendidos: [sellerSales] })
             totalSales.push(
               {
@@ -276,17 +286,21 @@ function App () {
                 totalRecaudo: 0,
                 totalVenta: total,
                 vendedor: currentSeller,
-                ventasPendiente: pendingSalesTarget
+                ventasPendiente: pendingSalesTarget,
+                comisionVenta: commission,
+                comisionTotal: 0
               }
             )
           }
           currentSeller = null
           sellerSales = null
           total = 0
+          commission = 0
         } else {
           currentSeller = row.Vendedor
           sellerSales = []
           total = 0
+          commission = 0
         }
       }
       if (currentSeller && sellerSales && !splitChain[1].startsWith('Flete')) {
@@ -323,6 +337,9 @@ function App () {
     let percentageCollected
     let pendingCollectionTarget
 
+    let commission
+    let resultBonus
+
     formattedDataCollectionFile.forEach(row => {
       if (row.RC in debitForDocNum) {
         row.Recaudo = debitForDocNum[row.RC]
@@ -337,6 +354,18 @@ function App () {
 
             percentageCollected = toFixed(percentageCollected, 1)
 
+            // Comisiones
+            let collectionBonus
+            const firstBonus = totalWithoutVAT * 0.02
+            const secondBonus = 0
+
+            if (percentageCollected >= 100) {
+              collectionBonus = totalWithoutVAT * 0.01
+              commission = collectionBonus
+            }
+
+            resultBonus = firstBonus + secondBonus
+
             sellerData[currentSeller] = sellerSales
             sellerCollection.push({
               vendedor: currentSeller,
@@ -344,16 +373,23 @@ function App () {
               totalRecaudo: totalWithoutVAT,
               metaRecaudoSinIva: 0,
               porcentajeRecaudo: percentageCollected,
-              recaudoPendiente: pendingCollectionTarget
+              recaudoPendiente: pendingCollectionTarget,
+              comisionRecaudo: commission,
+              comisionTotal: 0,
+              bonoResultado: resultBonus
             })
           }
           currentSeller = null
           sellerSales = null
           total = 0
+          commission = 0
+          resultBonus = 0
         } else {
           currentSeller = row.Vendedor
           sellerSales = []
           total = 0
+          commission = 0
+          resultBonus = 0
         }
       }
       if (currentSeller && sellerSales) {
@@ -415,18 +451,30 @@ function App () {
 
   const joinData = (dataCollection = [], dataCost = []) => {
     const collectionBySeller = []
-    dataCollection.forEach(({ vendedor, totalRecaudo, metaRecaudoSinIva, porcentajeRecaudo, recaudoPendiente }) => {
-      collectionBySeller.push({ vendedor, totalRecaudo, metaRecaudoSinIva, porcentajeRecaudo, recaudoPendiente })
+    dataCollection.forEach(({ vendedor, totalRecaudo, metaRecaudoSinIva, porcentajeRecaudo, recaudoPendiente, comisionRecaudo, bonoResultado }) => {
+      collectionBySeller.push({ vendedor, totalRecaudo, metaRecaudoSinIva, porcentajeRecaudo, recaudoPendiente, comisionRecaudo, bonoResultado })
     })
     dataCost.forEach(el => {
       const combinedData = collectionBySeller.find(element => element.vendedor === el.vendedor)
+      let secondBonus = 0
+
+      if (el.porcentajeVentas > 100 && el.porcentajeRecaudo > 100) {
+        secondBonus = el.totalRecaudo * 0.012
+      }
+
       if (combinedData) {
         el.totalRecaudo = combinedData.totalRecaudo
         el.porcentajeRecaudo = combinedData.porcentajeRecaudo
         el.recaudoPendiente = combinedData.recaudoPendiente
+        el.bonoResultado = (secondBonus + combinedData.bonoResultado) || 0
+        el.comisionTotal = (el.comisionVenta + combinedData.comisionRecaudo + el.bonoResultado) || 0
+        // el.bonoResultado = combinedData.bonoResultado || 0
+        el.comisionRecaudo = combinedData.comisionRecaudo
       }
     })
   }
+
+  // console.log(data)
 
   joinData(dataCollection, data)
 
