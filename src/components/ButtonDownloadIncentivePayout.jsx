@@ -2,10 +2,12 @@ import React from 'react'
 import XLSX from 'xlsx-js-style'
 import excelStyles from '../styles/excelStyles'
 
-const ButtonDownloadIncentivePayout = ({ title, data, currencyFormat, toFixed }) => {
+const ButtonDownloadIncentivePayout = ({ title, data, currencyFormat, dataCollection }) => {
   const handleDownload = () => {
     const values = ['Vendedor', 'Facturas', 'Meta de Venta', 'Venta (Sin flete)', '% Venta', 'Meta de Recaudo', 'Recaudo', '% Recaudo']
     const wsData = []
+
+    const salesDetailHeader = ['Fecha', 'Nombre de cliente', 'Ventas']
 
     values.forEach(value => {
       let row = [value]
@@ -28,19 +30,53 @@ const ButtonDownloadIncentivePayout = ({ title, data, currencyFormat, toFixed })
     const sellerWsData = {}
     const sellerName = wsData[0].map(el => el.v)
 
+    const sellerDataSale = {}
+    const sellerWsDataSale = {}
+
+    const sellerDataCollection = {}
+    const sellerWsDataCollection = {}
+
     sellerName.forEach(seller => {
       if (seller !== 'Vendedor') {
         sellerData[seller] = []
         sellerWsData[seller] = []
+
+        sellerDataSale[seller] = []
+        sellerWsDataSale[seller] = []
+
+        sellerDataCollection[seller] = []
+        sellerWsDataCollection[seller] = []
       }
     })
 
     for (const key in data) {
       const seller = data[key].vendedor
+      const sale = data[key].venta
       if (sellerData[seller]) {
         sellerData[seller].push(data[key])
       }
+      if (sellerDataSale[seller]) {
+        if (sale !== undefined) {
+          sale.forEach(element => {
+            sellerDataSale[seller].push(element)
+          })
+        }
+      }
     }
+
+    console.log({ sellerDataSale })
+
+    for (const key in dataCollection) {
+      const seller = dataCollection[key].vendedor
+      const collection = dataCollection[key].recaudo
+      if (sellerDataCollection[seller]) {
+        collection.forEach(element => {
+          sellerDataCollection[seller].push(element)
+        })
+      }
+    }
+
+    console.log({ sellerDataCollection })
 
     for (const key in data) {
       const seller = data[key].vendedor
@@ -100,7 +136,7 @@ const ButtonDownloadIncentivePayout = ({ title, data, currencyFormat, toFixed })
               cellElement.s = excelStyles.whiteStyle
             }
             if (value === '% Venta') {
-              cellElement.v = element.porcentajeVentas
+              cellElement.v = `${element.porcentajeVentas}%`
               cellElement.s = excelStyles.grayStyle
             }
             if (value === 'Meta de Recaudo') {
@@ -112,7 +148,7 @@ const ButtonDownloadIncentivePayout = ({ title, data, currencyFormat, toFixed })
               cellElement.s = excelStyles.whiteStyle
             }
             if (value === '% Recaudo') {
-              cellElement.v = element.porcentajeRecaudo
+              cellElement.v = `${element.porcentajeRecaudo}%`
               cellElement.s = excelStyles.grayStyle
             }
             row.push(cellElement)
@@ -122,7 +158,93 @@ const ButtonDownloadIncentivePayout = ({ title, data, currencyFormat, toFixed })
       }
     }
 
-    const wsIncentiveData = []
+    // Tabla Detalle Ventas
+    for (const key in data) {
+      const seller = data[key].vendedor
+      if (sellerWsDataSale[seller]) {
+        salesDetailHeader.forEach(header => {
+          let row = [header]
+          const cellHeader = { v: '', s: {} }
+          if (header === 'Fecha') {
+            cellHeader.v = header
+            cellHeader.s = excelStyles.headerYellowStyle
+          }
+          if (header === 'Nombre de cliente') {
+            cellHeader.v = header
+            cellHeader.s = excelStyles.headerYellowStyle
+          }
+          if (header === 'Ventas') {
+            cellHeader.v = header
+            cellHeader.s = excelStyles.headerYellowStyle
+          }
+          row = [cellHeader]
+
+          sellerDataSale[seller].forEach(element => {
+            const cell = { v: '', s: {} }
+            if (header === 'Fecha') {
+              cell.v = element.Fecha
+              cell.s = excelStyles.whiteStyle
+            }
+            if (header === 'Nombre de cliente') {
+              cell.v = element.Nombres
+              cell.s = excelStyles.whiteStyle
+            }
+            if (header === 'Ventas') {
+              const iva = 1.19
+              const saleWithoutVat = element.Ventas
+              cell.v = currencyFormat(saleWithoutVat)
+              cell.s = excelStyles.whiteStyle
+            }
+            row.push(cell)
+          })
+          sellerWsDataSale[seller].push(row)
+        })
+      }
+    }
+
+    // for (const key in dataCollection) {
+    //   const seller = dataCollection[key].vendedor
+    //   if (sellerWsDataCollection[seller]) {
+    //     salesDetailHeader.forEach(header => {
+    //       let row = [header]
+    //       const cellHeader = { v: '', s: {} }
+    //       if (header === 'Fecha') {
+    //         cellHeader.v = header
+    //         cellHeader.s = excelStyles.headerYellowStyle
+    //       }
+    //       if (header === 'Nombre de cliente') {
+    //         cellHeader.v = header
+    //         cellHeader.s = excelStyles.headerYellowStyle
+    //       }
+    //       if (header === 'Ventas') {
+    //         cellHeader.v = header
+    //         cellHeader.s = excelStyles.headerYellowStyle
+    //       }
+    //       row = [cellHeader]
+    //       sellerDataCollection[seller].forEach(element => {
+    //         const cell = { v: '', s: {} }
+    //         if (header === 'Fecha') {
+    //           cell.v = element.Fecha_
+    //           cell.s = excelStyles.whiteStyle
+    //         }
+    //         if (header === 'Nombre de cliente') {
+    //           cell.v = element.Cliente
+    //           cell.s = excelStyles.whiteStyle
+    //         }
+    //         if (header === 'Ventas') {
+    //           const iva = 1.19
+    //           const saleWithoutVat = element.Recaudo / iva
+    //           cell.v = currencyFormat(saleWithoutVat)
+    //           cell.s = excelStyles.whiteStyle
+    //         }
+    //         row.push(cell)
+    //       })
+    //       sellerWsDataCollection[seller].push(row)
+    //     })
+    //   }
+    // }
+
+    const incentiveWsData = []
     const salesBonus = ['Venta']
     const collectionBonus = ['Recaudo']
     const resultBonus = ['Bono resultados']
@@ -131,7 +253,7 @@ const ButtonDownloadIncentivePayout = ({ title, data, currencyFormat, toFixed })
     sellerName.forEach(seller => {
       if (seller !== 'Vendedor') {
         sellerData[seller] = []
-        wsIncentiveData[seller] = []
+        incentiveWsData[seller] = []
       }
     })
 
@@ -144,7 +266,7 @@ const ButtonDownloadIncentivePayout = ({ title, data, currencyFormat, toFixed })
 
     for (const key in data) {
       const seller = data[key].vendedor
-      if (wsIncentiveData[seller]) {
+      if (incentiveWsData[seller]) {
         salesBonus.forEach(bonus => {
           let row = [bonus]
           const cellValue = { v: '', s: {} }
@@ -162,13 +284,13 @@ const ButtonDownloadIncentivePayout = ({ title, data, currencyFormat, toFixed })
             row.push({ v: '>=100%', s: excelStyles.whiteStyle }, { v: '1% Venta', s: excelStyles.whiteStyle })
             row.push(cellElement)
           })
-          wsIncentiveData[seller].push(row)
+          incentiveWsData[seller].push(row)
         })
       }
     }
     for (const key in data) {
       const seller = data[key].vendedor
-      if (wsIncentiveData[seller]) {
+      if (incentiveWsData[seller]) {
         collectionBonus.forEach(bonus => {
           let row = [bonus]
           const cellValue = { v: '', s: {} }
@@ -186,14 +308,14 @@ const ButtonDownloadIncentivePayout = ({ title, data, currencyFormat, toFixed })
             row.push({ v: '>=100%', s: excelStyles.whiteStyle }, { v: '1% Recaudo', s: excelStyles.whiteStyle })
             row.push(cellElement)
           })
-          wsIncentiveData[seller].push(row)
-          wsIncentiveData[seller].push([{ v: '', s: {} }])
+          incentiveWsData[seller].push(row)
+          incentiveWsData[seller].push([{ v: '', s: {} }])
         })
       }
     }
     for (const key in data) {
       const seller = data[key].vendedor
-      if (wsIncentiveData[seller]) {
+      if (incentiveWsData[seller]) {
         commission.forEach(bonus => {
           let row = [bonus]
           const cellValue = { v: '', s: {} }
@@ -211,8 +333,8 @@ const ButtonDownloadIncentivePayout = ({ title, data, currencyFormat, toFixed })
             row.push({ v: '', s: excelStyles.whiteStyle }, { v: '', s: excelStyles.whiteStyle })
             row.push(cellElement)
           })
-          wsIncentiveData[seller].push(row)
-          wsIncentiveData[seller].push([{ v: '', s: {} }])
+          incentiveWsData[seller].push(row)
+          incentiveWsData[seller].push([{ v: '', s: {} }])
         })
       }
     }
@@ -242,7 +364,7 @@ const ButtonDownloadIncentivePayout = ({ title, data, currencyFormat, toFixed })
       })
       const fifthBonus = 0
 
-      if (wsIncentiveData[seller]) {
+      if (incentiveWsData[seller]) {
         resultBonus.forEach(bonus => {
           let row = [bonus]
           const cellValue = { v: '', s: {} }
@@ -260,8 +382,8 @@ const ButtonDownloadIncentivePayout = ({ title, data, currencyFormat, toFixed })
             row.push({ v: '', s: excelStyles.whiteStyle }, { v: '', s: excelStyles.whiteStyle })
             row.push(cellElement)
           })
-          wsIncentiveData[seller].push(row)
-          wsIncentiveData[seller].push(
+          incentiveWsData[seller].push(row)
+          incentiveWsData[seller].push(
             [
               { v: '', s: {} }
             ],
@@ -295,7 +417,7 @@ const ButtonDownloadIncentivePayout = ({ title, data, currencyFormat, toFixed })
               { v: `${currencyFormat(fifthBonus)}`, s: excelStyles.whiteStyle }
             ]
           )
-          wsIncentiveData[seller].push([{ v: '', s: {} }])
+          incentiveWsData[seller].push([{ v: '', s: {} }])
         })
       }
     }
@@ -317,11 +439,15 @@ const ButtonDownloadIncentivePayout = ({ title, data, currencyFormat, toFixed })
       return acc
     }, [])
 
+    console.log(sellerWsDataSale)
+
     sellerName.forEach(seller => {
       if (sellerWsData[seller]) {
         const sheetName = seller.split(' ')
         const ws = XLSX.utils.aoa_to_sheet(sellerWsData[seller])
-        XLSX.utils.sheet_add_aoa(ws, wsIncentiveData[seller], { origin: 'D2' })
+        XLSX.utils.sheet_add_aoa(ws, incentiveWsData[seller], { origin: 'D2' })
+
+        XLSX.utils.sheet_add_aoa(ws, sellerWsDataSale[seller], { origin: 'A18' })
 
         ws['!cols'] = columnWidths.map(width => ({ wch: width + 1 }))
         XLSX.utils.book_append_sheet(workbook, ws, `INCENTIVO ${sheetName[0]} ${sheetName[1]}`)

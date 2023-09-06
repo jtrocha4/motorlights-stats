@@ -207,7 +207,7 @@ function App () {
   const formattedDataAuxiliaryBookFile = formatDataAuxiliaryBookFile(headersAuxiliaryBookFile, rowsAuxiliaryBookFile)
 
   const howAreWeDoing = (formattedData, SalesGoalBySeller = {}, collectionGoalBySeller = {}) => {
-    const sellerData = []
+    const saleData = {}
     const totalSales = []
     let currentSeller
     let sellerSales
@@ -273,10 +273,12 @@ function App () {
               commission = salesBonus
             }
 
-            sellerData.push({ vendedor: currentSeller, productosVendidos: [sellerSales] })
+            saleData[currentSeller] = sellerSales
             totalSales.push(
               {
                 cantidadFacturas: billCounter,
+                comisionTotal: 0,
+                comisionVenta: commission,
                 metaRecaudoSinIva: collectionTarget,
                 metaVentas: goalSale,
                 porcentajeRecaudo: percentageCollected,
@@ -287,8 +289,7 @@ function App () {
                 totalVenta: total,
                 vendedor: currentSeller,
                 ventasPendiente: pendingSalesTarget,
-                comisionVenta: commission,
-                comisionTotal: 0
+                venta: saleData[currentSeller]
               }
             )
           }
@@ -324,7 +325,7 @@ function App () {
   }
 
   const howAreWeDoingCollection = async (formattedDataCollectionFile, debitForDocNum, collectionGoalBySeller = {}) => {
-    const sellerData = {}
+    const collectionData = {}
     const sellerCollection = []
     let currentSeller
     let sellerSales
@@ -366,10 +367,10 @@ function App () {
 
             resultBonus = firstBonus + secondBonus
 
-            sellerData[currentSeller] = sellerSales
+            collectionData[currentSeller] = sellerSales
             sellerCollection.push({
               vendedor: currentSeller,
-              recaudo: sellerData[currentSeller],
+              recaudo: collectionData[currentSeller],
               totalRecaudo: totalWithoutVAT,
               metaRecaudoSinIva: 0,
               porcentajeRecaudo: percentageCollected,
@@ -474,8 +475,6 @@ function App () {
     })
   }
 
-  // console.log(data)
-
   joinData(dataCollection, data)
 
   const [SalesGoalBySeller, setSalesGoalBySeller] = useState({})
@@ -516,7 +515,7 @@ function App () {
             <h2>Como vamos</h2>
             <div className='d-grid gap-2 d-md-flex justify-content-md-end mb-2'>
               <ButtonDownloadExcel title='Descargar informe' data={data} currencyFormat={currencyFormat} toFixed={toFixed} dateExcel={dateExcel} />
-              <ButtonDownloadIncentivePayout title='Descargar Liq. de incentivos' data={data} currencyFormat={currencyFormat} toFixed={toFixed} />
+              <ButtonDownloadIncentivePayout title='Descargar Liq. de incentivos' data={data} currencyFormat={currencyFormat} dataCollection={dataCollection} />
             </div>
             <div>
               <Table headers={['Vendedor', 'Total ventas', 'Cantidad de facturas', 'Promedio de ventas', 'Meta de ventas', 'Porcentaje de ventas', 'Ventas pendiente', 'Recaudo', 'Meta recaudo sin iva', 'Porcentaje de recaudo', 'Recaudo pendiente']} data={data} currencyFormat={currencyFormat} toFixed={toFixed} />

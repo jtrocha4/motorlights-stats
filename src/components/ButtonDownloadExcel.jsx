@@ -112,7 +112,7 @@ const ButtonDownloadExcel = ({ title, data, currencyFormat, toFixed, dateExcel }
           cell.s = excelStyles.blackStyle
         }
         if (value === '% Venta') {
-          cell.v = item.porcentajeVentas
+          cell.v = `${item.porcentajeVentas}%`
           cell.s = excelStyles.whiteStyle
         }
         if (value === 'Ventas pendiente') {
@@ -128,7 +128,7 @@ const ButtonDownloadExcel = ({ title, data, currencyFormat, toFixed, dateExcel }
           cell.s = excelStyles.blackStyle
         }
         if (value === '% Recaudo') {
-          cell.v = item.porcentajeRecaudo
+          cell.v = `${item.porcentajeRecaudo}%`
           cell.s = excelStyles.whiteStyle
         }
         if (value === 'Recaudo pendiente') {
@@ -190,7 +190,7 @@ const ButtonDownloadExcel = ({ title, data, currencyFormat, toFixed, dateExcel }
         row.push(cell)
       }
       if (value === '% Venta') {
-        cell.v = total.porcentajeVentas
+        cell.v = `${total.porcentajeVentas}%`
         cell.s = excelStyles.whiteStyle
         row.push(cell)
       }
@@ -210,7 +210,7 @@ const ButtonDownloadExcel = ({ title, data, currencyFormat, toFixed, dateExcel }
         row.push(cell)
       }
       if (value === '% Recaudo') {
-        cell.v = total.porcentajeRecaudo
+        cell.v = `${total.porcentajeRecaudo}%`
         cell.s = excelStyles.whiteStyle
         row.push(cell)
       }
