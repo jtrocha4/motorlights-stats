@@ -7,7 +7,7 @@ const ButtonDownloadIncentivePayout = ({ title, data, currencyFormat, dataCollec
     const values = ['Vendedor', 'Facturas', 'Meta de Venta', 'Venta (Sin flete)', '% Venta', 'Meta de Recaudo', 'Recaudo', '% Recaudo']
     const wsData = []
 
-    const salesDetailHeader = ['Fecha', 'Nombre de cliente', 'Ventas']
+    const salesDetailHeader = []
 
     values.forEach(value => {
       let row = [value]
@@ -155,46 +155,24 @@ const ButtonDownloadIncentivePayout = ({ title, data, currencyFormat, dataCollec
     }
 
     // Tabla Detalle Ventas
+    const salesDetailHeaderTable = []
+    salesDetailHeaderTable.push([
+      { v: 'Detalle Ventas', s: excelStyles.headerYellowStyle }
+    ])
+    salesDetailHeader.push([
+      { v: 'Fecha', s: excelStyles.headerYellowStyle },
+      { v: 'Nombre Cliente', s: excelStyles.headerYellowStyle },
+      { v: 'Ventas', s: excelStyles.headerYellowStyle }
+    ])
+
     for (const key in data) {
       const seller = data[key].vendedor
       if (sellerWsDataSale[seller]) {
-        salesDetailHeader.forEach(header => {
-          let row = [header]
-          const cellHeader = { v: '', s: {} }
-          if (header === 'Fecha') {
-            cellHeader.v = header
-            cellHeader.s = excelStyles.headerYellowStyle
-          }
-          if (header === 'Nombre de cliente') {
-            cellHeader.v = header
-            cellHeader.s = excelStyles.headerYellowStyle
-          }
-          if (header === 'Ventas') {
-            cellHeader.v = header
-            cellHeader.s = excelStyles.headerYellowStyle
-          }
-          row = [cellHeader]
-
-          sellerDataSale[seller].forEach(element => {
-            const cell = { v: '', s: {} }
-            if (header === 'Fecha') {
-              cell.v = formatDate(element.Fecha)
-              cell.s = excelStyles.whiteStyle
-            }
-            if (header === 'Nombre de cliente') {
-              cell.v = element.Nombres
-              cell.s = excelStyles.whiteStyle
-            }
-            if (header === 'Ventas') {
-              // const iva = 1.19
-              const saleWithoutVat = element.Ventas
-              cell.v = currencyFormat(saleWithoutVat)
-              cell.s = excelStyles.whiteStyle
-            }
-            row.push(cell)
-          })
-          sellerWsDataSale[seller].push(row)
-        })
+        sellerWsDataSale[seller] = sellerDataSale[seller].map(element => ([
+          { v: formatDate(element.Fecha), s: excelStyles.whiteStyle },
+          { v: element.Nombres, s: excelStyles.whiteStyle },
+          { v: currencyFormat(element.Ventas), s: excelStyles.whiteStyle }
+        ]))
       }
     }
 
@@ -441,12 +419,16 @@ const ButtonDownloadIncentivePayout = ({ title, data, currencyFormat, dataCollec
         const ws = XLSX.utils.aoa_to_sheet(sellerWsData[seller])
         XLSX.utils.sheet_add_aoa(ws, incentiveWsData[seller], { origin: 'D2' })
 
-        XLSX.utils.sheet_add_aoa(ws, sellerWsDataSale[seller], { origin: 'A18' })
+        XLSX.utils.sheet_add_aoa(ws, salesDetailHeaderTable, { origin: 'A17' })
+        XLSX.utils.sheet_add_aoa(ws, salesDetailHeader, { origin: 'A18' })
+        XLSX.utils.sheet_add_aoa(ws, sellerWsDataSale[seller], { origin: 'A19' })
 
-        ws['!cols'] = columnWidths.map(width => ({ wch: width + 1 }))
+        ws['!cols'] = columnWidths.map(width => ({ wch: width + 5 }))
         XLSX.utils.book_append_sheet(workbook, ws, `INCENTIVO ${sheetName[0]} ${sheetName[1]}`)
       }
     })
+
+    console.log(salesDetailHeader)
 
     const excelFileName = 'Liq Incentivos.xlsx'
     XLSX.writeFile(workbook, excelFileName)
