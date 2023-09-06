@@ -192,6 +192,20 @@ function App () {
     }
   }
 
+  const formatDate = (excelDate) => {
+    const excelBaseDate = new Date(1900, 0, 1)
+    const days = excelDate - 1
+    const formattedDate = new Date(excelBaseDate.getTime() + days * 24 * 60 * 60 * 1000)
+
+    const month = formattedDate.getMonth() + 1
+    const day = formattedDate.getDate()
+    const year = formattedDate.getFullYear()
+
+    const formattedDateString = `${month.toString().padStart(2, '0')}/${day.toString().padStart(2, '0')}/${year}`
+
+    return formattedDateString
+  }
+
   const dateRow = excelData[2]
 
   const headersCostFile = excelData[3]
@@ -515,7 +529,7 @@ function App () {
             <h2>Como vamos</h2>
             <div className='d-grid gap-2 d-md-flex justify-content-md-end mb-2'>
               <ButtonDownloadExcel title='Descargar informe' data={data} currencyFormat={currencyFormat} toFixed={toFixed} dateExcel={dateExcel} />
-              <ButtonDownloadIncentivePayout title='Descargar Liq. de incentivos' data={data} currencyFormat={currencyFormat} dataCollection={dataCollection} />
+              <ButtonDownloadIncentivePayout title='Descargar Liq. de incentivos' data={data} currencyFormat={currencyFormat} dataCollection={dataCollection} formatDate={formatDate} />
             </div>
             <div>
               <Table headers={['Vendedor', 'Total ventas', 'Cantidad de facturas', 'Promedio de ventas', 'Meta de ventas', 'Porcentaje de ventas', 'Ventas pendiente', 'Recaudo', 'Meta recaudo sin iva', 'Porcentaje de recaudo', 'Recaudo pendiente']} data={data} currencyFormat={currencyFormat} toFixed={toFixed} />

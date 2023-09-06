@@ -2,7 +2,7 @@ import React from 'react'
 import XLSX from 'xlsx-js-style'
 import excelStyles from '../styles/excelStyles'
 
-const ButtonDownloadIncentivePayout = ({ title, data, currencyFormat, dataCollection }) => {
+const ButtonDownloadIncentivePayout = ({ title, data, currencyFormat, dataCollection, formatDate }) => {
   const handleDownload = () => {
     const values = ['Vendedor', 'Facturas', 'Meta de Venta', 'Venta (Sin flete)', '% Venta', 'Meta de Recaudo', 'Recaudo', '% Recaudo']
     const wsData = []
@@ -64,8 +64,6 @@ const ButtonDownloadIncentivePayout = ({ title, data, currencyFormat, dataCollec
       }
     }
 
-    console.log({ sellerDataSale })
-
     for (const key in dataCollection) {
       const seller = dataCollection[key].vendedor
       const collection = dataCollection[key].recaudo
@@ -75,8 +73,6 @@ const ButtonDownloadIncentivePayout = ({ title, data, currencyFormat, dataCollec
         })
       }
     }
-
-    console.log({ sellerDataCollection })
 
     for (const key in data) {
       const seller = data[key].vendedor
@@ -182,7 +178,7 @@ const ButtonDownloadIncentivePayout = ({ title, data, currencyFormat, dataCollec
           sellerDataSale[seller].forEach(element => {
             const cell = { v: '', s: {} }
             if (header === 'Fecha') {
-              cell.v = element.Fecha
+              cell.v = formatDate(element.Fecha)
               cell.s = excelStyles.whiteStyle
             }
             if (header === 'Nombre de cliente') {
@@ -190,7 +186,7 @@ const ButtonDownloadIncentivePayout = ({ title, data, currencyFormat, dataCollec
               cell.s = excelStyles.whiteStyle
             }
             if (header === 'Ventas') {
-              const iva = 1.19
+              // const iva = 1.19
               const saleWithoutVat = element.Ventas
               cell.v = currencyFormat(saleWithoutVat)
               cell.s = excelStyles.whiteStyle
@@ -438,8 +434,6 @@ const ButtonDownloadIncentivePayout = ({ title, data, currencyFormat, dataCollec
       })
       return acc
     }, [])
-
-    console.log(sellerWsDataSale)
 
     sellerName.forEach(seller => {
       if (sellerWsData[seller]) {
