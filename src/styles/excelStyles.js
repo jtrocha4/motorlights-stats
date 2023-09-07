@@ -128,6 +128,31 @@ const excelStyles = {
       }
     }
   },
+  headerBlueStyle: {
+    fill: { fgColor: { rgb: 'B9D5FF' } },
+    alignment: { horizontal: 'left' },
+    font: {
+      bold: true
+    },
+    border: {
+      right: {
+        style: 'thin',
+        color: '000000'
+      },
+      left: {
+        style: 'thin',
+        color: '000000'
+      },
+      top: {
+        style: 'thin',
+        color: '000000'
+      },
+      bottom: {
+        style: 'thin',
+        color: '000000'
+      }
+    }
+  },
 
   yellowStyle: {
     fill: { fgColor: { rgb: 'FFFF00' } },

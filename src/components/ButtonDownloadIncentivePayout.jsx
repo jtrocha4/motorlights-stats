@@ -167,12 +167,47 @@ const ButtonDownloadIncentivePayout = ({ title, data, currencyFormat, dataCollec
 
     for (const key in data) {
       const seller = data[key].vendedor
+      const customer = []
+      const totalSalesPerCustomer = []
+      const dateSalesPerCustomer = []
+
       if (sellerWsDataSale[seller]) {
-        sellerWsDataSale[seller] = sellerDataSale[seller].map(element => ([
-          { v: formatDate(element.Fecha), s: excelStyles.whiteStyle },
-          { v: element.Nombres, s: excelStyles.whiteStyle },
-          { v: currencyFormat(element.Ventas), s: excelStyles.whiteStyle }
-        ]))
+        customer[seller] = []
+        sellerDataSale[seller].forEach(element => {
+          if (totalSalesPerCustomer[element.Nombres]) {
+            totalSalesPerCustomer[element.Nombres] += element.Ventas
+            dateSalesPerCustomer[element.Nombres] = element.Fecha
+          } else {
+            totalSalesPerCustomer[element.Nombres] = element.Ventas
+            dateSalesPerCustomer[element.Nombres] = element.Fecha
+          }
+        })
+      }
+
+      for (const key in customer) {
+        const seller = key
+        let total = 0
+        for (const key in totalSalesPerCustomer) {
+          for (const keyDateSalesPerCustomer in dateSalesPerCustomer) {
+            if (sellerWsDataSale[seller]) {
+              if (keyDateSalesPerCustomer === key) {
+                const date = dateSalesPerCustomer[keyDateSalesPerCustomer]
+                const totalSales = totalSalesPerCustomer[key]
+                total += totalSales
+                sellerWsDataSale[seller].push([
+                  { v: formatDate(date), s: excelStyles.whiteStyle },
+                  { v: key, s: excelStyles.whiteStyle },
+                  { v: currencyFormat(totalSales), s: excelStyles.yellowStyle }
+                ])
+              }
+            }
+          }
+        }
+        sellerWsDataSale[seller].push([
+          { v: 'Total', s: excelStyles.headerBlackStyle },
+          { v: '', s: excelStyles.headerBlackStyle },
+          { v: currencyFormat(total), s: excelStyles.blackStyle }
+        ])
       }
     }
 
@@ -427,8 +462,6 @@ const ButtonDownloadIncentivePayout = ({ title, data, currencyFormat, dataCollec
         XLSX.utils.book_append_sheet(workbook, ws, `INCENTIVO ${sheetName[0]} ${sheetName[1]}`)
       }
     })
-
-    console.log(salesDetailHeader)
 
     const excelFileName = 'Liq Incentivos.xlsx'
     XLSX.writeFile(workbook, excelFileName)
