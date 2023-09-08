@@ -260,6 +260,32 @@ const excelStyles = {
   },
 
   whiteStyle: {
+    numFmt: '0',
+    fill: { fgColor: { rgb: 'FFFFFF' } },
+    alignment: { horizontal: 'right' },
+    font: {
+      bold: true
+    },
+    border: {
+      right: {
+        style: 'thin',
+        color: '000000'
+      },
+      left: {
+        style: 'thin',
+        color: '000000'
+      },
+      top: {
+        style: 'thin',
+        color: '000000'
+      },
+      bottom: {
+        style: 'thin',
+        color: '000000'
+      }
+    }
+  },
+  percentageWhiteStyle: {
     numFmt: '0.0%',
     fill: { fgColor: { rgb: 'FFFFFF' } },
     alignment: { horizontal: 'right' },

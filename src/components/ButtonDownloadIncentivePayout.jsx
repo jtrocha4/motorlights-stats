@@ -2,7 +2,12 @@ import React from 'react'
 import XLSX from 'xlsx-js-style'
 import excelStyles from '../styles/excelStyles'
 
-const ButtonDownloadIncentivePayout = ({ title, data, currencyFormat, dataCollection, formatDate }) => {
+const ButtonDownloadIncentivePayout = ({ title, data, currencyFormat, dataCollection, formatDate, toFixed }) => {
+  const excelPercentageFormat = (percentageValue) => {
+    const percentage = parseFloat(percentageValue / 100)
+    return percentage
+  }
+
   const handleDownload = () => {
     const values = ['Vendedor', 'Facturas', 'Meta de Venta', 'Venta (Sin flete)', '% Venta', 'Meta de Recaudo', 'Recaudo', '% Recaudo']
     const wsData = []
@@ -112,13 +117,14 @@ const ButtonDownloadIncentivePayout = ({ title, data, currencyFormat, dataCollec
           }
           row = [cellValue]
           sellerData[seller].forEach(element => {
-            const cellElement = { v: '', s: {} }
+            const cellElement = { v: '', s: {}, t: '' }
             if (value === 'Vendedor') {
               cellElement.v = element.vendedor
               cellElement.s = excelStyles.whiteStyle
             }
             if (value === 'Facturas') {
               cellElement.v = element.cantidadFacturas
+              cellElement.t = 'n'
               cellElement.s = excelStyles.whiteStyle
             }
             if (value === 'Meta de Venta') {
@@ -130,8 +136,9 @@ const ButtonDownloadIncentivePayout = ({ title, data, currencyFormat, dataCollec
               cellElement.s = excelStyles.whiteStyle
             }
             if (value === '% Venta') {
-              cellElement.v = `${element.porcentajeVentas}%`
-              cellElement.s = excelStyles.grayStyle
+              cellElement.v = excelPercentageFormat(element.porcentajeVentas)
+              cellElement.t = 'n'
+              cellElement.s = excelStyles.percentageGrayStyle
             }
             if (value === 'Meta de Recaudo') {
               cellElement.v = currencyFormat(element.metaRecaudoSinIva)
@@ -142,8 +149,9 @@ const ButtonDownloadIncentivePayout = ({ title, data, currencyFormat, dataCollec
               cellElement.s = excelStyles.whiteStyle
             }
             if (value === '% Recaudo') {
-              cellElement.v = `${element.porcentajeRecaudo}%`
-              cellElement.s = excelStyles.grayStyle
+              cellElement.v = excelPercentageFormat(element.porcentajeRecaudo)
+              cellElement.t = 'n'
+              cellElement.s = excelStyles.percentageGrayStyle
             }
             row.push(cellElement)
           })
@@ -221,8 +229,6 @@ const ButtonDownloadIncentivePayout = ({ title, data, currencyFormat, dataCollec
       { v: 'Cliente', s: excelStyles.headerYellowStyle },
       { v: 'Valor', s: excelStyles.headerYellowStyle }
     ])
-
-    console.log(sellerDataCollection)
 
     for (const key in dataCollection) {
       const seller = dataCollection[key].vendedor

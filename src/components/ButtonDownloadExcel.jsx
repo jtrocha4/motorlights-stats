@@ -4,12 +4,9 @@ import _ from 'lodash'
 import excelStyles from '../styles/excelStyles'
 
 const ButtonDownloadExcel = ({ title, data, currencyFormat, toFixed, dateExcel }) => {
-  const commaPercentageFormat = (percentageValue) => {
-    let percentage = parseFloat(percentageValue / 100)
-    percentage = toFixed(percentage, 3)
-    const percentageString = percentage.toString()
-    const percentajeCommaFormat = percentageString.replace(/\./g, ',')
-    return percentajeCommaFormat
+  const excelPercentageFormat = (percentageValue) => {
+    const percentage = parseFloat(percentageValue / 100)
+    return percentage
   }
 
   const handleDownload = () => {
@@ -21,24 +18,30 @@ const ButtonDownloadExcel = ({ title, data, currencyFormat, toFixed, dateExcel }
     const wsDataPercentaje = []
 
     dates.forEach(date => {
-      const cell = { v: '', s: {} }
+      const cell = { v: '', s: {}, t: '' }
       let row = [date]
       if (date === 'Mes') {
         cell.v = `${dateExcel.mes}`
         cell.s = excelStyles.headerYellowStyle
       }
       row = [cell]
-      wsData.push(row)
+      wsData.push([...row,
+        {
+          v: excelPercentageFormat(dateExcel.porcentajeDiasTranscurridos),
+          t: 'n',
+          s: excelStyles.percentageYellowStyle
+        }
+      ])
     })
 
     headers.forEach(header => {
-      const cell = { v: '', s: {} }
+      const cellHeader = { v: '', s: {} }
       let row = [header]
       if (header === 'Vendedor') {
-        cell.v = commaPercentageFormat(dateExcel.porcentajeDiasTranscurridos)
-        cell.s = excelStyles.percentageYellowStyle
+        cellHeader.v = 'Vendedor'
+        cellHeader.s = excelStyles.headerBlackStyle
       }
-      row = [cell]
+      row = [cellHeader]
       data.forEach(element => {
         const splitName = element.vendedor.split(' ')
         const firstAndMiddleName = `${splitName[0]} ${splitName[1]}`
@@ -104,13 +107,14 @@ const ButtonDownloadExcel = ({ title, data, currencyFormat, toFixed, dateExcel }
       }
       row = [cellValue]
       data.forEach(item => {
-        const cell = { v: '', s: {} }
+        const cell = { v: '', s: {}, t: '' }
         if (value === 'Total ventas') {
           cell.v = currencyFormat(item.totalVenta)
           cell.s = excelStyles.yellowStyle
         }
         if (value === 'Cantidad de facturas') {
           cell.v = item.cantidadFacturas
+          cell.t = 'n'
           cell.s = excelStyles.grayStyle
         }
         if (value === 'Promedio de ventas') {
@@ -122,8 +126,9 @@ const ButtonDownloadExcel = ({ title, data, currencyFormat, toFixed, dateExcel }
           cell.s = excelStyles.blackStyle
         }
         if (value === '% Venta') {
-          cell.v = commaPercentageFormat(item.porcentajeVentas)
-          cell.s = excelStyles.whiteStyle
+          cell.v = excelPercentageFormat(item.porcentajeVentas)
+          cell.t = 'n'
+          cell.s = excelStyles.percentageWhiteStyle
         }
         if (value === 'Ventas pendiente') {
           cell.v = currencyFormat(item.ventasPendiente)
@@ -138,8 +143,9 @@ const ButtonDownloadExcel = ({ title, data, currencyFormat, toFixed, dateExcel }
           cell.s = excelStyles.blackStyle
         }
         if (value === '% Recaudo') {
-          cell.v = commaPercentageFormat(item.porcentajeRecaudo)
-          cell.s = excelStyles.whiteStyle
+          cell.v = excelPercentageFormat(item.porcentajeRecaudo)
+          cell.t = 'n'
+          cell.s = excelStyles.percentageWhiteStyle
         }
         if (value === 'Recaudo pendiente') {
           cell.v = currencyFormat(item.recaudoPendiente)
@@ -178,7 +184,7 @@ const ButtonDownloadExcel = ({ title, data, currencyFormat, toFixed, dateExcel }
       total.porcentajeVentas = toFixed(total.porcentajeVentas, 1)
       total.porcentajeRecaudo = toFixed(total.porcentajeRecaudo, 1)
 
-      const cell = { v: '', s: {} }
+      const cell = { v: '', s: {}, t: '' }
       if (value === 'Total ventas') {
         cell.v = currencyFormat(total.ventas)
         cell.s = excelStyles.yellowStyle
@@ -186,6 +192,7 @@ const ButtonDownloadExcel = ({ title, data, currencyFormat, toFixed, dateExcel }
       }
       if (value === 'Cantidad de facturas') {
         cell.v = total.facturas
+        cell.t = 'n'
         cell.s = excelStyles.grayStyle
         row.push(cell)
       }
@@ -200,8 +207,9 @@ const ButtonDownloadExcel = ({ title, data, currencyFormat, toFixed, dateExcel }
         row.push(cell)
       }
       if (value === '% Venta') {
-        cell.v = commaPercentageFormat(total.porcentajeVentas)
-        cell.s = excelStyles.whiteStyle
+        cell.v = excelPercentageFormat(total.porcentajeVentas)
+        cell.t = 'n'
+        cell.s = excelStyles.percentageWhiteStyle
         row.push(cell)
       }
       if (value === 'Ventas pendiente') {
@@ -220,8 +228,9 @@ const ButtonDownloadExcel = ({ title, data, currencyFormat, toFixed, dateExcel }
         row.push(cell)
       }
       if (value === '% Recaudo') {
-        cell.v = commaPercentageFormat(total.porcentajeRecaudo)
-        cell.s = excelStyles.whiteStyle
+        cell.v = excelPercentageFormat(total.porcentajeRecaudo)
+        cell.t = 'n'
+        cell.s = excelStyles.percentageWhiteStyle
         row.push(cell)
       }
       if (value === 'Recaudo pendiente') {
@@ -232,8 +241,6 @@ const ButtonDownloadExcel = ({ title, data, currencyFormat, toFixed, dateExcel }
       wsData.push(row)
     })
 
-    console.log(wsData)
-
     const wsDateData = []
     const workDays = []
     const daysElapsed = []
@@ -243,6 +250,7 @@ const ButtonDownloadExcel = ({ title, data, currencyFormat, toFixed, dateExcel }
       s: excelStyles.headerWhiteStyle
     }, {
       v: dateExcel.diasLaborales,
+      t: 'n',
       s: excelStyles.whiteStyle
     }, {
       v: `Desde ${dateExcel.fechaInicial} hasta ${dateExcel.fechaFinal}`,
@@ -253,13 +261,15 @@ const ButtonDownloadExcel = ({ title, data, currencyFormat, toFixed, dateExcel }
       s: excelStyles.headerWhiteStyle
     }, {
       v: dateExcel.diasTranscurridos,
+      t: 'n',
       s: excelStyles.whiteStyle
     })
     PercentageDaysElapsed.push({
       v: '',
       s: {}
     }, {
-      v: commaPercentageFormat(dateExcel.porcentajeDiasTranscurridos),
+      v: excelPercentageFormat(dateExcel.porcentajeDiasTranscurridos),
+      t: 'n',
       s: excelStyles.percentageGrayStyle
     })
     wsDateData.push(workDays)
@@ -273,7 +283,8 @@ const ButtonDownloadExcel = ({ title, data, currencyFormat, toFixed, dateExcel }
     const newWsData = []
     newWsData.push(newDataHeaderStyle)
     newWsData.push({
-      v: commaPercentageFormat(dateExcel.porcentajeDiasTranscurridos),
+      v: excelPercentageFormat(dateExcel.porcentajeDiasTranscurridos),
+      t: 'n',
       s: excelStyles.percentageYellowStyle
     })
 
