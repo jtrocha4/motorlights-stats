@@ -187,7 +187,7 @@ function App () {
         mes: months[month],
         diasLaborales: workDays,
         diasTranscurridos: daysPassed,
-        PorcentajeDiasTranscurridos: percentageDaysPassed
+        porcentajeDiasTranscurridos: percentageDaysPassed
       })
     }
   }

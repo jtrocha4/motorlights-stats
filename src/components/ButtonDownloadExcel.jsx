@@ -4,6 +4,14 @@ import _ from 'lodash'
 import excelStyles from '../styles/excelStyles'
 
 const ButtonDownloadExcel = ({ title, data, currencyFormat, toFixed, dateExcel }) => {
+  const commaPercentageFormat = (percentageValue) => {
+    let percentage = parseFloat(percentageValue / 100)
+    percentage = toFixed(percentage, 3)
+    const percentageString = percentage.toString()
+    const percentajeCommaFormat = percentageString.replace(/\./g, ',')
+    return percentajeCommaFormat
+  }
+
   const handleDownload = () => {
     const dates = ['Mes']
     const headers = ['Vendedor']
@@ -27,14 +35,16 @@ const ButtonDownloadExcel = ({ title, data, currencyFormat, toFixed, dateExcel }
       const cell = { v: '', s: {} }
       let row = [header]
       if (header === 'Vendedor') {
-        cell.v = `${dateExcel.PorcentajeDiasTranscurridos}%`
-        cell.s = excelStyles.yellowStyle
+        cell.v = commaPercentageFormat(dateExcel.porcentajeDiasTranscurridos)
+        cell.s = excelStyles.percentageYellowStyle
       }
       row = [cell]
       data.forEach(element => {
+        const splitName = element.vendedor.split(' ')
+        const firstAndMiddleName = `${splitName[0]} ${splitName[1]}`
         const cell = { v: '', s: {} }
         if (header === 'Vendedor') {
-          cell.v = element.vendedor
+          cell.v = firstAndMiddleName
           cell.s = excelStyles.headerBlackStyle
         }
         row.push(cell)
@@ -112,7 +122,7 @@ const ButtonDownloadExcel = ({ title, data, currencyFormat, toFixed, dateExcel }
           cell.s = excelStyles.blackStyle
         }
         if (value === '% Venta') {
-          cell.v = `${item.porcentajeVentas}%`
+          cell.v = commaPercentageFormat(item.porcentajeVentas)
           cell.s = excelStyles.whiteStyle
         }
         if (value === 'Ventas pendiente') {
@@ -128,7 +138,7 @@ const ButtonDownloadExcel = ({ title, data, currencyFormat, toFixed, dateExcel }
           cell.s = excelStyles.blackStyle
         }
         if (value === '% Recaudo') {
-          cell.v = `${item.porcentajeRecaudo}%`
+          cell.v = commaPercentageFormat(item.porcentajeRecaudo)
           cell.s = excelStyles.whiteStyle
         }
         if (value === 'Recaudo pendiente') {
@@ -190,7 +200,7 @@ const ButtonDownloadExcel = ({ title, data, currencyFormat, toFixed, dateExcel }
         row.push(cell)
       }
       if (value === '% Venta') {
-        cell.v = `${total.porcentajeVentas}%`
+        cell.v = commaPercentageFormat(total.porcentajeVentas)
         cell.s = excelStyles.whiteStyle
         row.push(cell)
       }
@@ -210,7 +220,7 @@ const ButtonDownloadExcel = ({ title, data, currencyFormat, toFixed, dateExcel }
         row.push(cell)
       }
       if (value === '% Recaudo') {
-        cell.v = `${total.porcentajeRecaudo}%`
+        cell.v = commaPercentageFormat(total.porcentajeRecaudo)
         cell.s = excelStyles.whiteStyle
         row.push(cell)
       }
@@ -221,6 +231,8 @@ const ButtonDownloadExcel = ({ title, data, currencyFormat, toFixed, dateExcel }
       }
       wsData.push(row)
     })
+
+    console.log(wsData)
 
     const wsDateData = []
     const workDays = []
@@ -247,8 +259,8 @@ const ButtonDownloadExcel = ({ title, data, currencyFormat, toFixed, dateExcel }
       v: '',
       s: {}
     }, {
-      v: `${dateExcel.PorcentajeDiasTranscurridos}%`,
-      s: excelStyles.grayStyle
+      v: commaPercentageFormat(dateExcel.porcentajeDiasTranscurridos),
+      s: excelStyles.percentageGrayStyle
     })
     wsDateData.push(workDays)
     wsDateData.push(daysElapsed)
@@ -261,8 +273,8 @@ const ButtonDownloadExcel = ({ title, data, currencyFormat, toFixed, dateExcel }
     const newWsData = []
     newWsData.push(newDataHeaderStyle)
     newWsData.push({
-      v: `${dateExcel.PorcentajeDiasTranscurridos}%`,
-      s: excelStyles.yellowStyle
+      v: commaPercentageFormat(dateExcel.porcentajeDiasTranscurridos),
+      s: excelStyles.percentageYellowStyle
     })
 
     wsDataPercentaje.push(newWsData)
@@ -288,7 +300,7 @@ const ButtonDownloadExcel = ({ title, data, currencyFormat, toFixed, dateExcel }
       return acc
     }, [])
 
-    ws['!cols'] = columnWidths.map(width => ({ wch: width + 4 }))
+    ws['!cols'] = columnWidths.map(width => ({ wch: width + 5 }))
 
     XLSX.utils.book_append_sheet(workbook, ws, sheetName)
 

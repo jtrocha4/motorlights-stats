@@ -7,8 +7,6 @@ const ButtonDownloadIncentivePayout = ({ title, data, currencyFormat, dataCollec
     const values = ['Vendedor', 'Facturas', 'Meta de Venta', 'Venta (Sin flete)', '% Venta', 'Meta de Recaudo', 'Recaudo', '% Recaudo']
     const wsData = []
 
-    const salesDetailHeader = []
-
     values.forEach(value => {
       let row = [value]
       const cellValue = { v: '' }
@@ -159,7 +157,7 @@ const ButtonDownloadIncentivePayout = ({ title, data, currencyFormat, dataCollec
     salesDetailHeaderTable.push([
       { v: 'Detalle Ventas', s: excelStyles.headerYellowStyle }
     ])
-    salesDetailHeader.push([
+    salesDetailHeaderTable.push([
       { v: 'Fecha', s: excelStyles.headerYellowStyle },
       { v: 'Nombre Cliente', s: excelStyles.headerYellowStyle },
       { v: 'Ventas', s: excelStyles.headerYellowStyle }
@@ -211,47 +209,32 @@ const ButtonDownloadIncentivePayout = ({ title, data, currencyFormat, dataCollec
       }
     }
 
-    // for (const key in dataCollection) {
-    //   const seller = dataCollection[key].vendedor
-    //   if (sellerWsDataCollection[seller]) {
-    //     salesDetailHeader.forEach(header => {
-    //       let row = [header]
-    //       const cellHeader = { v: '', s: {} }
-    //       if (header === 'Fecha') {
-    //         cellHeader.v = header
-    //         cellHeader.s = excelStyles.headerYellowStyle
-    //       }
-    //       if (header === 'Nombre de cliente') {
-    //         cellHeader.v = header
-    //         cellHeader.s = excelStyles.headerYellowStyle
-    //       }
-    //       if (header === 'Ventas') {
-    //         cellHeader.v = header
-    //         cellHeader.s = excelStyles.headerYellowStyle
-    //       }
-    //       row = [cellHeader]
-    //       sellerDataCollection[seller].forEach(element => {
-    //         const cell = { v: '', s: {} }
-    //         if (header === 'Fecha') {
-    //           cell.v = element.Fecha_
-    //           cell.s = excelStyles.whiteStyle
-    //         }
-    //         if (header === 'Nombre de cliente') {
-    //           cell.v = element.Cliente
-    //           cell.s = excelStyles.whiteStyle
-    //         }
-    //         if (header === 'Ventas') {
-    //           const iva = 1.19
-    //           const saleWithoutVat = element.Recaudo / iva
-    //           cell.v = currencyFormat(saleWithoutVat)
-    //           cell.s = excelStyles.whiteStyle
-    //         }
-    //         row.push(cell)
-    //       })
-    //       sellerWsDataCollection[seller].push(row)
-    //     })
-    //   }
-    // }
+    // Tabla Detalle Gestion Cobranza
+    const collectionDetailHeaderTable = []
+    collectionDetailHeaderTable.push([
+      { v: '', s: {} },
+      { v: 'Detalle Archivo Gestion De Cobranza', s: excelStyles.headerYellowStyle }
+    ])
+    collectionDetailHeaderTable.push([
+      { v: 'Fecha', s: excelStyles.headerYellowStyle },
+      { v: 'Factura', s: excelStyles.headerYellowStyle },
+      { v: 'Cliente', s: excelStyles.headerYellowStyle },
+      { v: 'Valor', s: excelStyles.headerYellowStyle }
+    ])
+
+    console.log(sellerDataCollection)
+
+    for (const key in dataCollection) {
+      const seller = dataCollection[key].vendedor
+      if (sellerWsDataCollection[seller]) {
+        sellerWsDataCollection[seller] = sellerDataCollection[seller].map(element => ([
+          { v: formatDate(element.Fecha_), s: excelStyles.whiteStyle },
+          { v: element.Factura, s: excelStyles.whiteStyle },
+          { v: element.Cliente, s: excelStyles.whiteStyle },
+          { v: element.Recaudo, s: excelStyles.whiteStyle }
+        ]))
+      }
+    }
 
     const incentiveWsData = []
     const salesBonus = ['Venta']
@@ -455,8 +438,10 @@ const ButtonDownloadIncentivePayout = ({ title, data, currencyFormat, dataCollec
         XLSX.utils.sheet_add_aoa(ws, incentiveWsData[seller], { origin: 'D2' })
 
         XLSX.utils.sheet_add_aoa(ws, salesDetailHeaderTable, { origin: 'A17' })
-        XLSX.utils.sheet_add_aoa(ws, salesDetailHeader, { origin: 'A18' })
         XLSX.utils.sheet_add_aoa(ws, sellerWsDataSale[seller], { origin: 'A19' })
+
+        XLSX.utils.sheet_add_aoa(ws, collectionDetailHeaderTable, { origin: 'E17' })
+        XLSX.utils.sheet_add_aoa(ws, sellerWsDataCollection[seller], { origin: 'E19' })
 
         ws['!cols'] = columnWidths.map(width => ({ wch: width + 5 }))
         XLSX.utils.book_append_sheet(workbook, ws, `INCENTIVO ${sheetName[0]} ${sheetName[1]}`)
