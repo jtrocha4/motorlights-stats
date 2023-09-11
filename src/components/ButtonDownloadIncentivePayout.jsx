@@ -134,6 +134,7 @@ const ButtonDownloadIncentivePayout = ({ title, data, dataCollection, formatDate
             }
             if (value === 'Venta (Sin flete)') {
               cellElement.v = element.totalVenta
+              cellElement.t = 'n'
               cellElement.s = excelStyles.whiteStyleCurrencyFormat
             }
             if (value === '% Venta') {
@@ -235,13 +236,44 @@ const ButtonDownloadIncentivePayout = ({ title, data, dataCollection, formatDate
 
     for (const key in dataCollection) {
       const seller = dataCollection[key].vendedor
+      const equalRc = []
+      let total = 0
+
       if (sellerWsDataCollection[seller]) {
-        sellerWsDataCollection[seller] = sellerDataCollection[seller].map(element => ([
-          { v: formatDate(element.Fecha_), s: excelStyles.whiteStyle },
-          { v: element.Factura, s: excelStyles.whiteStyle },
-          { v: element.Cliente, s: excelStyles.whiteStyle },
-          { v: element.Recaudo, s: excelStyles.yellowStyleCurrencyFormat, t: 'n' }
-        ]))
+        sellerDataCollection[seller].forEach(element => {
+          const rc = element.RC
+          const bill = element.Factura
+          const collectionWithoutVAT = element.Recaudo / 1.19
+          if (!equalRc[rc]) {
+            equalRc[rc] = {
+              Vendedor: element.Vendedor,
+              Cliente: element.Cliente,
+              RC: element.RC,
+              Fecha_: element.Fecha_,
+              Factura: element.Factura,
+              Recaudo: collectionWithoutVAT
+            }
+          } else {
+            equalRc[rc].Factura += ' - ' + bill
+          }
+        })
+        const res = Object.values(equalRc)
+
+        res.forEach(element => {
+          total += element.Recaudo
+          sellerWsDataCollection[seller].push([
+            { v: formatDate(element.Fecha_), s: excelStyles.whiteStyle },
+            { v: element.Factura, s: excelStyles.whiteStyle },
+            { v: element.Cliente, s: excelStyles.whiteStyle },
+            { v: element.Recaudo, s: excelStyles.yellowStyleCurrencyFormat, t: 'n' }
+          ])
+        })
+        sellerWsDataCollection[seller].push([
+          { v: 'Total', s: excelStyles.headerBlackStyle },
+          { v: '', s: excelStyles.headerBlackStyle },
+          { v: '', s: excelStyles.headerBlackStyle },
+          { v: total, s: excelStyles.blackStyleCurrencyFormat, t: 'n' }
+        ])
       }
     }
 
