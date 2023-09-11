@@ -3,7 +3,7 @@ import XLSX from 'xlsx-js-style'
 import _ from 'lodash'
 import excelStyles from '../styles/excelStyles'
 
-const ButtonDownloadExcel = ({ title, data, currencyFormat, toFixed, dateExcel }) => {
+const ButtonDownloadExcel = ({ title, data, toFixed, dateExcel }) => {
   const excelPercentageFormat = (percentageValue) => {
     const percentage = parseFloat(percentageValue / 100)
     return percentage
@@ -109,8 +109,9 @@ const ButtonDownloadExcel = ({ title, data, currencyFormat, toFixed, dateExcel }
       data.forEach(item => {
         const cell = { v: '', s: {}, t: '' }
         if (value === 'Total ventas') {
-          cell.v = currencyFormat(item.totalVenta)
-          cell.s = excelStyles.yellowStyle
+          cell.v = item.totalVenta
+          cell.t = 'n'
+          cell.s = excelStyles.yellowStyleCurrencyFormat
         }
         if (value === 'Cantidad de facturas') {
           cell.v = item.cantidadFacturas
@@ -118,12 +119,14 @@ const ButtonDownloadExcel = ({ title, data, currencyFormat, toFixed, dateExcel }
           cell.s = excelStyles.grayStyle
         }
         if (value === 'Promedio de ventas') {
-          cell.v = currencyFormat(item.promedioVentas)
-          cell.s = excelStyles.grayStyle
+          cell.v = item.promedioVentas
+          cell.t = 'n'
+          cell.s = excelStyles.grayStyleCurrencyFormat
         }
         if (value === 'Meta ventas') {
-          cell.v = currencyFormat(item.metaVentas)
-          cell.s = excelStyles.blackStyle
+          cell.v = item.metaVentas
+          cell.t = 'n'
+          cell.s = excelStyles.blackStyleCurrencyFormat
         }
         if (value === '% Venta') {
           cell.v = excelPercentageFormat(item.porcentajeVentas)
@@ -131,16 +134,19 @@ const ButtonDownloadExcel = ({ title, data, currencyFormat, toFixed, dateExcel }
           cell.s = excelStyles.percentageWhiteStyle
         }
         if (value === 'Ventas pendiente') {
-          cell.v = currencyFormat(item.ventasPendiente)
-          cell.s = excelStyles.whiteStyle
+          cell.v = item.ventasPendiente
+          cell.t = 'n'
+          cell.s = excelStyles.whiteStyleCurrencyFormat
         }
         if (value === 'Total recaudo') {
-          cell.v = currencyFormat(item.totalRecaudo)
-          cell.s = excelStyles.yellowStyle
+          cell.v = item.totalRecaudo
+          cell.t = 'n'
+          cell.s = excelStyles.yellowStyleCurrencyFormat
         }
         if (value === 'Meta recaudo sin iva') {
-          cell.v = currencyFormat(item.metaRecaudoSinIva)
-          cell.s = excelStyles.blackStyle
+          cell.v = item.metaRecaudoSinIva
+          cell.t = 'n'
+          cell.s = excelStyles.blackStyleCurrencyFormat
         }
         if (value === '% Recaudo') {
           cell.v = excelPercentageFormat(item.porcentajeRecaudo)
@@ -148,8 +154,9 @@ const ButtonDownloadExcel = ({ title, data, currencyFormat, toFixed, dateExcel }
           cell.s = excelStyles.percentageWhiteStyle
         }
         if (value === 'Recaudo pendiente') {
-          cell.v = currencyFormat(item.recaudoPendiente)
-          cell.s = excelStyles.whiteStyle
+          cell.v = item.recaudoPendiente
+          cell.t = 'n'
+          cell.s = excelStyles.whiteStyleCurrencyFormat
         }
         row.push(cell)
       })
@@ -186,8 +193,9 @@ const ButtonDownloadExcel = ({ title, data, currencyFormat, toFixed, dateExcel }
 
       const cell = { v: '', s: {}, t: '' }
       if (value === 'Total ventas') {
-        cell.v = currencyFormat(total.ventas)
-        cell.s = excelStyles.yellowStyle
+        cell.v = total.ventas
+        cell.t = 'n'
+        cell.s = excelStyles.yellowStyleCurrencyFormat
         row.push(cell)
       }
       if (value === 'Cantidad de facturas') {
@@ -197,13 +205,15 @@ const ButtonDownloadExcel = ({ title, data, currencyFormat, toFixed, dateExcel }
         row.push(cell)
       }
       if (value === 'Promedio de ventas') {
-        cell.v = currencyFormat(total.promedioVentas)
-        cell.s = excelStyles.grayStyle
+        cell.v = total.promedioVentas
+        cell.t = 'n'
+        cell.s = excelStyles.grayStyleCurrencyFormat
         row.push(cell)
       }
       if (value === 'Meta ventas') {
-        cell.v = currencyFormat(total.metaVentas)
-        cell.s = excelStyles.blackStyle
+        cell.v = total.metaVentas
+        cell.t = 'n'
+        cell.s = excelStyles.blackStyleCurrencyFormat
         row.push(cell)
       }
       if (value === '% Venta') {
@@ -213,18 +223,21 @@ const ButtonDownloadExcel = ({ title, data, currencyFormat, toFixed, dateExcel }
         row.push(cell)
       }
       if (value === 'Ventas pendiente') {
-        cell.v = currencyFormat(total.ventasPendiente)
-        cell.s = excelStyles.whiteStyle
+        cell.v = total.ventasPendiente
+        cell.t = 'n'
+        cell.s = excelStyles.whiteStyleCurrencyFormat
         row.push(cell)
       }
       if (value === 'Total recaudo') {
-        cell.v = currencyFormat(total.recaudo)
-        cell.s = excelStyles.yellowStyle
+        cell.v = total.recaudo
+        cell.t = 'n'
+        cell.s = excelStyles.yellowStyleCurrencyFormat
         row.push(cell)
       }
       if (value === 'Meta recaudo sin iva') {
-        cell.v = currencyFormat(total.metaRecaudoSinIva)
-        cell.s = excelStyles.blackStyle
+        cell.v = total.metaRecaudoSinIva
+        cell.t = 'n'
+        cell.s = excelStyles.blackStyleCurrencyFormat
         row.push(cell)
       }
       if (value === '% Recaudo') {
@@ -234,8 +247,9 @@ const ButtonDownloadExcel = ({ title, data, currencyFormat, toFixed, dateExcel }
         row.push(cell)
       }
       if (value === 'Recaudo pendiente') {
-        cell.v = currencyFormat(total.recaudoPendiente)
-        cell.s = excelStyles.whiteStyle
+        cell.v = total.recaudoPendiente
+        cell.t = 'n'
+        cell.s = excelStyles.whiteStyleCurrencyFormat
         row.push(cell)
       }
       wsData.push(row)

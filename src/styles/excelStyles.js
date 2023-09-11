@@ -179,6 +179,32 @@ const excelStyles = {
       }
     }
   },
+  yellowStyleCurrencyFormat: {
+    numFmt: '"$"#,##0.00;[Red]("$"#,##0.00)',
+    fill: { fgColor: { rgb: 'FFFF00' } },
+    alignment: { horizontal: 'right' },
+    font: {
+      bold: true
+    },
+    border: {
+      right: {
+        style: 'thin',
+        color: '000000'
+      },
+      left: {
+        style: 'thin',
+        color: '000000'
+      },
+      top: {
+        style: 'thin',
+        color: '000000'
+      },
+      bottom: {
+        style: 'thin',
+        color: '000000'
+      }
+    }
+  },
   percentageYellowStyle: {
     numFmt: '0.0%',
     fill: { fgColor: { rgb: 'FFFF00' } },
@@ -206,6 +232,32 @@ const excelStyles = {
     }
   },
 
+  grayStyleCurrencyFormat: {
+    numFmt: '"$"#,##0.00;[Red]("$"#,##0.00)',
+    fill: { fgColor: { rgb: 'BFBFBF' } },
+    alignment: { horizontal: 'right' },
+    font: {
+      bold: true
+    },
+    border: {
+      right: {
+        style: 'thin',
+        color: '000000'
+      },
+      left: {
+        style: 'thin',
+        color: '000000'
+      },
+      top: {
+        style: 'thin',
+        color: '000000'
+      },
+      bottom: {
+        style: 'thin',
+        color: '000000'
+      }
+    }
+  },
   grayStyle: {
     numFmt: '0',
     fill: { fgColor: { rgb: 'BFBFBF' } },
@@ -285,6 +337,32 @@ const excelStyles = {
       }
     }
   },
+  whiteStyleCurrencyFormat: {
+    numFmt: '"$"#,##0.00;[Red]("$"#,##0.00)',
+    fill: { fgColor: { rgb: 'FFFFFF' } },
+    alignment: { horizontal: 'right' },
+    font: {
+      bold: true
+    },
+    border: {
+      right: {
+        style: 'thin',
+        color: '000000'
+      },
+      left: {
+        style: 'thin',
+        color: '000000'
+      },
+      top: {
+        style: 'thin',
+        color: '000000'
+      },
+      bottom: {
+        style: 'thin',
+        color: '000000'
+      }
+    }
+  },
   percentageWhiteStyle: {
     numFmt: '0.0%',
     fill: { fgColor: { rgb: 'FFFFFF' } },
@@ -313,6 +391,33 @@ const excelStyles = {
   },
 
   blackStyle: {
+    fill: { fgColor: { rgb: '000000' } },
+    alignment: { horizontal: 'right' },
+    font: {
+      bold: true,
+      color: { rgb: 'FFFFFF' }
+    },
+    border: {
+      right: {
+        style: 'thin',
+        color: '000000'
+      },
+      left: {
+        style: 'thin',
+        color: '000000'
+      },
+      top: {
+        style: 'thin',
+        color: '000000'
+      },
+      bottom: {
+        style: 'thin',
+        color: '000000'
+      }
+    }
+  },
+  blackStyleCurrencyFormat: {
+    numFmt: '"$"#,##0.00;[Red]("$"#,##0.00)',
     fill: { fgColor: { rgb: '000000' } },
     alignment: { horizontal: 'right' },
     font: {

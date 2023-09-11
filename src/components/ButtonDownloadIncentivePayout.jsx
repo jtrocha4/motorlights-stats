@@ -2,7 +2,7 @@ import React from 'react'
 import XLSX from 'xlsx-js-style'
 import excelStyles from '../styles/excelStyles'
 
-const ButtonDownloadIncentivePayout = ({ title, data, currencyFormat, dataCollection, formatDate, toFixed }) => {
+const ButtonDownloadIncentivePayout = ({ title, data, dataCollection, formatDate }) => {
   const excelPercentageFormat = (percentageValue) => {
     const percentage = parseFloat(percentageValue / 100)
     return percentage
@@ -128,12 +128,13 @@ const ButtonDownloadIncentivePayout = ({ title, data, currencyFormat, dataCollec
               cellElement.s = excelStyles.whiteStyle
             }
             if (value === 'Meta de Venta') {
-              cellElement.v = currencyFormat(element.metaVentas)
-              cellElement.s = excelStyles.whiteStyle
+              cellElement.v = element.metaVentas
+              cellElement.t = 'n'
+              cellElement.s = excelStyles.whiteStyleCurrencyFormat
             }
             if (value === 'Venta (Sin flete)') {
-              cellElement.v = currencyFormat(element.totalVenta)
-              cellElement.s = excelStyles.whiteStyle
+              cellElement.v = element.totalVenta
+              cellElement.s = excelStyles.whiteStyleCurrencyFormat
             }
             if (value === '% Venta') {
               cellElement.v = excelPercentageFormat(element.porcentajeVentas)
@@ -141,12 +142,14 @@ const ButtonDownloadIncentivePayout = ({ title, data, currencyFormat, dataCollec
               cellElement.s = excelStyles.percentageGrayStyle
             }
             if (value === 'Meta de Recaudo') {
-              cellElement.v = currencyFormat(element.metaRecaudoSinIva)
-              cellElement.s = excelStyles.whiteStyle
+              cellElement.v = element.metaRecaudoSinIva
+              cellElement.t = 'n'
+              cellElement.s = excelStyles.whiteStyleCurrencyFormat
             }
             if (value === 'Recaudo') {
-              cellElement.v = currencyFormat(element.totalRecaudo)
-              cellElement.s = excelStyles.whiteStyle
+              cellElement.v = element.totalRecaudo
+              cellElement.t = 'n'
+              cellElement.s = excelStyles.whiteStyleCurrencyFormat
             }
             if (value === '% Recaudo') {
               cellElement.v = excelPercentageFormat(element.porcentajeRecaudo)
@@ -203,7 +206,7 @@ const ButtonDownloadIncentivePayout = ({ title, data, currencyFormat, dataCollec
                 sellerWsDataSale[seller].push([
                   { v: formatDate(date), s: excelStyles.whiteStyle },
                   { v: key, s: excelStyles.whiteStyle },
-                  { v: currencyFormat(totalSales), s: excelStyles.yellowStyle }
+                  { v: totalSales, s: excelStyles.yellowStyleCurrencyFormat, t: 'n' }
                 ])
               }
             }
@@ -212,7 +215,7 @@ const ButtonDownloadIncentivePayout = ({ title, data, currencyFormat, dataCollec
         sellerWsDataSale[seller].push([
           { v: 'Total', s: excelStyles.headerBlackStyle },
           { v: '', s: excelStyles.headerBlackStyle },
-          { v: currencyFormat(total), s: excelStyles.blackStyle }
+          { v: total, s: excelStyles.blackStyleCurrencyFormat, t: 'n' }
         ])
       }
     }
@@ -237,7 +240,7 @@ const ButtonDownloadIncentivePayout = ({ title, data, currencyFormat, dataCollec
           { v: formatDate(element.Fecha_), s: excelStyles.whiteStyle },
           { v: element.Factura, s: excelStyles.whiteStyle },
           { v: element.Cliente, s: excelStyles.whiteStyle },
-          { v: element.Recaudo, s: excelStyles.whiteStyle }
+          { v: element.Recaudo, s: excelStyles.yellowStyleCurrencyFormat, t: 'n' }
         ]))
       }
     }
@@ -274,10 +277,11 @@ const ButtonDownloadIncentivePayout = ({ title, data, currencyFormat, dataCollec
           }
           row = [cellValue]
           sellerData[seller].forEach(element => {
-            const cellElement = { v: '', s: {} }
+            const cellElement = { v: '', s: {}, t: '' }
             if (bonus === 'Venta') {
-              cellElement.v = currencyFormat(element.comisionVenta)
-              cellElement.s = excelStyles.whiteStyle
+              cellElement.v = element.comisionVenta
+              cellElement.t = 'n'
+              cellElement.s = excelStyles.whiteStyleCurrencyFormat
             }
             row.push({ v: '>=100%', s: excelStyles.whiteStyle }, { v: '1% Venta', s: excelStyles.whiteStyle })
             row.push(cellElement)
@@ -300,8 +304,9 @@ const ButtonDownloadIncentivePayout = ({ title, data, currencyFormat, dataCollec
           sellerData[seller].forEach(element => {
             const cellElement = { v: '', s: {} }
             if (bonus === 'Recaudo') {
-              cellElement.v = currencyFormat(element.comisionRecaudo)
-              cellElement.s = excelStyles.whiteStyle
+              cellElement.v = element.comisionRecaudo
+              cellElement.t = 'n'
+              cellElement.s = excelStyles.whiteStyleCurrencyFormat
             }
             row.push({ v: '>=100%', s: excelStyles.whiteStyle }, { v: '1% Recaudo', s: excelStyles.whiteStyle })
             row.push(cellElement)
@@ -325,8 +330,9 @@ const ButtonDownloadIncentivePayout = ({ title, data, currencyFormat, dataCollec
           sellerData[seller].forEach(element => {
             const cellElement = { v: '', s: {} }
             if (bonus === 'Total comision') {
-              cellElement.v = currencyFormat(element.comisionTotal)
-              cellElement.s = excelStyles.whiteStyle
+              cellElement.v = element.comisionTotal
+              cellElement.t = 'n'
+              cellElement.s = excelStyles.whiteStyleCurrencyFormat
             }
             row.push({ v: '', s: excelStyles.whiteStyle }, { v: '', s: excelStyles.whiteStyle })
             row.push(cellElement)
@@ -365,7 +371,7 @@ const ButtonDownloadIncentivePayout = ({ title, data, currencyFormat, dataCollec
       if (incentiveWsData[seller]) {
         resultBonus.forEach(bonus => {
           let row = [bonus]
-          const cellValue = { v: '', s: {} }
+          const cellValue = { v: '', s: {}, t: '' }
           if (bonus === 'Bono resultados') {
             cellValue.v = bonus
             cellValue.s = excelStyles.headerYellowStyle
@@ -374,8 +380,9 @@ const ButtonDownloadIncentivePayout = ({ title, data, currencyFormat, dataCollec
           sellerData[seller].forEach(element => {
             const cellElement = { v: '', s: {} }
             if (bonus === 'Bono resultados') {
-              cellElement.v = currencyFormat(element.bonoResultado)
-              cellElement.s = excelStyles.whiteStyle
+              cellElement.v = element.bonoResultado
+              cellElement.t = 'n'
+              cellElement.s = excelStyles.whiteStyleCurrencyFormat
             }
             row.push({ v: '', s: excelStyles.whiteStyle }, { v: '', s: excelStyles.whiteStyle })
             row.push(cellElement)
@@ -389,30 +396,30 @@ const ButtonDownloadIncentivePayout = ({ title, data, currencyFormat, dataCollec
               { v: 'Bono Resultados', s: excelStyles.headerYellowStyle },
               { v: '2% Recaudo', s: excelStyles.whiteStyle },
               { v: 'Sin condiciones', s: excelStyles.whiteStyle },
-              { v: `${currencyFormat(firstBonus)}`, s: excelStyles.whiteStyle }
+              { v: `${firstBonus}`, s: excelStyles.whiteStyleCurrencyFormat, t: 'n' }
             ],
             [
               { v: '', s: {} },
               { v: '1,2% Recaudo', s: excelStyles.whiteStyle },
               { v: 'Recaudo > 100% + Venta >100%', s: excelStyles.whiteStyle },
-              { v: `${currencyFormat(secondBonus)}`, s: excelStyles.whiteStyle }
+              { v: `${secondBonus}`, s: excelStyles.whiteStyleCurrencyFormat, t: 'n' }
             ],
             [
               { v: '', s: {} },
               { v: '0,6% Recaudo', s: excelStyles.whiteStyle },
               { v: 'Util ml del mes >10% al 20% *para los que cumplen recaudo*', s: excelStyles.whiteStyle },
-              { v: `${currencyFormat(thirdBonus)}`, s: excelStyles.whiteStyle }
+              { v: `${thirdBonus}`, s: excelStyles.whiteStyleCurrencyFormat, t: 'n' }
             ],
             [
               { v: '', s: {} },
               { v: '0,7% Recaudo', s: excelStyles.whiteStyle },
               { v: 'Util ml del mes >20%', s: excelStyles.whiteStyle },
-              { v: `${currencyFormat(fourthBonus)}`, s: excelStyles.whiteStyle }
+              { v: `${fourthBonus}`, s: excelStyles.whiteStyleCurrencyFormat, t: 'n' }
             ],
             [{ v: '', s: {} },
               { v: '0,1% Recaudo', s: excelStyles.whiteStyle },
               { v: 'Por cada cliente nuevo', s: excelStyles.whiteStyle },
-              { v: `${currencyFormat(fifthBonus)}`, s: excelStyles.whiteStyle }
+              { v: `${fifthBonus}`, s: excelStyles.whiteStyleCurrencyFormat, t: 'n' }
             ]
           )
           incentiveWsData[seller].push([{ v: '', s: {} }])

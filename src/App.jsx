@@ -528,8 +528,8 @@ function App () {
           <div>
             <h2>Como vamos</h2>
             <div className='d-grid gap-2 d-md-flex justify-content-md-end mb-2'>
-              <ButtonDownloadExcel title='Descargar informe' data={data} currencyFormat={currencyFormat} toFixed={toFixed} dateExcel={dateExcel} />
-              <ButtonDownloadIncentivePayout title='Descargar Liq. de incentivos' data={data} currencyFormat={currencyFormat} toFixed={toFixed} dataCollection={dataCollection} formatDate={formatDate} />
+              <ButtonDownloadExcel title='Descargar informe' data={data} toFixed={toFixed} dateExcel={dateExcel} />
+              <ButtonDownloadIncentivePayout title='Descargar Liq. de incentivos' data={data} dataCollection={dataCollection} formatDate={formatDate} />
             </div>
             <div>
               <Table headers={['Vendedor', 'Total ventas', 'Cantidad de facturas', 'Promedio de ventas', 'Meta de ventas', 'Porcentaje de ventas', 'Ventas pendiente', 'Recaudo', 'Meta recaudo sin iva', 'Porcentaje de recaudo', 'Recaudo pendiente']} data={data} currencyFormat={currencyFormat} toFixed={toFixed} />
