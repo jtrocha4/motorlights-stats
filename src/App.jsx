@@ -338,6 +338,8 @@ function App () {
     setData(totalSales)
   }
 
+  const [errorRc, setErrorRc] = useState([])
+
   const howAreWeDoingCollection = async (formattedDataCollectionFile, debitForDocNum, collectionGoalBySeller = {}) => {
     const collectionData = {}
     const sellerCollection = []
@@ -355,14 +357,19 @@ function App () {
     let commission
     let resultBonus
 
+    const errorRc = []
+
     formattedDataCollectionFile.forEach(row => {
       if (row.RC in debitForDocNum) {
         row.Recaudo = debitForDocNum[row.RC]
+      } else {
+        errorRc.push(`(MS) rc ${row.RC}`)
+        row.Recaudo = 0
       }
       if (row.Vendedor) {
         if (row.Vendedor.startsWith('Total')) {
           if (currentSeller) {
-            totalWithoutVAT = total / iva
+            totalWithoutVAT = parseFloat(total / iva)
             collectionTarget = collectionGoalBySeller[currentSeller]
             percentageCollected = (totalWithoutVAT * 100) / collectionTarget
             pendingCollectionTarget = collectionTarget - totalWithoutVAT
@@ -415,8 +422,11 @@ function App () {
         }
       }
     })
+    setErrorRc(errorRc.filter(el => el !== '(MS) rc undefined'))
     setDataCollection(sellerCollection)
   }
+
+  const [totalDebitByDocNum, setTotalDebitByDocNum] = useState({})
 
   const howAreWeDoingAuxiliaryBook = async (formattedDataAuxiliaryBookFile) => {
     const sellerCollection = []
@@ -458,11 +468,10 @@ function App () {
         }
       })
     })
+
     setTotalDebitByDocNum(debitForDocNum)
     setDataAuxiliaryBook(sellerCollectionFilter)
   }
-
-  const [totalDebitByDocNum, setTotalDebitByDocNum] = useState({})
 
   const joinData = (dataCollection = [], dataCost = []) => {
     const collectionBySeller = []
@@ -478,7 +487,7 @@ function App () {
       }
 
       if (combinedData) {
-        el.totalRecaudo = combinedData.totalRecaudo
+        el.totalRecaudo = combinedData.totalRecaudo || 0
         el.porcentajeRecaudo = combinedData.porcentajeRecaudo
         el.recaudoPendiente = combinedData.recaudoPendiente
         el.bonoResultado = (secondBonus + combinedData.bonoResultado) || 0
@@ -529,7 +538,7 @@ function App () {
             <h2>Como vamos</h2>
             <div className='d-grid gap-2 d-md-flex justify-content-md-end mb-2'>
               <ButtonDownloadExcel title='Descargar informe' data={data} toFixed={toFixed} dateExcel={dateExcel} />
-              <ButtonDownloadIncentivePayout title='Descargar Liq. de incentivos' data={data} dataCollection={dataCollection} formatDate={formatDate} />
+              <ButtonDownloadIncentivePayout title='Descargar Liq. de incentivos' data={data} dataCollection={dataCollection} formatDate={formatDate} errorRc={errorRc} />
             </div>
             <div>
               <Table headers={['Vendedor', 'Total ventas', 'Cantidad de facturas', 'Promedio de ventas', 'Meta de ventas', 'Porcentaje de ventas', 'Ventas pendiente', 'Recaudo', 'Meta recaudo sin iva', 'Porcentaje de recaudo', 'Recaudo pendiente']} data={data} currencyFormat={currencyFormat} toFixed={toFixed} />

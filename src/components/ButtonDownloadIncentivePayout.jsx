@@ -2,7 +2,7 @@ import React from 'react'
 import XLSX from 'xlsx-js-style'
 import excelStyles from '../styles/excelStyles'
 
-const ButtonDownloadIncentivePayout = ({ title, data, dataCollection, formatDate }) => {
+const ButtonDownloadIncentivePayout = ({ title, data, dataCollection, formatDate, errorRc }) => {
   const excelPercentageFormat = (percentageValue) => {
     const percentage = parseFloat(percentageValue / 100)
     return percentage
@@ -459,6 +459,17 @@ const ButtonDownloadIncentivePayout = ({ title, data, dataCollection, formatDate
       }
     }
 
+    const errorRCWs = []
+    errorRCWs.push([
+      { v: 'Codigo RC con error', s: excelStyles.headerYellowStyle }
+    ])
+
+    errorRc.forEach(element => {
+      errorRCWs.push([
+        { v: element, s: excelStyles.whiteStyle }
+      ])
+    })
+
     const workbook = XLSX.utils.book_new()
 
     data.map(element => {
@@ -492,6 +503,10 @@ const ButtonDownloadIncentivePayout = ({ title, data, dataCollection, formatDate
         XLSX.utils.book_append_sheet(workbook, ws, `INCENTIVO ${sheetName[0]} ${sheetName[1]}`)
       }
     })
+
+    const errorWs = XLSX.utils.aoa_to_sheet(errorRCWs)
+    errorWs['!cols'] = columnWidths.map(width => ({ wch: width + 5 }))
+    XLSX.utils.book_append_sheet(workbook, errorWs, 'ERROR RC')
 
     const excelFileName = 'Liq Incentivos.xlsx'
     XLSX.writeFile(workbook, excelFileName)
