@@ -2,7 +2,7 @@ import React from 'react'
 import XLSX from 'xlsx-js-style'
 import excelStyles from '../styles/excelStyles'
 
-const ButtonDownloadIncentivePayout = ({ title, data, dataCollection, formatDate, errorRc }) => {
+const ButtonDownloadIncentivePayout = ({ title, data, dataCollection, formatDate, errorRc, dateExcel }) => {
   const excelPercentageFormat = (percentageValue) => {
     const percentage = parseFloat(percentageValue / 100)
     return percentage
@@ -508,7 +508,7 @@ const ButtonDownloadIncentivePayout = ({ title, data, dataCollection, formatDate
     errorWs['!cols'] = columnWidths.map(width => ({ wch: width + 5 }))
     XLSX.utils.book_append_sheet(workbook, errorWs, 'ERROR RC')
 
-    const excelFileName = 'Liq Incentivos.xlsx'
+    const excelFileName = `Liq Incentivos ${dateExcel.dia} ${dateExcel.mes}.xlsx`
     XLSX.writeFile(workbook, excelFileName)
   }
   return (

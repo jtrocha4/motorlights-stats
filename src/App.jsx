@@ -1,13 +1,14 @@
 import './App.css'
-import * as XLSX from 'xlsx'
-import InputFile from './components/InputFile'
-import Navbar from './components/Navbar'
-import Sidebar from './components/Sidebar'
 import { useEffect, useState } from 'react'
-import Table from './components/Table'
-import ModalGoals from './components/ModalGoals'
+import * as XLSX from 'xlsx'
 import ButtonDownloadExcel from './components/ButtonDownloadExcel'
 import ButtonDownloadIncentivePayout from './components/ButtonDownloadIncentivePayout'
+import InputFile from './components/InputFile'
+import ModalGoals from './components/ModalGoals'
+import Navbar from './components/Navbar'
+import Sidebar from './components/Sidebar'
+import Swal from 'sweetalert2'
+import Table from './components/Table'
 
 function App () {
   const [excelData, setExcelData] = useState([])
@@ -116,9 +117,9 @@ function App () {
   }
 
   const [dateExcel, setDateExcel] = useState({})
-  const extractDateFromExcel = (dateRow = []) => {
-    if (dateRow.length) {
-      const date = dateRow.join()
+  const extractDateFromExcel = (dateCostFile = [], dateCollectionFile = [], dateAuxiliaryBookFile = []) => {
+    if (dateCostFile.length) {
+      const date = dateCostFile.join()
       const dateFormat = /\b(?:0?[1-9]|[12][0-9]|3[01])\/(?:0?[1-9]|1[0-2])\/\d{4}\b/g
       const dateExcel = date.match(dateFormat)
 
@@ -126,8 +127,11 @@ function App () {
       const months = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre']
 
       if (!dateExcel) {
-        // console.log('Date excel undefined, El informe de costo no es el correcto')
-        return
+        return Swal.fire({
+          icon: 'error',
+          title: 'Error en el Informe Costo',
+          text: 'El Informe de Costo proporcionado no es válido o está incorrecto. Por favor, revise y vuelva a intentarlo.'
+        })
       }
 
       const initialDate = dateExcel[0]
@@ -190,6 +194,71 @@ function App () {
         porcentajeDiasTranscurridos: percentageDaysPassed
       })
     }
+    if (dateCollectionFile.length) {
+      const date = dateCollectionFile.join()
+      const dateFormat = /\b(?:0?[1-9]|[12][0-9]|3[01])\/(?:0?[1-9]|1[0-2])\/\d{4}\b/g
+      const dateExcel = date.match(dateFormat)
+      if (!dateExcel) {
+        return Swal.fire({
+          icon: 'error',
+          title: 'Error en el Informe Recaudo',
+          text: 'El Informe de Recaudo proporcionado no es válido o está incorrecto. Por favor, revise y vuelva a intentarlo.'
+        })
+      }
+    }
+    if (dateAuxiliaryBookFile.length) {
+      const date = dateAuxiliaryBookFile.join()
+      const dateFormat = /\b(?:0?[1-9]|[12][0-9]|3[01])\/(?:0?[1-9]|1[0-2])\/\d{4}\b/g
+      const dateExcel = date.match(dateFormat)
+      if (!dateExcel) {
+        return Swal.fire({
+          icon: 'error',
+          title: 'Error en el Informe Libro Auxiliar',
+          text: 'El Informe de Libro Auxiliar proporcionado no es válido o está incorrecto. Por favor, revise y vuelva a intentarlo.'
+        })
+      }
+    }
+  }
+
+  const reportDateValidation = (dateCostFile = [], dateCollectionFile = [], dateAuxiliaryBookFile = []) => {
+    if (dateCostFile.length && dateCollectionFile.length && dateAuxiliaryBookFile.length) {
+      const dateCostString = dateCostFile.join()
+      const dateCollectionString = dateCollectionFile.join()
+      const dateAuxiliaryBookString = dateAuxiliaryBookFile.join()
+
+      const dateFormat = /([1-9]|[12][0-9]|3[01])\/(?:0?[1-9]|1[0-2])\/\d{4}\b/g
+
+      const dateExcelCost = dateCostString.match(dateFormat)
+      const dateExcelCollection = dateCollectionString.match(dateFormat)
+      const dateExcelAuxiliaryBook = dateAuxiliaryBookString.match(dateFormat)
+
+      const finalDate = []
+      if (dateExcelCost !== null && dateExcelCollection !== null && dateExcelAuxiliaryBook !== null) {
+        finalDate.push(dateExcelCost[1], dateExcelCollection[1], dateExcelAuxiliaryBook[1])
+      }
+
+      if (finalDate[0] !== finalDate[1]) {
+        return Swal.fire({
+          icon: 'warning',
+          title: 'Fechas Diferentes',
+          text: 'La fecha del "Informe de Recaudo" no coincide con la fecha del "Informe de Costo". Por favor, verifique las fechas e intente nuevamente.'
+        })
+      }
+      if (finalDate[0] !== finalDate[2]) {
+        return Swal.fire({
+          icon: 'warning',
+          title: 'Fechas Diferentes',
+          text: 'La fecha del "Informe Libro Auxiliar" no coincide con la fecha del "Informe de Costo". Por favor, verifique las fechas e intente nuevamente.'
+        })
+      }
+      if (finalDate[1] !== finalDate[2]) {
+        return Swal.fire({
+          icon: 'warning',
+          title: 'Fechas Diferentes',
+          text: 'La fecha del "Informe de Recaudo" no coincide con la fecha del "Informe Libro Auxiliar". Por favor, verifique las fechas e intente nuevamente.'
+        })
+      }
+    }
   }
 
   const formatDate = (excelDate) => {
@@ -206,7 +275,9 @@ function App () {
     return formattedDateString
   }
 
-  const dateRow = excelData[2]
+  const dateCostFile = excelData[2]
+  const dateCollectionFile = excelDataCollection[1]
+  const dateAuxiliaryBookFile = excelDataAuxiliaryBook[1]
 
   const headersCostFile = excelData[3]
   const rowsCostFile = excelData.slice(4)
@@ -266,7 +337,10 @@ function App () {
           if (currentSeller) {
             // Calculo de operaciones
             billCounter = Object.keys(uniqueDocs[currentSeller] || {}).length
+
             averageSale = total / Object.keys(uniqueDocs[currentSeller] || {}).length
+            averageSale = (averageSale !== -Infinity) ? (total / Object.keys(uniqueDocs[currentSeller] || {}).length) : 0
+
             goalSale = SalesGoalBySeller[currentSeller] || 0
             percetageSale = (goalSale !== 0) ? ((total * 100) / goalSale) : (0)
             pendingSalesTarget = goalSale - total
@@ -506,7 +580,8 @@ function App () {
   useEffect(() => {
     howAreWeDoing(formattedData, SalesGoalBySeller, collectionGoalBySeller)
     howAreWeDoingAuxiliaryBook(formattedDataAuxiliaryBookFile)
-    extractDateFromExcel(dateRow)
+    extractDateFromExcel(dateCostFile, dateCollectionFile, dateAuxiliaryBookFile)
+    reportDateValidation(dateCostFile, dateCollectionFile, dateAuxiliaryBookFile)
   }, [excelData, excelDataCollection, excelDataAuxiliaryBook, SalesGoalBySeller, collectionGoalBySeller])
 
   useEffect(() => {
@@ -538,7 +613,7 @@ function App () {
             <h2>Como vamos</h2>
             <div className='d-grid gap-2 d-md-flex justify-content-md-end mb-2'>
               <ButtonDownloadExcel title='Descargar informe' data={data} toFixed={toFixed} dateExcel={dateExcel} />
-              <ButtonDownloadIncentivePayout title='Descargar Liq. de incentivos' data={data} dataCollection={dataCollection} formatDate={formatDate} errorRc={errorRc} />
+              <ButtonDownloadIncentivePayout title='Descargar Liq. de incentivos' data={data} dataCollection={dataCollection} formatDate={formatDate} errorRc={errorRc} dateExcel={dateExcel} />
             </div>
             <div>
               <Table headers={['Vendedor', 'Total ventas', 'Cantidad de facturas', 'Promedio de ventas', 'Meta de ventas', 'Porcentaje de ventas', 'Ventas pendiente', 'Recaudo', 'Meta recaudo sin iva', 'Porcentaje de recaudo', 'Recaudo pendiente']} data={data} currencyFormat={currencyFormat} toFixed={toFixed} />
