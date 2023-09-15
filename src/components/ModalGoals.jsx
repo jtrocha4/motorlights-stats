@@ -1,30 +1,12 @@
+/* eslint-disable no-undef */
 import React, { useState } from 'react'
 
 const ModalGoals = ({ title, buttonBackground = 'dark', data = [], sendForm }) => {
-  const [saleGoalsForm, setSaleGoalsForm] = useState({
-    // Mes Agosto. Datos por defecto
-    'CARLOS ALONSO VESGA ORTIZ': 85000000,
-    'DEIVER JOSE ZUÑIGA VASQUEZ': 35000000,
-    'HERNANDO JAVIER NOVA NARVAEZ': 70000000,
-    'JOSE ANDRES MONTENEGRO GUEVARA': 0,
-    'JULIAN ANDRES POSADA SALAZAR': 30000000,
-    'MARIA VICTORIA MOLINA': 50000000,
-    'MELANY JOHANNA RAMIREZ QUINTERO': 30000000,
-    'SERGIO ANDRES BARCELO TRESPALACIOS': 65000000,
-    'MOTORLIGHTS S.A.S': 0
-  })
-  const [collectionGoalForm, setCollectionGoalForm] = useState({
-    // Mes Agosto. Datos por defecto
-    'CARLOS ALONSO VESGA ORTIZ': 81790197,
-    'DEIVER JOSE ZUÑIGA VASQUEZ': 46092813,
-    'HERNANDO JAVIER NOVA NARVAEZ': 73101897,
-    'JOSE ANDRES MONTENEGRO GUEVARA': 0,
-    'JULIAN ANDRES POSADA SALAZAR': 14660847,
-    'MARIA VICTORIA MOLINA': 42858353,
-    'MELANY JOHANNA RAMIREZ QUINTERO': 27524761,
-    'SERGIO ANDRES BARCELO TRESPALACIOS': 46036555,
-    'MOTORLIGHTS S.A.S': 12277167
-  })
+  const salesGoals = JSON.parse(localStorage.getItem('metaVentas'))
+  const collectionGoals = JSON.parse(localStorage.getItem('metaRecaudo'))
+
+  const [saleGoalsForm, setSaleGoalsForm] = useState(salesGoals)
+  const [collectionGoalForm, setCollectionGoalForm] = useState(collectionGoals)
 
   const handleChange = (event) => {
     setSaleGoalsForm({
@@ -42,6 +24,8 @@ const ModalGoals = ({ title, buttonBackground = 'dark', data = [], sendForm }) =
 
   const handleSubmit = (event) => {
     event.preventDefault()
+    localStorage.setItem('metaVentas', JSON.stringify(saleGoalsForm))
+    localStorage.setItem('metaRecaudo', JSON.stringify(collectionGoalForm))
     sendForm(saleGoalsForm, collectionGoalForm)
   }
 

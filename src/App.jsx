@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import './App.css'
 import { useEffect, useState } from 'react'
 import * as XLSX from 'xlsx'
@@ -34,7 +35,6 @@ function App () {
 
   const handleReadCostFile = (event) => {
     const file = event.target.files[0]
-    // eslint-disable-next-line no-undef
     const reader = new FileReader()
 
     reader.onload = (e) => {
@@ -50,7 +50,6 @@ function App () {
 
   const handleReadCollectionFile = (event) => {
     const file = event.target.files[0]
-    // eslint-disable-next-line no-undef
     const reader = new FileReader()
 
     reader.onload = (e) => {
@@ -66,7 +65,6 @@ function App () {
 
   const handleReadAuxiliaryBookFile = (event) => {
     const file = event.target.files[0]
-    // eslint-disable-next-line no-undef
     const reader = new FileReader()
 
     reader.onload = (e) => {
@@ -123,7 +121,6 @@ function App () {
       const dateFormat = /\b(?:0?[1-9]|[12][0-9]|3[01])\/(?:0?[1-9]|1[0-2])\/\d{4}\b/g
       const dateExcel = date.match(dateFormat)
 
-      //
       const months = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre']
 
       if (!dateExcel) {
@@ -142,7 +139,7 @@ function App () {
       const days = parseInt(parts[0])
       const year = parseInt(parts[2])
 
-      const daysOfTheMonth = new Date(2023, month, 0).getDate()
+      const daysOfTheMonth = new Date(2023, month + 1, 0).getDate()
 
       const countSundays = (year, month) => {
         const firstDay = new Date(year, month, 1)
@@ -172,7 +169,6 @@ function App () {
           }
           countDays++
         }
-
         return countDays - countSunday
       }
 
@@ -181,6 +177,7 @@ function App () {
       const workDays = daysOfTheMonth - sundays
 
       const daysPassed = daysElapsed(year, month, days)
+
       let percentageDaysPassed = parseFloat((daysPassed * 100) / workDays)
       percentageDaysPassed = toFixed(percentageDaysPassed, 1)
 
@@ -291,7 +288,7 @@ function App () {
   const rowsAuxiliaryBookFile = excelDataAuxiliaryBook.slice(4)
   const formattedDataAuxiliaryBookFile = formatDataAuxiliaryBookFile(headersAuxiliaryBookFile, rowsAuxiliaryBookFile)
 
-  const howAreWeDoing = (formattedData, SalesGoalBySeller = {}, collectionGoalBySeller = {}) => {
+  const howAreWeDoing = (formattedData, salesGoalBySeller = {}, collectionGoalBySeller = {}) => {
     const saleData = {}
     const totalSales = []
     let currentSeller
@@ -316,7 +313,7 @@ function App () {
     const motorlightsObject = {
       cantidadFacturas: 0,
       metaRecaudoSinIva: (collectionGoalBySeller['MOTORLIGHTS S.A.S'] === undefined) ? (0) : (collectionGoalBySeller['MOTORLIGHTS S.A.S']),
-      metaVentas: (SalesGoalBySeller['MOTORLIGHTS S.A.S'] === undefined) ? (0) : (SalesGoalBySeller['MOTORLIGHTS S.A.S']),
+      metaVentas: (salesGoalBySeller['MOTORLIGHTS S.A.S'] === undefined) ? (0) : (salesGoalBySeller['MOTORLIGHTS S.A.S']),
       porcentajeRecaudo: 0,
       porcentajeVentas: 0,
       promedioVentas: 0,
@@ -341,7 +338,7 @@ function App () {
             averageSale = total / Object.keys(uniqueDocs[currentSeller] || {}).length
             averageSale = (averageSale !== -Infinity) ? (total / Object.keys(uniqueDocs[currentSeller] || {}).length) : 0
 
-            goalSale = SalesGoalBySeller[currentSeller] || 0
+            goalSale = salesGoalBySeller[currentSeller] || 0
             percetageSale = (goalSale !== 0) ? ((total * 100) / goalSale) : (0)
             pendingSalesTarget = goalSale - total
 
@@ -574,24 +571,36 @@ function App () {
 
   joinData(dataCollection, data)
 
-  const [SalesGoalBySeller, setSalesGoalBySeller] = useState({})
+  const [salesGoalBySeller, setSalesGoalBySeller] = useState({})
   const [collectionGoalBySeller, setCollectionGoalBySeller] = useState({})
 
   useEffect(() => {
-    howAreWeDoing(formattedData, SalesGoalBySeller, collectionGoalBySeller)
+    howAreWeDoing(formattedData, salesGoalBySeller, collectionGoalBySeller)
     howAreWeDoingAuxiliaryBook(formattedDataAuxiliaryBookFile)
     extractDateFromExcel(dateCostFile, dateCollectionFile, dateAuxiliaryBookFile)
     reportDateValidation(dateCostFile, dateCollectionFile, dateAuxiliaryBookFile)
-  }, [excelData, excelDataCollection, excelDataAuxiliaryBook, SalesGoalBySeller, collectionGoalBySeller])
+  }, [excelData, excelDataCollection, excelDataAuxiliaryBook, salesGoalBySeller, collectionGoalBySeller])
 
   useEffect(() => {
     howAreWeDoingCollection(formattedDataCollectionFile, totalDebitByDocNum, collectionGoalBySeller)
   }, [totalDebitByDocNum, dataAuxiliaryBook])
 
   const sendForm = (salesGoalsFormData, collectionGoalsFormData) => {
-    setSalesGoalBySeller(salesGoalsFormData)
-    setCollectionGoalBySeller(collectionGoalsFormData)
+    const salesGoals = JSON.parse(localStorage.getItem('metaVentas'))
+    const collectionGoals = JSON.parse(localStorage.getItem('metaRecaudo'))
+    if (salesGoals !== null) {
+      setSalesGoalBySeller(salesGoals)
+    }
+    if (salesGoals !== null) {
+      setCollectionGoalBySeller(collectionGoals)
+    }
+    // setCollectionGoalBySeller(salesGoalsFormData)
+    // setCollectionGoalBySeller(collectionGoalsFormData)
   }
+
+  useEffect(() => {
+    sendForm()
+  }, [excelData])
 
   return (
     <>

@@ -499,7 +499,7 @@ const ButtonDownloadIncentivePayout = ({ title, data, dataCollection, formatDate
         XLSX.utils.sheet_add_aoa(ws, collectionDetailHeaderTable, { origin: 'E17' })
         XLSX.utils.sheet_add_aoa(ws, sellerWsDataCollection[seller], { origin: 'E19' })
 
-        ws['!cols'] = columnWidths.map(width => ({ wch: width + 5 }))
+        ws['!cols'] = columnWidths.map(width => ({ wch: width + 15 }))
         XLSX.utils.book_append_sheet(workbook, ws, `INCENTIVO ${sheetName[0]} ${sheetName[1]}`)
       }
     })
