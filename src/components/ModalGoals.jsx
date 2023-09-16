@@ -2,8 +2,8 @@
 import React, { useState } from 'react'
 
 const ModalGoals = ({ title, buttonBackground = 'dark', data = [], sendForm }) => {
-  const salesGoals = JSON.parse(localStorage.getItem('metaVentas'))
-  const collectionGoals = JSON.parse(localStorage.getItem('metaRecaudo'))
+  const salesGoals = JSON.parse(localStorage.getItem('metaVentas')) || {}
+  const collectionGoals = JSON.parse(localStorage.getItem('metaRecaudo')) || {}
 
   const [saleGoalsForm, setSaleGoalsForm] = useState(salesGoals)
   const [collectionGoalForm, setCollectionGoalForm] = useState(collectionGoals)
