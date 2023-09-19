@@ -350,8 +350,8 @@ const ButtonDownloadExcel = ({ title, data, toFixed, dateExcel }) => {
     const sheetName = 'Resumen'
 
     const ws = XLSX.utils.aoa_to_sheet(wsData, { origin: 'A2' })
-    XLSX.utils.sheet_add_aoa(ws, wsDateData, { origin: 'A21' })
-    XLSX.utils.sheet_add_aoa(ws, wsDataPercentaje, { origin: 'A26' })
+    XLSX.utils.sheet_add_aoa(ws, wsDateData, { origin: 'A18' })
+    XLSX.utils.sheet_add_aoa(ws, wsDataPercentaje, { origin: 'A23' })
 
     const columnWidths = wsData.reduce((acc, row) => {
       row.forEach((cell, colIndex) => {
