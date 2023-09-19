@@ -12,7 +12,7 @@ const ButtonDownloadExcel = ({ title, data, toFixed, dateExcel }) => {
   const handleDownload = () => {
     const dates = ['Mes']
     const headers = ['Vendedor']
-    const values = ['Total ventas', 'Cantidad de facturas', 'Promedio de ventas', 'Meta ventas', '% Venta', 'Ventas pendiente', 'Total recaudo', 'Meta recaudo sin iva', '% Recaudo', 'Recaudo pendiente']
+    const values = ['Total ventas', 'Cantidad de facturas', 'Promedio de ventas', 'Total ventas con flete', 'Total costo', 'Margen', '% Margen', 'Meta ventas', '% Venta', 'Ventas pendiente', 'Total recaudo', 'Meta recaudo sin iva', '% Recaudo', 'Recaudo pendiente']
 
     const wsData = []
     const wsDataPercentaje = []
@@ -73,13 +73,25 @@ const ButtonDownloadExcel = ({ title, data, toFixed, dateExcel }) => {
         cellValue.v = value
         cellValue.s = excelStyles.headerGrayStyle
       }
+      if (value === 'Total ventas con flete') {
+        cellValue.v = value
+        cellValue.s = excelStyles.headerGrayStyle
+      }
+      if (value === 'Total costo') {
+        cellValue.v = value
+        cellValue.s = excelStyles.headerGrayStyle
+      }
+      if (value === 'Margen') {
+        cellValue.v = value
+        cellValue.s = excelStyles.headerGrayStyle
+      }
+      if (value === '% Margen') {
+        cellValue.v = value
+        cellValue.s = excelStyles.headerGrayStyle
+      }
       if (value === 'Meta ventas') {
         cellValue.v = value
         cellValue.s = excelStyles.headerBlackStyle
-      }
-      if (value === '% Venta') {
-        cellValue.v = value
-        cellValue.s = excelStyles.headerWhiteStyle
       }
       if (value === '% Venta') {
         cellValue.v = value
@@ -122,6 +134,26 @@ const ButtonDownloadExcel = ({ title, data, toFixed, dateExcel }) => {
           cell.v = item.promedioVentas
           cell.t = 'n'
           cell.s = excelStyles.grayStyleCurrencyFormat
+        }
+        if (value === 'Total ventas con flete') {
+          cell.v = item.totalVentaConFlete
+          cell.t = 'n'
+          cell.s = excelStyles.grayStyleCurrencyFormat
+        }
+        if (value === 'Total costo') {
+          cell.v = item.totalCosto
+          cell.t = 'n'
+          cell.s = excelStyles.grayStyleCurrencyFormat
+        }
+        if (value === 'Margen') {
+          cell.v = item.margen
+          cell.t = 'n'
+          cell.s = excelStyles.grayStyleCurrencyFormat
+        }
+        if (value === '% Margen') {
+          cell.v = excelPercentageFormat(item.porcentajeMargen)
+          cell.t = 'n'
+          cell.s = excelStyles.percentageGrayStyle
         }
         if (value === 'Meta ventas') {
           cell.v = item.metaVentas
@@ -171,7 +203,11 @@ const ButtonDownloadExcel = ({ title, data, toFixed, dateExcel }) => {
         recaudo: 0,
         metaRecaudoSinIva: 0,
         porcentajeRecaudo: 0,
-        recaudoPendiente: 0
+        recaudoPendiente: 0,
+        margen: 0,
+        costo: 0,
+        ventaConFlete: 0,
+        porcentajeMargen: 0
       }
 
       // Operaciones para calcular el total
@@ -187,9 +223,15 @@ const ButtonDownloadExcel = ({ title, data, toFixed, dateExcel }) => {
       total.porcentajeRecaudo = (total.recaudo * 100) / total.metaRecaudoSinIva
       total.recaudoPendiente = data.reduce((acc, item) => acc + item.recaudoPendiente, 0)
 
+      total.margen = data.reduce((acc, item) => acc + item.margen, 0)
+      total.costo = data.reduce((acc, item) => acc + item.totalCosto, 0)
+      total.ventaConFlete = data.reduce((acc, item) => acc + item.totalVentaConFlete, 0)
+      total.porcentajeMargen = (total.costo * 100) / total.ventaConFlete
+
       // Aproximaciones
       total.porcentajeVentas = toFixed(total.porcentajeVentas, 1)
       total.porcentajeRecaudo = toFixed(total.porcentajeRecaudo, 1)
+      total.porcentajeMargen = toFixed(total.porcentajeMargen, 1)
 
       const cell = { v: '', s: {}, t: '' }
       if (value === 'Total ventas') {
@@ -208,6 +250,30 @@ const ButtonDownloadExcel = ({ title, data, toFixed, dateExcel }) => {
         cell.v = total.promedioVentas
         cell.t = 'n'
         cell.s = excelStyles.grayStyleCurrencyFormat
+        row.push(cell)
+      }
+      if (value === 'Total ventas con flete') {
+        cell.v = total.ventaConFlete
+        cell.t = 'n'
+        cell.s = excelStyles.grayStyleCurrencyFormat
+        row.push(cell)
+      }
+      if (value === 'Total costo') {
+        cell.v = total.costo
+        cell.t = 'n'
+        cell.s = excelStyles.grayStyleCurrencyFormat
+        row.push(cell)
+      }
+      if (value === 'Margen') {
+        cell.v = total.margen
+        cell.t = 'n'
+        cell.s = excelStyles.grayStyleCurrencyFormat
+        row.push(cell)
+      }
+      if (value === '% Margen') {
+        cell.v = excelPercentageFormat(total.porcentajeMargen)
+        cell.t = 'n'
+        cell.s = excelStyles.percentageGrayStyle
         row.push(cell)
       }
       if (value === 'Meta ventas') {
@@ -307,15 +373,15 @@ const ButtonDownloadExcel = ({ title, data, toFixed, dateExcel }) => {
     wsSellerData[0].v = 'Vendedores'
     wsSellerData[0].s = excelStyles.headerBlackStyle
     wsDataPercentaje.push(wsSellerData)
-    wsDataPercentaje.push(wsData[6])
-    wsDataPercentaje.push(wsData[10])
+    wsDataPercentaje.push(wsData[10]) // Porcentaje Ventas
+    wsDataPercentaje.push(wsData[14]) // Porcentaje Recaudo
 
     const workbook = XLSX.utils.book_new()
     const sheetName = 'Resumen'
 
     const ws = XLSX.utils.aoa_to_sheet(wsData, { origin: 'A2' })
-    XLSX.utils.sheet_add_aoa(ws, wsDateData, { origin: 'A17' })
-    XLSX.utils.sheet_add_aoa(ws, wsDataPercentaje, { origin: 'A22' })
+    XLSX.utils.sheet_add_aoa(ws, wsDateData, { origin: 'A21' })
+    XLSX.utils.sheet_add_aoa(ws, wsDataPercentaje, { origin: 'A26' })
 
     const columnWidths = wsData.reduce((acc, row) => {
       row.forEach((cell, colIndex) => {
