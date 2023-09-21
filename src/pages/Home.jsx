@@ -597,9 +597,10 @@ const Home = () => {
     howAreWeDoingAuxiliaryBook(formattedDataAuxiliaryBookFile)
     extractDateFromExcel(dateCostFile, dateCollectionFile, dateAuxiliaryBookFile)
     reportDateValidation(dateCostFile, dateCollectionFile, dateAuxiliaryBookFile)
-    localStorage.setItem('data', JSON.stringify(data))
-    localStorage.setItem('dateData', JSON.stringify(dateExcel))
   }, [excelData, excelDataCollection, excelDataAuxiliaryBook, salesGoalBySeller, collectionGoalBySeller])
+
+  localStorage.setItem('data', JSON.stringify(data))
+  localStorage.setItem('dateData', JSON.stringify(dateExcel))
 
   useEffect(() => {
     howAreWeDoingCollection(formattedDataCollectionFile, totalDebitByDocNum, collectionGoalBySeller)
