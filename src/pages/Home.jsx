@@ -597,6 +597,8 @@ const Home = () => {
     howAreWeDoingAuxiliaryBook(formattedDataAuxiliaryBookFile)
     extractDateFromExcel(dateCostFile, dateCollectionFile, dateAuxiliaryBookFile)
     reportDateValidation(dateCostFile, dateCollectionFile, dateAuxiliaryBookFile)
+    localStorage.setItem('data', JSON.stringify(data))
+    localStorage.setItem('dateData', JSON.stringify(dateExcel))
   }, [excelData, excelDataCollection, excelDataAuxiliaryBook, salesGoalBySeller, collectionGoalBySeller])
 
   useEffect(() => {
@@ -620,7 +622,7 @@ const Home = () => {
 
   return (
     <div className='flex'>
-      <div className='container'>
+      <div className='container-fluid'>
         <h2>Inicio</h2>
         <p>Añada los siguientes archivos:</p>
         <div className='inputFile-group'>

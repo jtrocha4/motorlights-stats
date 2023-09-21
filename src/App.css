@@ -1,35 +1,47 @@
+body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+}
+
 #root {
   display: flex;
 }
 
-#navbar{
+#navbar {
   width: 100%;
-  height: auto;
+  height: 4.2rem;
   position: fixed;
   top: 0;
   left: 0;
+  background-color: #4673bf;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 2px;
+  z-index: 999;
 }
 
-.nav.sidebar{
+#navbar .logo {
+  width: 40px;
+  margin: 0px;
+}
+
+.nav.sidebar {
   position: fixed;
+  display: block;
   top: 4.2rem;
   left: 0;
-}
-
-nav .logo{
-  width: 40px;
-  margin: 0 5px;
-}
-
-.nav.sidebar{
   width: 15rem;
-  height: 91.6vh;
+  height: calc(100vh - 4.2rem);
   background-color: whitesmoke;
-  display: block;
   border-right: 1px solid #888;
+  overflow-y: auto;
+  z-index: 998;
 }
 
-.nav.sidebar li a{
+.nav.sidebar li a {
   color: #212529;
   margin-bottom: 0.2rem;
 }
@@ -37,24 +49,20 @@ nav .logo{
 .nav.sidebar li a:hover {
   color: #212529db;
   font-weight: bold;
-  zoom: 1.02;
 }
 
-.flex{
+.flex {
+  width: 83.95vw;
+  height: 100vh;
   flex: 1;
-  margin-top: 5rem;
+  margin-top: 4.2rem;
   margin-left: 15rem;
-  margin-right: 0;
-  margin-bottom: 0;
-  overflow-y: auto;
-  overflow-x: auto;
+  /* overflow-y: auto;
+  overflow-x: auto; */
+  padding: 20px;
 }
 
-.inputFile-group{
-  margin: 25px 0;
-}
-
-.button-group{
+.inputFile-group, .button-group {
   margin: 25px 0;
 }
 
