@@ -208,7 +208,7 @@ const ButtonDownloadExcel = ({ title, data, toFixed, dateExcel }) => {
       total.margen = data.reduce((acc, item) => acc + item.margen, 0)
       total.costo = data.reduce((acc, item) => acc + item.totalCosto, 0)
       total.ventaConFlete = data.reduce((acc, item) => acc + item.totalVentaConFlete, 0)
-      total.porcentajeMargen = (total.costo * 100) / total.ventaConFlete
+      total.porcentajeMargen = (total.margen * 100) / total.ventas
 
       // Aproximaciones
       total.porcentajeVentas = toFixed(total.porcentajeVentas, 1)
