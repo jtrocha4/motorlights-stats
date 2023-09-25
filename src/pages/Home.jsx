@@ -7,6 +7,7 @@ import InputFile from '../components/InputFile'
 import ModalGoals from '../components/ModalGoals'
 import Swal from 'sweetalert2'
 import Table from '../components/Table'
+import { auxiliaryBookFileToModel, collectionFileToModel, costFileToModel } from '../mappers'
 
 const Home = () => {
   const [excelData, setExcelData] = useState([])
@@ -76,7 +77,7 @@ const Home = () => {
   }
 
   const formatData = (headers = [], rows = []) => {
-    return rows.map(row => {
+    const costFile = rows.map(row => {
       const rowData = {}
       headers.forEach((header, index) => {
         if (header !== 'PorMargen' && header !== 'Costo Unitario' && header !== 'Margen') { // Filtrado de columnas, las columnas que estan dentro de la condicion no aparecen
@@ -85,10 +86,11 @@ const Home = () => {
       })
       return rowData
     })
+    return costFileToModel(costFile)
   }
 
   const formatDataCollectionFile = (headers = [], rows = []) => {
-    return rows.map(row => {
+    const collectionFile = rows.map(row => {
       const rowData = {}
       headers.forEach((header, index) => {
         if (header !== 'Sucursal' && header !== 'Empresa') {
@@ -97,10 +99,11 @@ const Home = () => {
       })
       return rowData
     })
+    return collectionFileToModel(collectionFile)
   }
 
   const formatDataAuxiliaryBookFile = (headers = [], rows = []) => {
-    return rows.map(row => {
+    const auxiliaryBookFile = rows.map(row => {
       const rowData = {}
       headers.forEach((header, index) => {
         if (header !== 'Creditos' && header !== 'Cheque' && header !== 'Tercero' && header !== 'Saldo' && header !== 'Nota') {
@@ -109,6 +112,7 @@ const Home = () => {
       })
       return rowData
     })
+    return auxiliaryBookFileToModel(auxiliaryBookFile)
   }
 
   const [dateExcel, setDateExcel] = useState({})
@@ -328,11 +332,11 @@ const Home = () => {
     }
 
     formattedData.forEach(row => {
-      if (row['CódigoInventario'] !== undefined) {
-        splitChain = row['CódigoInventario'].split(' ')
+      if (row.codigoInventario !== undefined) {
+        splitChain = row.codigoInventario.split(' ')
       }
-      if (row.Vendedor) {
-        if (row.Vendedor.startsWith('Total')) {
+      if (row.vendedor) {
+        if (row.vendedor.startsWith('Total')) {
           if (currentSeller) {
             // Calculo de operaciones
             billCounter = Object.keys(uniqueDocs[currentSeller] || {}).length
@@ -395,7 +399,7 @@ const Home = () => {
           totalCost = 0
           commission = 0
         } else {
-          currentSeller = row.Vendedor
+          currentSeller = row.vendedor
           sellerSales = []
           total = 0
           totalWithFreight = 0
@@ -404,17 +408,17 @@ const Home = () => {
         }
       }
       if (currentSeller && sellerSales) {
-        totalWithFreight += row.Ventas || 0
+        totalWithFreight += row.ventas || 0
       }
       if (currentSeller && sellerSales && !splitChain[1].startsWith('Flete')) {
         sellerSales.push(row)
-        total += row.Ventas || 0
-        totalCost += row['Total Costo'] || 0
+        total += row.ventas || 0
+        totalCost += row.totalCosto || 0
         if (!uniqueDocs[currentSeller]) {
           uniqueDocs[currentSeller] = {}
         }
-        if (row.Doc.startsWith('FV')) {
-          uniqueDocs[currentSeller][row.Doc] = true
+        if (row.doc.startsWith('FV')) {
+          uniqueDocs[currentSeller][row.doc] = true
         }
       }
     })
@@ -449,14 +453,14 @@ const Home = () => {
     const errorRc = []
 
     formattedDataCollectionFile.forEach(row => {
-      if (row.RC in debitForDocNum) {
-        row.Recaudo = debitForDocNum[row.RC]
+      if (row.rc in debitForDocNum) {
+        row.recaudo = debitForDocNum[row.rc]
       } else {
-        errorRc.push(`(MS) rc ${row.RC}`)
-        row.Recaudo = 0
+        errorRc.push(`(MS) rc ${row.rc}`)
+        row.recaudo = 0
       }
-      if (row.Vendedor) {
-        if (row.Vendedor.startsWith('Total')) {
+      if (row.vendedor) {
+        if (row.vendedor.startsWith('Total')) {
           if (currentSeller) {
             totalWithoutVAT = parseFloat(total / iva)
             collectionTarget = collectionGoalBySeller[currentSeller]
@@ -496,7 +500,7 @@ const Home = () => {
           commission = 0
           resultBonus = 0
         } else {
-          currentSeller = row.Vendedor
+          currentSeller = row.vendedor
           sellerSales = []
           total = 0
           commission = 0
@@ -505,9 +509,9 @@ const Home = () => {
       }
       if (currentSeller && sellerSales) {
         sellerSales.push(row)
-        if (!uniqueRC[row.RC]) {
-          uniqueRC[row.RC] = row.Recaudo
-          total += uniqueRC[row.RC]
+        if (!uniqueRC[row.rc]) {
+          uniqueRC[row.rc] = row.recaudo
+          total += uniqueRC[row.rc]
         }
       }
     })
@@ -523,20 +527,20 @@ const Home = () => {
     let sellerSales
 
     formattedDataAuxiliaryBookFile.forEach(row => {
-      if (row.Cuenta) {
-        if (row.Cuenta.startsWith('Total')) {
+      if (row.cuenta) {
+        if (row.cuenta.startsWith('Total')) {
           if (currentSeller) {
-            const filterDoc = sellerSales.filter(el => el['Doc Num'] !== undefined)
+            const filterDoc = sellerSales.filter(el => el.docNum !== undefined)
             filterDoc.forEach(el => {
-              const numberDoc = el['Doc Num'].match(/\d+/g).join('')
-              el['Doc Num'] = numberDoc
+              const numberDoc = el.docNum.match(/\d+/g).join('')
+              el.docNum = numberDoc
             })
             sellerCollection.push(filterDoc)
           }
           currentSeller = null
           sellerSales = null
         } else {
-          currentSeller = row.Cuenta
+          currentSeller = row.cuenta
           sellerSales = []
         }
       }
@@ -548,8 +552,8 @@ const Home = () => {
     const debitForDocNum = {}
     sellerCollectionFilter.forEach(collection => {
       collection.forEach(el => {
-        const docNum = el['Doc Num']
-        const debit = parseFloat(el.Debitos)
+        const docNum = el.docNum
+        const debit = parseFloat(el.debitos)
         if (debitForDocNum[docNum]) {
           debitForDocNum[docNum] += debit
         } else {
