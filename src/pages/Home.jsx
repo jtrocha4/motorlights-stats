@@ -8,8 +8,9 @@ import ModalGoals from '../components/ModalGoals'
 import Swal from 'sweetalert2'
 import Table from '../components/Table'
 import { auxiliaryBookFileToModel, collectionFileToModel, costFileToModel } from '../mappers'
+import ButtonUploadDb from '../components/ButtonUploadDb'
 
-const Home = () => {
+const Home = ({ postDataToApi }) => {
   const [excelData, setExcelData] = useState([])
   const [data, setData] = useState([])
   const [dataCollection, setDataCollection] = useState([])
@@ -643,6 +644,7 @@ const Home = () => {
           <div className='d-grid gap-2 d-md-flex justify-content-md-end mb-2'>
             <ButtonDownloadExcel title='Descargar informe' data={data} toFixed={toFixed} dateExcel={dateExcel} />
             <ButtonDownloadIncentivePayout title='Descargar Liq. de incentivos' data={data} dataCollection={dataCollection} formatDate={formatDate} errorRc={errorRc} dateExcel={dateExcel} />
+            {/* <ButtonUploadDb title='Guardad informacion' background='primary' data={data} postDataToApi={postDataToApi} /> */}
           </div>
           <div>
             <Table headers={['Vendedor', 'Total ventas', 'Cantidad de facturas', 'Promedio de ventas', 'Meta de ventas', 'Porcentaje de ventas', 'Ventas pendiente', 'Recaudo', 'Meta recaudo sin iva', 'Porcentaje de recaudo', 'Recaudo pendiente']} data={data} currencyFormat={currencyFormat} toFixed={toFixed} />

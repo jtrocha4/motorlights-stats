@@ -184,12 +184,12 @@ const ButtonDownloadIncentivePayout = ({ title, data, dataCollection, formatDate
       if (sellerWsDataSale[seller]) {
         customer[seller] = []
         sellerDataSale[seller].forEach(element => {
-          if (totalSalesPerCustomer[element.Nombres]) {
-            totalSalesPerCustomer[element.Nombres] += element.Ventas
-            dateSalesPerCustomer[element.Nombres] = element.Fecha
+          if (totalSalesPerCustomer[element.clientes]) {
+            totalSalesPerCustomer[element.clientes] += element.ventas
+            dateSalesPerCustomer[element.clientes] = element.fecha
           } else {
-            totalSalesPerCustomer[element.Nombres] = element.Ventas
-            dateSalesPerCustomer[element.Nombres] = element.Fecha
+            totalSalesPerCustomer[element.clientes] = element.ventas
+            dateSalesPerCustomer[element.clientes] = element.fecha
           }
         })
       }
@@ -241,31 +241,31 @@ const ButtonDownloadIncentivePayout = ({ title, data, dataCollection, formatDate
 
       if (sellerWsDataCollection[seller]) {
         sellerDataCollection[seller].forEach(element => {
-          const rc = element.RC
-          const bill = element.Factura
-          const collectionWithoutVAT = element.Recaudo / 1.19
+          const rc = element.rc
+          const bill = element.factura
+          const collectionWithoutVAT = element.recaudo / 1.19
           if (!equalRc[rc]) {
             equalRc[rc] = {
-              Vendedor: element.Vendedor,
-              Cliente: element.Cliente,
-              RC: element.RC,
-              Fecha_: element.Fecha_,
-              Factura: element.Factura,
-              Recaudo: collectionWithoutVAT
+              vendedor: element.vendedor,
+              cliente: element.cliente,
+              rc: element.rc,
+              fecha: element.fecha,
+              factura: element.factura,
+              recaudo: collectionWithoutVAT
             }
           } else {
-            equalRc[rc].Factura += ' - ' + bill
+            equalRc[rc].factura += ' - ' + bill
           }
         })
         const res = Object.values(equalRc)
 
         res.forEach(element => {
-          total += element.Recaudo
+          total += element.recaudo
           sellerWsDataCollection[seller].push([
-            { v: formatDate(element.Fecha_), s: excelStyles.whiteStyle },
-            { v: element.Factura, s: excelStyles.whiteStyle },
-            { v: element.Cliente, s: excelStyles.whiteStyle },
-            { v: element.Recaudo, s: excelStyles.yellowStyleCurrencyFormat, t: 'n' }
+            { v: formatDate(element.fecha), s: excelStyles.whiteStyle },
+            { v: element.factura, s: excelStyles.whiteStyle },
+            { v: element.cliente, s: excelStyles.whiteStyle },
+            { v: element.recaudo, s: excelStyles.yellowStyleCurrencyFormat, t: 'n' }
           ])
         })
         sellerWsDataCollection[seller].push([
