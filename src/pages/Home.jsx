@@ -472,14 +472,13 @@ const Home = ({ postDataToApi }) => {
             // Comisiones
             let collectionBonus
             const firstBonus = totalWithoutVAT * 0.02
-            const secondBonus = 0
 
             if (percentageCollected >= 100) {
               collectionBonus = totalWithoutVAT * 0.01
               commission = collectionBonus
             }
 
-            resultBonus = firstBonus + secondBonus
+            resultBonus = firstBonus
 
             collectionData[currentSeller] = sellerSales
             sellerCollection.push({
@@ -573,19 +572,18 @@ const Home = ({ postDataToApi }) => {
     })
     dataCost.forEach(el => {
       const combinedData = collectionBySeller.find(element => element.vendedor === el.vendedor)
-      let secondBonus = 0
-
-      if (el.porcentajeVentas > 100 && el.porcentajeRecaudo > 100) {
-        secondBonus = el.totalRecaudo * 0.012
-      }
 
       if (combinedData) {
         el.totalRecaudo = combinedData.totalRecaudo || 0
         el.porcentajeRecaudo = combinedData.porcentajeRecaudo
         el.recaudoPendiente = combinedData.recaudoPendiente
-        el.bonoResultado = (secondBonus + combinedData.bonoResultado) || 0
+        el.bonoResultado = combinedData.bonoResultado || 0
+
+        if (el.porcentajeVentas > 100 && el.porcentajeRecaudo > 100) {
+          el.bonoResultado = (el.totalRecaudo * 0.012) + combinedData.bonoResultado
+        }
+
         el.comisionTotal = (el.comisionVenta + combinedData.comisionRecaudo + el.bonoResultado) || 0
-        // el.bonoResultado = combinedData.bonoResultado || 0
         el.comisionRecaudo = combinedData.comisionRecaudo
       }
     })
