@@ -12,9 +12,9 @@ const ButtonDownloadImg = ({ title, background = 'primary', containerRef, date }
 
     const options = {
       quality: 1
-    //   style: {
-    //     background: 'white'
-    //   }
+      // style: {
+      //   background: 'white'
+      // }
     }
 
     domToImage.toBlob(node, options)

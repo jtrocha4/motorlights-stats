@@ -55,7 +55,9 @@ const SimpleBarCharts = () => {
               <LabelList dataKey='porcentajeRecaudo' position='top' fill='#7d7a79' formatter={customTooltipFormatter} />
             </Bar>
 
-            <Line name='Avance del mes' dataKey='porcentajeMes' stroke='#fd0001' />
+            <Line name='Avance del mes' dataKey='porcentajeMes' stroke='#fd0001'>
+              <LabelList dataKey='porcentajeMes' position='insideBottomLeft' fill='#7d7a79' formatter={customTooltipFormatter} />
+            </Line>
           </ComposedChart>
         </ResponsiveContainer>
       </div>
