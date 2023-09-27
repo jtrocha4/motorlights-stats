@@ -383,7 +383,6 @@ const Home = ({ postDataToApi }) => {
                 porcentajeVentas: percetageSale,
                 promedioVentas: averageSale,
                 recaudoPendiente: pendingCollectionTarget,
-                totalVentaConFlete: totalWithFreight,
                 totalCosto: totalCost,
                 totalRecaudo: 0,
                 totalVenta: total,
@@ -644,7 +643,7 @@ const Home = ({ postDataToApi }) => {
           <div className='d-grid gap-2 d-md-flex justify-content-md-end mb-2'>
             <ButtonDownloadExcel title='Descargar informe' data={data} toFixed={toFixed} dateExcel={dateExcel} />
             <ButtonDownloadIncentivePayout title='Descargar Liq. de incentivos' data={data} dataCollection={dataCollection} formatDate={formatDate} errorRc={errorRc} dateExcel={dateExcel} />
-            {/* <ButtonUploadDb title='Guardad informacion' background='primary' data={data} postDataToApi={postDataToApi} /> */}
+            <ButtonUploadDb title='Guardad informacion' background='primary' data={data} postDataToApi={postDataToApi} dateData={dateExcel} />
           </div>
           <div>
             <Table headers={['Vendedor', 'Total ventas', 'Cantidad de facturas', 'Promedio de ventas', 'Meta de ventas', 'Porcentaje de ventas', 'Ventas pendiente', 'Recaudo', 'Meta recaudo sin iva', 'Porcentaje de recaudo', 'Recaudo pendiente']} data={data} currencyFormat={currencyFormat} toFixed={toFixed} />
