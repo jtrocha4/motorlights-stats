@@ -16,8 +16,8 @@ function App () {
 
   const fetchDataFromApi = async () => {
     const response = await getData()
+    console.log(response)
     setData(response)
-    // console.log(response)
     return response
   }
 

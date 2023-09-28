@@ -1,4 +1,5 @@
 import React from 'react'
+import Swal from 'sweetalert2'
 
 const ButtonUploadDb = ({ title, background = 'primary', data, dateData, postDataToApi }) => {
   const { fechaFinal } = dateData
@@ -37,17 +38,42 @@ const ButtonUploadDb = ({ title, background = 'primary', data, dateData, postDat
     }
   ))
 
-  const handleUploadDb = () => {
-    try {
-      if (data.length === 0) {
-        throw new Error('Empty data')
+  const handleUploadDb = async () => {
+    Swal.fire({
+      title: '¿Seguro que deseas guardar esta información?',
+      text: 'Por favor revise la informacion antes de subirla al servidor',
+      icon: 'warning',
+      showDenyButton: true,
+      confirmButtonColor: '#3085d6',
+      denyButtonColor: '#6e7881',
+      denyButtonText: 'Cancelar',
+      confirmButtonText: 'Guardar'
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        if (data.length > 0) {
+          try {
+            for (const key in leakedData) {
+              await postDataToApi(leakedData[key])
+            }
+            Swal.fire({
+              title: 'Los datos se han guardado con éxito.',
+              icon: 'success'
+            })
+          } catch (error) {
+            Swal.fire({
+              title: 'Lo sentimos, ha ocurrido un error al guardar los datos.',
+              icon: 'error'
+            })
+          }
+        } else {
+          Swal.fire({
+            title: 'Lo sentimos, ha ocurrido un error al guardar los datos.',
+            text: 'Por favor, asegúrese de haber cargado todos los informes necesarios.',
+            icon: 'error'
+          })
+        }
       }
-      for (const key in data) {
-        postDataToApi(leakedData[key])
-      }
-    } catch (error) {
-      console.log(error)
-    }
+    })
   }
 
   return (
