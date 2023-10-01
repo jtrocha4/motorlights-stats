@@ -3,22 +3,52 @@ import React, { useRef } from 'react'
 import { Bar, CartesianGrid, ComposedChart, LabelList, Legend, Line, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import ButtonDownloadImg from '../ButtonDownloadImg'
 
-const SimpleBarCharts = () => {
-  const data = JSON.parse(localStorage.getItem('data')) || {}
-  const dateData = JSON.parse(localStorage.getItem('dateData')) || {}
-  const { porcentajeDiasTranscurridos, dia, mes } = dateData
+const SimpleBarCharts = ({ dataset, dateData }) => {
+  const localData = JSON.parse(localStorage.getItem('data')) || {}
+  const localDateData = JSON.parse(localStorage.getItem('dateData')) || {}
+
+  let porcentajeDiasTranscurridos, dia, mes
+
+  const getLengthOfObject = (object) => {
+    const lengthOfObject = Object.keys(object).length
+    return lengthOfObject
+  }
+
+  if (getLengthOfObject(localDateData) === 0 && dateData(dataset)) {
+    porcentajeDiasTranscurridos = dateData(dataset).porcentajeDiasTranscurridos
+    dia = dateData(dataset).dia
+    mes = dateData(dataset).mes
+  } else {
+    porcentajeDiasTranscurridos = localDateData.porcentajeDiasTranscurridos
+    dia = localDateData.dia
+    mes = localDateData.mes
+  }
+
   const percentageData = []
 
-  data.forEach(({ vendedor, porcentajeVentas, porcentajeRecaudo }) => {
-    const splitName = vendedor.split(' ')
-    const firstAndMiddleName = `${splitName[0]} ${splitName[1]}`
-    percentageData.push({
-      vendedor: firstAndMiddleName,
-      porcentajeVentas,
-      porcentajeRecaudo,
-      porcentajeMes: porcentajeDiasTranscurridos
+  const splitName = (name) => {
+    const nameChain = name.split(' ')
+    const firstAndMiddleName = `${nameChain[0]} ${nameChain[1]}`
+    return firstAndMiddleName
+  }
+
+  const addDataToPercentageData = (dataArray = [], percentageArray = []) => {
+    dataArray.forEach(({ vendedor, porcentajeVentas, porcentajeRecaudo }) => {
+      const firstAndMiddleName = splitName(vendedor)
+      percentageArray.push({
+        vendedor: firstAndMiddleName,
+        porcentajeVentas,
+        porcentajeRecaudo,
+        porcentajeMes: porcentajeDiasTranscurridos
+      })
     })
-  })
+  }
+
+  if (localData.length === 0) {
+    addDataToPercentageData(dataset, percentageData)
+  } else {
+    addDataToPercentageData(localData, percentageData)
+  }
 
   const leakedData = percentageData.filter(({ vendedor }) => vendedor !== 'MOTORLIGHTS S.A.S')
 

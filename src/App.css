@@ -14,13 +14,16 @@ body {
   position: fixed;
   top: 0;
   left: 0;
-  background-color: #4673bf;
   color: white;
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 0 2px;
   z-index: 999;
+}
+
+#navbar #navbarSupportedContent{
+  visibility: hidden;
 }
 
 #navbar .logo {
@@ -34,7 +37,8 @@ body {
   top: 4.2rem;
   left: 0;
   width: 15rem;
-  height: calc(100vh - 4.2rem);
+  /* height: calc(100vh - 4.2rem); */
+  height: 100vh;
   background-color: whitesmoke;
   border-right: 1px solid #888;
   overflow-y: auto;
@@ -49,6 +53,10 @@ body {
 .nav.sidebar li a:hover {
   color: #212529db;
   font-weight: bold;
+}
+
+.nav-link i{
+  margin-right: 5px;
 }
 
 .flex {
@@ -70,3 +78,38 @@ button i {
   padding-right: 0.2rem;
 }
 
+@media (max-width: 1024px){
+  body{
+    margin: 0;
+    padding: 0;
+    width: auto;
+  }
+  #root{
+    width: auto;
+    display: block;
+  }
+  .App{
+    width: auto;
+  }
+  .flex{
+    width: auto;
+    height: auto;
+    margin-left: 0;
+    padding: 10px;
+  }
+  .nav.sidebar{
+    visibility: hidden;
+  }
+  #navbar #navbarSupportedContent {
+    visibility: visible;
+  }
+
+  #navbar {
+    height: auto;
+    padding: 0.54rem 2px;
+  }
+
+  #navbar #div-ul {
+    visibility: visible;
+  }
+}

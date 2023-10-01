@@ -13,30 +13,13 @@ const ButtonUploadDb = ({ title, background = 'primary', data, dateData, postDat
     return new Date(year, month - 1, day)
   }
 
-  const leakedData = data.map(el => (
-    {
-      cantidadFacturas: el.cantidadFacturas,
-      comisionTotal: el.comisionTotal,
-      comisionVenta: el.comisionVenta,
-      margen: el.margen,
-      metaRecaudoSinIva: el.metaRecaudoSinIva,
-      metaVentas: el.metaVentas,
-      porcentajeMargen: el.porcentajeMargen,
-      porcentajeRecaudo: el.porcentajeRecaudo,
-      porcentajeVentas: el.porcentajeVentas,
-      promedioVentas: el.promedioVentas,
-      recaudoPendiente: el.recaudoPendiente,
-      totalVentaConFlete: el.totalVentaConFlete,
-      totalCosto: el.totalCosto,
-      totalRecaudo: el.totalRecaudo,
-      totalVenta: el.totalVenta,
-      vendedor: el.vendedor,
-      ventasPendiente: el.ventasPendiente,
-      bonoResultado: el.bonoResultado,
-      comisionRecaudo: el.comisionRecaudo,
+  const leakedData = data.map(el => {
+    const { venta, ...restOfData } = el
+    return {
+      ...restOfData,
       fecha: dateOfData(fechaFinal)
     }
-  ))
+  })
 
   const handleUploadDb = async () => {
     Swal.fire({

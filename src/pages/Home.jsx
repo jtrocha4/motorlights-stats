@@ -141,7 +141,7 @@ const Home = ({ postDataToApi }) => {
       const days = parseInt(parts[0])
       const year = parseInt(parts[2])
 
-      const daysOfTheMonth = new Date(2023, month + 1, 0).getDate()
+      const daysOfTheMonth = new Date(year, month + 1, 0).getDate()
 
       const countSundays = (year, month) => {
         const firstDay = new Date(year, month, 1)
@@ -641,9 +641,9 @@ const Home = ({ postDataToApi }) => {
           <div className='d-grid gap-2 d-md-flex justify-content-md-end mb-2'>
             <ButtonDownloadExcel title='Descargar informe' data={data} toFixed={toFixed} dateExcel={dateExcel} />
             <ButtonDownloadIncentivePayout title='Descargar Liq. de incentivos' data={data} dataCollection={dataCollection} formatDate={formatDate} errorRc={errorRc} dateExcel={dateExcel} />
-            <ButtonUploadDb title='Guardad informacion' background='primary' data={data} postDataToApi={postDataToApi} dateData={dateExcel} />
+            {/* <ButtonUploadDb title='Guardar informacion' background='primary' data={data} postDataToApi={postDataToApi} dateData={dateExcel} /> */}
           </div>
-          <div>
+          <div className='table-responsive'>
             <Table headers={['Vendedor', 'Total ventas', 'Cantidad de facturas', 'Promedio de ventas', 'Meta de ventas', 'Porcentaje de ventas', 'Ventas pendiente', 'Recaudo', 'Meta recaudo sin iva', 'Porcentaje de recaudo', 'Recaudo pendiente']} data={data} currencyFormat={currencyFormat} toFixed={toFixed} />
           </div>
         </div>
