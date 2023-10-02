@@ -22,9 +22,9 @@ const ButtonDownloadImg = ({ title, background = 'primary', containerRef, date }
   }
 
   return (
-    <div>
+    <>
       <button type='button' className={`btn btn-outline-${background}`} onClick={handleDownload}><i className='fa-regular fa-image' /> {title}</button>
-    </div>
+    </>
   )
 }
 

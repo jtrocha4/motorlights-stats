@@ -78,6 +78,11 @@ button i {
   padding-right: 0.2rem;
 }
 
+.charts-button-group{
+  display: flex;
+  justify-content: space-between;
+}
+
 @media (max-width: 1024px){
   body{
     margin: 0;
