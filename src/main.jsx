@@ -5,15 +5,18 @@ import './index.css'
 import { BrowserRouter } from 'react-router-dom'
 import { DataProvider } from './components/context/data.jsx'
 import { DateProvider } from './components/context/dateFile.jsx'
+import { NewCustomerProvider } from './components/context/newCustomers.jsx'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <DataProvider>
     <DateProvider>
-      {/* <React.StrictMode> */}
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
-      {/* </React.StrictMode> */}
+      <NewCustomerProvider>
+        {/* <React.StrictMode> */}
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
+        {/* </React.StrictMode> */}
+      </NewCustomerProvider>
     </DateProvider>
   </DataProvider>
 )
