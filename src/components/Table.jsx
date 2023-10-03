@@ -1,6 +1,6 @@
 import React from 'react'
 
-const Table = ({ headers, data, currencyFormat, toFixed }) => {
+const Table = ({ data, currencyFormat, toFixed }) => {
   const grandTotal = (data) => {
     const grandTotal = {
       sales: 0,
@@ -34,6 +34,7 @@ const Table = ({ headers, data, currencyFormat, toFixed }) => {
     })
     return grandTotal
   }
+
   const { sales, amountBills, averageSales, goalSales, percentageSales, pendingGoalSales, collection, collectionTarget, percentageCollection, pendingCollectionGoal } = grandTotal(data)
 
   return (
@@ -41,11 +42,17 @@ const Table = ({ headers, data, currencyFormat, toFixed }) => {
       <table className='table table-hover table-sm'>
         <thead>
           <tr>
-            {
-                headers.map((header, index) => (
-                  <th key={index}>{header}</th>
-                ))
-            }
+            <th>Vendedor</th>
+            <th>Total ventas</th>
+            <th>Cantidad de facturas</th>
+            <th>Promedio de ventas</th>
+            <th>Meta de ventas</th>
+            <th>Porcentaje de ventas</th>
+            <th>Ventas pendientes</th>
+            <th>Recaudo</th>
+            <th>Meta recaudo sin iva</th>
+            <th>Porcentaje de recaudo</th>
+            <th>Recaudo pendiente</th>
           </tr>
         </thead>
         <tbody className='table-group-divider'>
