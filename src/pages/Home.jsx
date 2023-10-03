@@ -1,24 +1,21 @@
 /* eslint-disable no-undef */
-import React, { useEffect, useState } from 'react'
-import * as XLSX from 'xlsx'
+import React, { useContext, useEffect } from 'react'
 import ButtonDownloadExcel from '../components/ButtonDownloadExcel'
 import ButtonDownloadIncentivePayout from '../components/ButtonDownloadIncentivePayout'
-import InputFile from '../components/InputFile'
 import ModalGoals from '../components/ModalGoals'
 import Swal from 'sweetalert2'
 import Table from '../components/Table'
-import { auxiliaryBookFileToModel, collectionFileToModel, costFileToModel } from '../mappers'
 import ButtonUploadDb from '../components/ButtonUploadDb'
+import InputCostFile from '../components/InputCostFile'
+import InputCollectionFile from '../components/InputCollectionFile'
+import InputAuxiliaryBookFile from '../components/InputAuxiliaryBookFile'
+import { DataContext } from '../components/context/data'
+import { DateContext } from '../components/context/dateFile'
 
 const Home = ({ postDataToApi }) => {
-  const [excelData, setExcelData] = useState([])
-  const [data, setData] = useState([])
-  const [dataCollection, setDataCollection] = useState([])
-  const [dataAuxiliaryBook, setDataAuxiliaryBook] = useState([])
+  const { dataCost, dataCollection, dateExcel, setDateExcel, excelDataCost, salesGoalBySeller, setSalesGoalBySeller, collectionGoalBySeller, setCollectionGoalBySeller } = useContext(DataContext)
 
-  // Data informe de recaudo
-  const [excelDataCollection, setExcelDataCollection] = useState([])
-  const [excelDataAuxiliaryBook, setExcelDataAuxiliaryBook] = useState([])
+  const { dateCostFile, dateCollectionFile, dateAuxiliaryBookFile } = useContext(DateContext)
 
   const currencyFormat = (number) => {
     if (number) {
@@ -32,93 +29,8 @@ const Home = ({ postDataToApi }) => {
     return parseFloat(number.toFixed(digitAfterPoint))
   }
 
-  const handleReadCostFile = (event) => {
-    const file = event.target.files[0]
-    const reader = new FileReader()
-
-    reader.onload = (e) => {
-      const fileContent = e.target.result
-      const workbook = XLSX.read(new Uint8Array(fileContent), { type: 'array' })
-      const sheetName = workbook.SheetNames[0]
-      const worksheet = workbook.Sheets[sheetName]
-      const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 })
-      setExcelData(jsonData)
-    }
-    reader.readAsArrayBuffer(file)
-  }
-
-  const handleReadCollectionFile = (event) => {
-    const file = event.target.files[0]
-    const reader = new FileReader()
-
-    reader.onload = (e) => {
-      const fileContent = e.target.result
-      const workbook = XLSX.read(new Uint8Array(fileContent), { type: 'array' })
-      const sheetName = workbook.SheetNames[0]
-      const worksheet = workbook.Sheets[sheetName]
-      const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 })
-      setExcelDataCollection(jsonData)
-    }
-    reader.readAsArrayBuffer(file)
-  }
-
-  const handleReadAuxiliaryBookFile = (event) => {
-    const file = event.target.files[0]
-    const reader = new FileReader()
-
-    reader.onload = (e) => {
-      const fileContent = e.target.result
-      const workbook = XLSX.read(new Uint8Array(fileContent), { type: 'array' })
-      const sheetName = workbook.SheetNames[0]
-      const worksheet = workbook.Sheets[sheetName]
-      const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 })
-      setExcelDataAuxiliaryBook(jsonData)
-    }
-    reader.readAsArrayBuffer(file)
-  }
-
-  const formatData = (headers = [], rows = []) => {
-    const costFile = rows.map(row => {
-      const rowData = {}
-      headers.forEach((header, index) => {
-        if (header !== 'PorMargen' && header !== 'Costo Unitario' && header !== 'Margen') { // Filtrado de columnas, las columnas que estan dentro de la condicion no aparecen
-          rowData[header] = row[index]
-        }
-      })
-      return rowData
-    })
-    return costFileToModel(costFile)
-  }
-
-  const formatDataCollectionFile = (headers = [], rows = []) => {
-    const collectionFile = rows.map(row => {
-      const rowData = {}
-      headers.forEach((header, index) => {
-        if (header !== 'Sucursal' && header !== 'Empresa') {
-          rowData[header] = row[index]
-        }
-      })
-      return rowData
-    })
-    return collectionFileToModel(collectionFile)
-  }
-
-  const formatDataAuxiliaryBookFile = (headers = [], rows = []) => {
-    const auxiliaryBookFile = rows.map(row => {
-      const rowData = {}
-      headers.forEach((header, index) => {
-        if (header !== 'Creditos' && header !== 'Cheque' && header !== 'Tercero' && header !== 'Saldo' && header !== 'Nota') {
-          rowData[header] = row[index]
-        }
-      })
-      return rowData
-    })
-    return auxiliaryBookFileToModel(auxiliaryBookFile)
-  }
-
-  const [dateExcel, setDateExcel] = useState({})
   const extractDateFromExcel = (dateCostFile = [], dateCollectionFile = [], dateAuxiliaryBookFile = []) => {
-    if (dateCostFile.length) {
+    if (dateCostFile.length !== 0) {
       const date = dateCostFile.join()
       const dateFormat = /\b(?:0?[1-9]|[12][0-9]|3[01])\/(?:0?[1-9]|1[0-2])\/\d{4}\b/g
       const dateExcel = date.match(dateFormat)
@@ -195,8 +107,9 @@ const Home = ({ postDataToApi }) => {
     }
     if (dateCollectionFile.length) {
       const date = dateCollectionFile.join()
-      const dateFormat = /\b(?:0?[1-9]|[12][0-9]|3[01])\/(?:0?[1-9]|1[0-2])\/\d{4}\b/g
+      const dateFormat = /Gestión de Cobranza/
       const dateExcel = date.match(dateFormat)
+
       if (!dateExcel) {
         return Swal.fire({
           icon: 'error',
@@ -207,7 +120,7 @@ const Home = ({ postDataToApi }) => {
     }
     if (dateAuxiliaryBookFile.length) {
       const date = dateAuxiliaryBookFile.join()
-      const dateFormat = /\b(?:0?[1-9]|[12][0-9]|3[01])\/(?:0?[1-9]|1[0-2])\/\d{4}\b/g
+      const dateFormat = /Libro Auxiliar/
       const dateExcel = date.match(dateFormat)
       if (!dateExcel) {
         return Swal.fire({
@@ -274,297 +187,6 @@ const Home = ({ postDataToApi }) => {
     return formattedDateString
   }
 
-  const dateCostFile = excelData[2]
-  const dateCollectionFile = excelDataCollection[1]
-  const dateAuxiliaryBookFile = excelDataAuxiliaryBook[1]
-
-  const headersCostFile = excelData[3]
-  const rowsCostFile = excelData.slice(4)
-  const formattedData = formatData(headersCostFile, rowsCostFile)
-
-  const headersCollectionFile = excelDataCollection[2]
-  const rowsCollectionFile = excelDataCollection.slice(3)
-  const formattedDataCollectionFile = formatDataCollectionFile(headersCollectionFile, rowsCollectionFile)
-
-  const headersAuxiliaryBookFile = excelDataAuxiliaryBook[3]
-  const rowsAuxiliaryBookFile = excelDataAuxiliaryBook.slice(4)
-  const formattedDataAuxiliaryBookFile = formatDataAuxiliaryBookFile(headersAuxiliaryBookFile, rowsAuxiliaryBookFile)
-
-  const howAreWeDoing = (formattedData, salesGoalBySeller = {}, collectionGoalBySeller = {}) => {
-    const saleData = {}
-    const sale = []
-    let currentSeller
-    let sellerSales
-    let total
-    let totalCost
-    const uniqueDocs = {}
-    let billCounter
-    let averageSale
-
-    let goalSale
-    let percetageSale
-    let pendingSalesTarget
-    let pendingCollectionTarget
-
-    let totalWithFreight
-    let margin
-    let percentageMargin
-
-    let collectionTarget
-    let percentageCollected
-
-    let splitChain
-
-    let commission
-
-    const motorlightsObject = {
-      cantidadFacturas: 0,
-      metaRecaudoSinIva: (collectionGoalBySeller['MOTORLIGHTS S.A.S'] === undefined) ? (0) : (collectionGoalBySeller['MOTORLIGHTS S.A.S']),
-      metaVentas: (salesGoalBySeller['MOTORLIGHTS S.A.S'] === undefined) ? (0) : (salesGoalBySeller['MOTORLIGHTS S.A.S']),
-      porcentajeRecaudo: 0,
-      porcentajeVentas: 0,
-      promedioVentas: 0,
-      recaudoPendiente: 0,
-      totalRecaudo: 0,
-      totalVenta: 0,
-      vendedor: 'MOTORLIGHTS S.A.S',
-      ventasPendiente: 0,
-      comisionTotal: 0
-    }
-
-    formattedData.forEach(row => {
-      if (row.codigoInventario !== undefined) {
-        splitChain = row.codigoInventario.split(' ')
-      }
-      if (row.vendedor) {
-        if (row.vendedor.startsWith('Total')) {
-          if (currentSeller) {
-            // Calculo de operaciones
-            billCounter = Object.keys(uniqueDocs[currentSeller] || {}).length
-
-            averageSale = total / Object.keys(uniqueDocs[currentSeller] || {}).length
-            averageSale = (averageSale !== -Infinity) ? (total / Object.keys(uniqueDocs[currentSeller] || {}).length) : 0
-
-            goalSale = salesGoalBySeller[currentSeller] || 0
-            percetageSale = (goalSale !== 0) ? ((total * 100) / goalSale) : (0)
-            pendingSalesTarget = goalSale - total
-
-            margin = totalWithFreight - totalCost
-            percentageMargin = (totalWithFreight !== 0) ? ((margin * 100) / totalWithFreight) : (0)
-
-            collectionTarget = collectionGoalBySeller[currentSeller] || 0
-            percentageCollected = 100
-            pendingCollectionTarget = collectionGoalBySeller[currentSeller] || 0
-
-            // Aproximacion de los datos
-            averageSale = toFixed(averageSale, 2)
-            percetageSale = toFixed(percetageSale, 1)
-            pendingSalesTarget = toFixed(pendingSalesTarget, 2)
-            percentageMargin = toFixed(percentageMargin, 1)
-
-            // Comisiones
-            let salesBonus
-            if (percetageSale >= 100) {
-              salesBonus = total * 0.01
-              commission = salesBonus
-            }
-
-            saleData[currentSeller] = sellerSales
-            sale.push(
-              {
-                cantidadFacturas: billCounter,
-                comisionTotal: 0,
-                comisionVenta: commission,
-                margen: margin,
-                metaRecaudoSinIva: collectionTarget,
-                metaVentas: goalSale,
-                porcentajeMargen: percentageMargin,
-                porcentajeRecaudo: percentageCollected,
-                porcentajeVentas: percetageSale,
-                promedioVentas: averageSale,
-                recaudoPendiente: pendingCollectionTarget,
-                totalCosto: totalCost,
-                totalRecaudo: 0,
-                totalVenta: total,
-                vendedor: currentSeller,
-                venta: saleData[currentSeller],
-                ventasPendiente: pendingSalesTarget
-              }
-            )
-          }
-          currentSeller = null
-          sellerSales = null
-          total = 0
-          totalWithFreight = 0
-          totalCost = 0
-          commission = 0
-        } else {
-          currentSeller = row.vendedor
-          sellerSales = []
-          total = 0
-          totalWithFreight = 0
-          totalCost = 0
-          commission = 0
-        }
-      }
-      if (currentSeller && sellerSales) {
-        totalWithFreight += row.ventas || 0
-      }
-      if (currentSeller && sellerSales && !splitChain[1].startsWith('Flete')) {
-        sellerSales.push(row)
-        total += row.ventas || 0
-        totalCost += row.totalCosto || 0
-        if (!uniqueDocs[currentSeller]) {
-          uniqueDocs[currentSeller] = {}
-        }
-        if (row.doc.startsWith('FV')) {
-          uniqueDocs[currentSeller][row.doc] = true
-        }
-      }
-    })
-    if (sale.length) {
-      const found = sale.find(el => el.vendedor === 'MOTORLIGHTS S.A.S')
-      if (found === undefined) {
-        sale.push(motorlightsObject)
-      }
-    }
-    setData(sale)
-  }
-
-  const [errorRc, setErrorRc] = useState([])
-
-  const howAreWeDoingCollection = async (formattedDataCollectionFile, debitForDocNum, collectionGoalBySeller = {}) => {
-    const collectionData = {}
-    const sellerCollection = []
-    let currentSeller
-    let sellerSales
-
-    const uniqueRC = {}
-    const iva = 1.19
-    let total
-    let totalWithoutVAT
-    let collectionTarget
-    let percentageCollected
-    let pendingCollectionTarget
-
-    let commission
-    let resultBonus
-
-    const errorRc = []
-
-    formattedDataCollectionFile.forEach(row => {
-      if (row.rc in debitForDocNum) {
-        row.recaudo = debitForDocNum[row.rc]
-      } else {
-        errorRc.push(`(MS) rc ${row.rc}`)
-        row.recaudo = 0
-      }
-      if (row.vendedor) {
-        if (row.vendedor.startsWith('Total')) {
-          if (currentSeller) {
-            totalWithoutVAT = parseFloat(total / iva)
-            collectionTarget = collectionGoalBySeller[currentSeller]
-            percentageCollected = (totalWithoutVAT * 100) / collectionTarget
-            pendingCollectionTarget = collectionTarget - totalWithoutVAT
-
-            percentageCollected = toFixed(percentageCollected, 1)
-
-            // Comisiones
-            let collectionBonus
-            const firstBonus = totalWithoutVAT * 0.02
-
-            if (percentageCollected >= 100) {
-              collectionBonus = totalWithoutVAT * 0.01
-              commission = collectionBonus
-            }
-
-            resultBonus = firstBonus
-
-            collectionData[currentSeller] = sellerSales
-            sellerCollection.push({
-              vendedor: currentSeller,
-              recaudo: collectionData[currentSeller],
-              totalRecaudo: totalWithoutVAT,
-              metaRecaudoSinIva: 0,
-              porcentajeRecaudo: percentageCollected,
-              recaudoPendiente: pendingCollectionTarget,
-              comisionRecaudo: commission,
-              comisionTotal: 0,
-              bonoResultado: resultBonus
-            })
-          }
-          currentSeller = null
-          sellerSales = null
-          total = 0
-          commission = 0
-          resultBonus = 0
-        } else {
-          currentSeller = row.vendedor
-          sellerSales = []
-          total = 0
-          commission = 0
-          resultBonus = 0
-        }
-      }
-      if (currentSeller && sellerSales) {
-        sellerSales.push(row)
-        if (!uniqueRC[row.rc]) {
-          uniqueRC[row.rc] = row.recaudo
-          total += uniqueRC[row.rc]
-        }
-      }
-    })
-    setErrorRc(errorRc.filter(el => el !== '(MS) rc undefined'))
-    setDataCollection(sellerCollection)
-  }
-
-  const [totalDebitByDocNum, setTotalDebitByDocNum] = useState({})
-
-  const howAreWeDoingAuxiliaryBook = async (formattedDataAuxiliaryBookFile) => {
-    const sellerCollection = []
-    let currentSeller
-    let sellerSales
-
-    formattedDataAuxiliaryBookFile.forEach(row => {
-      if (row.cuenta) {
-        if (row.cuenta.startsWith('Total')) {
-          if (currentSeller) {
-            const filterDoc = sellerSales.filter(el => el.docNum !== undefined)
-            filterDoc.forEach(el => {
-              const numberDoc = el.docNum.match(/\d+/g).join('')
-              el.docNum = numberDoc
-            })
-            sellerCollection.push(filterDoc)
-          }
-          currentSeller = null
-          sellerSales = null
-        } else {
-          currentSeller = row.cuenta
-          sellerSales = []
-        }
-      }
-      if (currentSeller && sellerSales) {
-        sellerSales.push(row)
-      }
-    })
-    const sellerCollectionFilter = sellerCollection.filter(el => el.length > 0)
-    const debitForDocNum = {}
-    sellerCollectionFilter.forEach(collection => {
-      collection.forEach(el => {
-        const docNum = el.docNum
-        const debit = parseFloat(el.debitos)
-        if (debitForDocNum[docNum]) {
-          debitForDocNum[docNum] += debit
-        } else {
-          debitForDocNum[docNum] = debit
-        }
-      })
-    })
-
-    setTotalDebitByDocNum(debitForDocNum)
-    setDataAuxiliaryBook(sellerCollectionFilter)
-  }
-
   const joinData = (dataCollection = [], dataCost = []) => {
     const collectionBySeller = []
     dataCollection.forEach(({ vendedor, totalRecaudo, metaRecaudoSinIva, porcentajeRecaudo, recaudoPendiente, comisionRecaudo, bonoResultado }) => {
@@ -589,24 +211,10 @@ const Home = ({ postDataToApi }) => {
     })
   }
 
-  joinData(dataCollection, data)
+  joinData(dataCollection, dataCost)
 
-  const [salesGoalBySeller, setSalesGoalBySeller] = useState({})
-  const [collectionGoalBySeller, setCollectionGoalBySeller] = useState({})
-
-  useEffect(() => {
-    howAreWeDoing(formattedData, salesGoalBySeller, collectionGoalBySeller)
-    howAreWeDoingAuxiliaryBook(formattedDataAuxiliaryBookFile)
-    extractDateFromExcel(dateCostFile, dateCollectionFile, dateAuxiliaryBookFile)
-    reportDateValidation(dateCostFile, dateCollectionFile, dateAuxiliaryBookFile)
-  }, [excelData, excelDataCollection, excelDataAuxiliaryBook, salesGoalBySeller, collectionGoalBySeller])
-
-  localStorage.setItem('data', JSON.stringify(data))
+  localStorage.setItem('data', JSON.stringify(dataCost))
   localStorage.setItem('dateData', JSON.stringify(dateExcel))
-
-  useEffect(() => {
-    howAreWeDoingCollection(formattedDataCollectionFile, totalDebitByDocNum, collectionGoalBySeller)
-  }, [totalDebitByDocNum, dataAuxiliaryBook])
 
   const sendForm = () => {
     const salesGoals = JSON.parse(localStorage.getItem('metaVentas'))
@@ -620,8 +228,12 @@ const Home = ({ postDataToApi }) => {
   }
 
   useEffect(() => {
+    extractDateFromExcel(dateCostFile, dateCollectionFile, dateAuxiliaryBookFile)
+  }, [dateCostFile, dateCollectionFile, dateAuxiliaryBookFile])
+
+  useEffect(() => {
     sendForm()
-  }, [excelData])
+  }, [excelDataCost])
 
   return (
     <div className='flex'>
@@ -629,22 +241,35 @@ const Home = ({ postDataToApi }) => {
         <h2>Inicio</h2>
         <p>Añada los siguientes archivos:</p>
         <div className='inputFile-group'>
-          <InputFile label='Informe de Costo' handleChange={handleReadCostFile} />
-          <InputFile label='Informe de Recaudo' handleChange={handleReadCollectionFile} />
-          <InputFile label='Informe Libro auxiliar' handleChange={handleReadAuxiliaryBookFile} />
+          <InputCostFile label='Informe de Costo' toFixed={toFixed} salesGoalBySeller={salesGoalBySeller} collectionGoalBySeller={collectionGoalBySeller} />
+
+          <InputCollectionFile label='Informe de Recaudo' toFixed={toFixed} collectionGoalBySeller={collectionGoalBySeller} />
+
+          <InputAuxiliaryBookFile label='Informe Libro auxiliar' />
+
           <div className='button-group'>
-            <ModalGoals title='Modificar metas' data={data} sendForm={sendForm} />
+            <ModalGoals title='Modificar metas' data={dataCost} sendForm={sendForm} />
           </div>
         </div>
         <div>
-          <h2>Como vamos</h2>
+          <h2>{(dateExcel.dia !== undefined && dateExcel.mes !== undefined) ? (`Como Vamos ${dateExcel.dia} ${dateExcel.mes}`) : ('Como Vamos')}</h2>
           <div className='d-grid gap-2 d-md-flex justify-content-md-end mb-2'>
-            <ButtonDownloadExcel title='Descargar informe' data={data} toFixed={toFixed} dateExcel={dateExcel} />
-            <ButtonDownloadIncentivePayout title='Descargar Liq. de incentivos' data={data} dataCollection={dataCollection} formatDate={formatDate} errorRc={errorRc} dateExcel={dateExcel} />
-            {/* <ButtonUploadDb title='Guardar informacion' background='primary' data={data} postDataToApi={postDataToApi} dateData={dateExcel} /> */}
+            <ButtonDownloadExcel
+              title='Descargar informe' data={dataCost} toFixed={toFixed}
+            />
+
+            <ButtonDownloadIncentivePayout
+              title='Descargar Liq. de incentivos' data={dataCost}
+              formatDate={formatDate} errorRc={[]}
+            />
+            <ButtonUploadDb
+              title='Guardar informacion' background='primary'
+              data={dataCost}
+              postDataToApi={postDataToApi}
+            />
           </div>
           <div className='table-responsive'>
-            <Table headers={['Vendedor', 'Total ventas', 'Cantidad de facturas', 'Promedio de ventas', 'Meta de ventas', 'Porcentaje de ventas', 'Ventas pendiente', 'Recaudo', 'Meta recaudo sin iva', 'Porcentaje de recaudo', 'Recaudo pendiente']} data={data} currencyFormat={currencyFormat} toFixed={toFixed} />
+            <Table data={dataCost} currencyFormat={currencyFormat} toFixed={toFixed} />
           </div>
         </div>
       </div>
