@@ -10,15 +10,15 @@ export const auxiliaryBookFileToModel = (auxiliaryBookFile) => {
     Saldo,
     Tercero
   }) => ({
-    cheque: Cheque,
-    creditos: Creditos,
+    // cheque: Cheque,
+    // creditos: Creditos,
     cuenta: Cuenta,
     debitos: Debitos,
     docNum,
-    fecha: Fecha,
-    nota: Nota,
-    saldo: Saldo,
-    tercero: Tercero
+    fecha: Fecha
+    // nota: Nota,
+    // saldo: Saldo
+    // tercero: Tercero
   }))
 
   return auxiliaryBookFileModel
