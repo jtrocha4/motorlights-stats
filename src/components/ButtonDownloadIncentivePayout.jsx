@@ -1,8 +1,11 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import XLSX from 'xlsx-js-style'
 import excelStyles from '../styles/excelStyles'
+import { DataContext } from './context/data'
 
-const ButtonDownloadIncentivePayout = ({ title, data, dataCollection, formatDate, errorRc, dateExcel }) => {
+const ButtonDownloadIncentivePayout = ({ title, data, formatDate }) => {
+  const { dateExcel, errorRc, dataCollection } = useContext(DataContext)
+
   const excelPercentageFormat = (percentageValue) => {
     const percentage = parseFloat(percentageValue / 100)
     return percentage

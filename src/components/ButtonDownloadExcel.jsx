@@ -1,9 +1,12 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import XLSX from 'xlsx-js-style'
 import _ from 'lodash'
 import excelStyles from '../styles/excelStyles'
+import { DataContext } from './context/data'
 
-const ButtonDownloadExcel = ({ title, data, toFixed, dateExcel }) => {
+const ButtonDownloadExcel = ({ title, data, toFixed }) => {
+  const { dateExcel } = useContext(DataContext)
+
   const excelPercentageFormat = (percentageValue) => {
     const percentage = parseFloat(percentageValue / 100)
     return percentage

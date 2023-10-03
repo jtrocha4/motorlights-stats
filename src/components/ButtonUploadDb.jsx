@@ -1,16 +1,20 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import Swal from 'sweetalert2'
+import { DataContext } from './context/data'
 
-const ButtonUploadDb = ({ title, background = 'primary', data, dateData, postDataToApi }) => {
-  const { fechaFinal } = dateData
+const ButtonUploadDb = ({ title, background = 'primary', data, postDataToApi }) => {
+  const { dateExcel } = useContext(DataContext)
+  const { fechaFinal } = dateExcel
 
   const dateOfData = (fechaFinal) => {
-    const splitDate = fechaFinal.split('/')
-    const day = splitDate[0]
-    const month = splitDate[1]
-    const year = splitDate[2]
+    if (fechaFinal !== undefined) {
+      const splitDate = fechaFinal.split('/')
+      const day = splitDate[0]
+      const month = splitDate[1]
+      const year = splitDate[2]
 
-    return new Date(year, month - 1, day)
+      return new Date(year, month - 1, day)
+    }
   }
 
   const leakedData = data.map(el => {
