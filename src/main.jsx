@@ -6,17 +6,20 @@ import { BrowserRouter } from 'react-router-dom'
 import { DataProvider } from './components/context/data.jsx'
 import { DateProvider } from './components/context/dateFile.jsx'
 import { NewCustomerProvider } from './components/context/newCustomers.jsx'
+import { SaleItemProvider } from './components/context/saleItem.jsx'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-  <DataProvider>
-    <DateProvider>
-      <NewCustomerProvider>
-        {/* <React.StrictMode> */}
-        <BrowserRouter>
-          <App />
-        </BrowserRouter>
-        {/* </React.StrictMode> */}
-      </NewCustomerProvider>
-    </DateProvider>
-  </DataProvider>
+  <React.StrictMode>
+    <DataProvider>
+      <DateProvider>
+        <NewCustomerProvider>
+          <SaleItemProvider>
+            <BrowserRouter>
+              <App />
+            </BrowserRouter>
+          </SaleItemProvider>
+        </NewCustomerProvider>
+      </DateProvider>
+    </DataProvider>
+  </React.StrictMode>
 )
