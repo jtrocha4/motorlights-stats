@@ -11,7 +11,8 @@ import InputCollectionFile from '../components/InputCollectionFile'
 import InputAuxiliaryBookFile from '../components/InputAuxiliaryBookFile'
 import { DataContext } from '../components/context/data'
 import { DateContext } from '../components/context/dateFile'
-import InputNewCustomers from '../components/InputNewCustomers'
+import InputNewCustomersFile from '../components/InputNewCustomersFile'
+import InputSaleItemFile from '../components/InputSaleItemFile'
 
 const Home = ({ postDataToApi }) => {
   const { dataCost, dataCollection, dateExcel, setDateExcel, excelDataCost, salesGoalBySeller, setSalesGoalBySeller, collectionGoalBySeller, setCollectionGoalBySeller } = useContext(DataContext)
@@ -248,7 +249,9 @@ const Home = ({ postDataToApi }) => {
 
           <InputAuxiliaryBookFile label='Informe Libro auxiliar' />
 
-          <InputNewCustomers label='Informe Clientes Nuevos' />
+          <InputNewCustomersFile label='Informe Clientes Nuevos' />
+
+          <InputSaleItemFile label='Informe Ventas Items' />
 
           <div className='button-group'>
             <ModalGoals title='Modificar metas' data={dataCost} sendForm={sendForm} />
