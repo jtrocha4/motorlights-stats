@@ -4,7 +4,7 @@ import { collectionFileToModel } from '../mappers'
 import { DataContext } from './context/data'
 import { DateContext } from './context/dateFile'
 
-const InputCollectionFile = ({ label, toFixed, collectionGoalBySeller }) => {
+const InputCollectionFile = ({ label, toFixed, salesGoalBySeller, collectionGoalBySeller }) => {
   const { totalDebitByDocNum, setDataCollection, setErrorRc, excelDataCollection, setExcelDataCollection } = useContext(DataContext)
   const { setDateCollectionFile } = useContext(DateContext)
 
@@ -131,7 +131,7 @@ const InputCollectionFile = ({ label, toFixed, collectionGoalBySeller }) => {
   useEffect(() => {
     extractCollectionData(formattedDataCollectionFile, totalDebitByDocNum, collectionGoalBySeller)
     setDateCollectionFile(dateFile)
-  }, [excelDataCollection, totalDebitByDocNum])
+  }, [excelDataCollection, totalDebitByDocNum, salesGoalBySeller, collectionGoalBySeller])
 
   return (
     <>

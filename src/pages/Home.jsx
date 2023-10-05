@@ -245,9 +245,9 @@ const Home = ({ postDataToApi }) => {
         <div className='inputFile-group'>
           <InputCostFile label='Informe de Costo' toFixed={toFixed} salesGoalBySeller={salesGoalBySeller} collectionGoalBySeller={collectionGoalBySeller} />
 
-          <InputCollectionFile label='Informe de Recaudo' toFixed={toFixed} collectionGoalBySeller={collectionGoalBySeller} />
+          <InputCollectionFile label='Informe de Recaudo' toFixed={toFixed} salesGoalBySeller={salesGoalBySeller} collectionGoalBySeller={collectionGoalBySeller} />
 
-          <InputAuxiliaryBookFile label='Informe Libro auxiliar' />
+          <InputAuxiliaryBookFile label='Informe Libro auxiliar' salesGoalBySeller={salesGoalBySeller} collectionGoalBySeller={collectionGoalBySeller} />
 
           <InputNewCustomersFile label='Informe Clientes Nuevos' />
 

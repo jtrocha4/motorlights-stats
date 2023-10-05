@@ -4,7 +4,7 @@ import { auxiliaryBookFileToModel } from '../mappers'
 import { DataContext } from './context/data'
 import { DateContext } from './context/dateFile'
 
-const InputAuxiliaryBookFile = ({ label }) => {
+const InputAuxiliaryBookFile = ({ label, salesGoalBySeller, collectionGoalBySeller }) => {
   const { setDataAuxiliaryBook, setTotalDebitByDocNum, excelDataAuxiliaryBook, setExcelDataAuxiliaryBook } = useContext(DataContext)
   const { setDateAuxiliaryBookFile } = useContext(DateContext)
 
@@ -91,7 +91,7 @@ const InputAuxiliaryBookFile = ({ label }) => {
   useEffect(() => {
     extractAuxiliaryBookData(formattedDataAuxiliaryBookFile)
     setDateAuxiliaryBookFile(dateAuxiliaryBookFile)
-  }, [excelDataAuxiliaryBook])
+  }, [excelDataAuxiliaryBook, salesGoalBySeller, collectionGoalBySeller])
 
   return (
     <>
