@@ -82,7 +82,9 @@ const InputCostFile = ({ label, toFixed, salesGoalBySeller, collectionGoalBySell
       totalVenta: 0,
       vendedor: 'MOTORLIGHTS S.A.S',
       ventasPendiente: 0,
-      comisionTotal: 0
+      comisionTotal: 0,
+      margen: 0,
+      porcentajeMargen: 0
     }
 
     formattedData.forEach(row => {

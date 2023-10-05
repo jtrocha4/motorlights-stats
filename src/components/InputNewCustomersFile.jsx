@@ -38,7 +38,7 @@ const InputNewCustomersFile = ({ label }) => {
   const formattedDataNewCustomers = formatDataNewCustomers(headersNewCustomersFile, rowsNewCustomersFile)
 
   useEffect(() => {
-    console.log(formattedDataNewCustomers)
+    // console.log(formattedDataNewCustomers)
   }, [excelDataNewCustomers])
 
   return (
