@@ -2,9 +2,11 @@ import React, { useContext, useEffect } from 'react'
 import * as XLSX from 'xlsx'
 import { newCustomersFileToModel } from '../mappers'
 import { NewCustomerContext } from './context/newCustomers'
+import { SaleItemContext } from './context/saleItem'
 
 const InputNewCustomersFile = ({ label }) => {
-  const { excelDataNewCustomers, setExcelDataNewCustomers } = useContext(NewCustomerContext)
+  const { excelDataNewCustomers, setExcelDataNewCustomers, dataNewCustomers, setDataNewCustomers, findNewClients } = useContext(NewCustomerContext)
+  const { excelDataSaleItem, dataSaleItem } = useContext(SaleItemContext)
 
   const handleReadNewCustomersFile = (event) => {
     const file = event.target.files[0]
@@ -37,9 +39,15 @@ const InputNewCustomersFile = ({ label }) => {
   const rowsNewCustomersFile = excelDataNewCustomers.slice(1)
   const formattedDataNewCustomers = formatDataNewCustomers(headersNewCustomersFile, rowsNewCustomersFile)
 
+  const extractNewCustomersData = (formattedDataNewCustomers = []) => {
+    const customerData = formattedDataNewCustomers
+    setDataNewCustomers(customerData)
+  }
+
   useEffect(() => {
-    // console.log(formattedDataNewCustomers)
-  }, [excelDataNewCustomers])
+    extractNewCustomersData(formattedDataNewCustomers)
+    findNewClients(dataSaleItem, dataNewCustomers)
+  }, [excelDataNewCustomers, excelDataSaleItem, dataSaleItem])
 
   return (
     <>
