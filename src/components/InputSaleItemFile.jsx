@@ -4,7 +4,7 @@ import { saleItemFileToModel } from '../mappers'
 import { SaleItemContext } from './context/saleItem'
 
 const InputSaleItemFile = ({ label }) => {
-  const { excelDataSaleItem, setExcelDataSaleItem, dataSaleItem, setDataSaleItem } = useContext(SaleItemContext)
+  const { excelDataSaleItem, setExcelDataSaleItem, setDataSaleItem } = useContext(SaleItemContext)
 
   const handleReadSaleItemFile = (event) => {
     const file = event.target.files[0]
@@ -63,11 +63,8 @@ const InputSaleItemFile = ({ label }) => {
         customers.push(row.cliente)
       }
     })
-
     setDataSaleItem(seller)
   }
-
-  // console.log(dataSaleItem)
 
   useEffect(() => {
     extractSaleItemData(formattedDataSaleItem)
