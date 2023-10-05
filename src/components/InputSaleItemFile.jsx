@@ -4,7 +4,7 @@ import { saleItemFileToModel } from '../mappers'
 import { SaleItemContext } from './context/saleItem'
 
 const InputSaleItemFile = ({ label }) => {
-  const { excelDataSaleItem, setExcelDataSaleItem } = useContext(SaleItemContext)
+  const { excelDataSaleItem, setExcelDataSaleItem, dataSaleItem, setDataSaleItem } = useContext(SaleItemContext)
 
   const handleReadSaleItemFile = (event) => {
     const file = event.target.files[0]
@@ -36,8 +36,41 @@ const InputSaleItemFile = ({ label }) => {
   const headersSaleItemFile = excelDataSaleItem[3]
   const rowsSaleItemFile = excelDataSaleItem.slice(4)
   const formattedDataSaleItem = formatDataSaleItemFile(headersSaleItemFile, rowsSaleItemFile)
+
+  const extractSaleItemData = (formattedData) => {
+    let currentSeller
+    let customers = []
+
+    const seller = []
+
+    formattedData.forEach(row => {
+      if (row.vendedor) {
+        if (row.vendedor.startsWith('Total')) {
+          if (currentSeller) {
+            const uniqueCustomers = [...new Set(customers)]
+            seller.push({
+              vendedor: currentSeller,
+              clientes: uniqueCustomers
+            })
+            currentSeller = null
+            customers = []
+          }
+        } else {
+          currentSeller = row.vendedor
+        }
+      }
+      if (currentSeller && customers) {
+        customers.push(row.cliente)
+      }
+    })
+
+    setDataSaleItem(seller)
+  }
+
+  // console.log(dataSaleItem)
+
   useEffect(() => {
-    console.log(formattedDataSaleItem)
+    extractSaleItemData(formattedDataSaleItem)
   }, [excelDataSaleItem])
 
   return (
