@@ -15,7 +15,7 @@ const ButtonDownloadExcel = ({ title, data, toFixed }) => {
   const handleDownload = () => {
     const dates = ['Mes']
     const headers = ['Vendedor']
-    const values = ['Total ventas', 'Cantidad de facturas', 'Promedio de ventas', 'Margen bruto', '% Margen bruto', 'Meta ventas', '% Venta', 'Ventas pendiente', 'Total recaudo', 'Meta recaudo sin iva', '% Recaudo', 'Recaudo pendiente']
+    const values = ['Total ventas', 'Cantidad de facturas', 'Promedio de ventas', 'Clientes nuevos', 'Margen bruto', '% Margen bruto', 'Meta ventas', '% Venta', 'Ventas pendiente', 'Total recaudo', 'Meta recaudo sin iva', '% Recaudo', 'Recaudo pendiente']
 
     const wsData = []
     const wsDataPercentaje = []
@@ -76,6 +76,10 @@ const ButtonDownloadExcel = ({ title, data, toFixed }) => {
         cellValue.v = value
         cellValue.s = excelStyles.headerGrayStyle
       }
+      if (value === 'Clientes nuevos') {
+        cellValue.v = value
+        cellValue.s = excelStyles.headerOrangeStyle
+      }
       if (value === 'Margen bruto') {
         cellValue.v = value
         cellValue.s = excelStyles.headerOrangeStyle
@@ -129,6 +133,11 @@ const ButtonDownloadExcel = ({ title, data, toFixed }) => {
           cell.v = item.promedioVentas
           cell.t = 'n'
           cell.s = excelStyles.grayStyleCurrencyFormat
+        }
+        if (value === 'Clientes nuevos') {
+          cell.v = item.clientesNuevos
+          cell.t = 'n'
+          cell.s = excelStyles.orangeStyle
         }
         if (value === 'Margen bruto') {
           cell.v = item.margen
@@ -192,7 +201,8 @@ const ButtonDownloadExcel = ({ title, data, toFixed }) => {
         margen: 0,
         costo: 0,
         ventaConFlete: 0,
-        porcentajeMargen: 0
+        porcentajeMargen: 0,
+        clientesNuevos: 0
       }
 
       // Operaciones para calcular el total
@@ -207,6 +217,8 @@ const ButtonDownloadExcel = ({ title, data, toFixed }) => {
       total.metaRecaudoSinIva = data.reduce((acc, item) => acc + item.metaRecaudoSinIva, 0)
       total.porcentajeRecaudo = (total.recaudo * 100) / total.metaRecaudoSinIva
       total.recaudoPendiente = data.reduce((acc, item) => acc + item.recaudoPendiente, 0)
+
+      total.clientesNuevos = data.reduce((acc, item) => acc + item.clientesNuevos, 0)
 
       total.margen = data.reduce((acc, item) => acc + item.margen, 0)
       total.costo = data.reduce((acc, item) => acc + item.totalCosto, 0)
@@ -235,6 +247,12 @@ const ButtonDownloadExcel = ({ title, data, toFixed }) => {
         cell.v = total.promedioVentas
         cell.t = 'n'
         cell.s = excelStyles.grayStyleCurrencyFormat
+        row.push(cell)
+      }
+      if (value === 'Clientes nuevos') {
+        cell.v = total.clientesNuevos
+        cell.t = 'n'
+        cell.s = excelStyles.orangeStyle
         row.push(cell)
       }
       if (value === 'Margen bruto') {
@@ -346,8 +364,8 @@ const ButtonDownloadExcel = ({ title, data, toFixed }) => {
     wsSellerData[0].v = 'Vendedores'
     wsSellerData[0].s = excelStyles.headerBlackStyle
     wsDataPercentaje.push(wsSellerData)
-    wsDataPercentaje.push(wsData[8]) // Porcentaje Ventas
-    wsDataPercentaje.push(wsData[12]) // Porcentaje Recaudo
+    wsDataPercentaje.push(wsData[9]) // Porcentaje Ventas
+    wsDataPercentaje.push(wsData[13]) // Porcentaje Recaudo
 
     const workbook = XLSX.utils.book_new()
     const sheetName = 'Resumen'

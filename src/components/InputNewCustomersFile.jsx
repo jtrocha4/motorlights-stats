@@ -3,10 +3,12 @@ import * as XLSX from 'xlsx'
 import { newCustomersFileToModel } from '../mappers'
 import { NewCustomerContext } from './context/newCustomers'
 import { SaleItemContext } from './context/saleItem'
+import { DataContext } from './context/data'
 
 const InputNewCustomersFile = ({ label }) => {
-  const { excelDataNewCustomers, setExcelDataNewCustomers, dataNewCustomers, setDataNewCustomers, findNewClients } = useContext(NewCustomerContext)
+  const { excelDataNewCustomers, setExcelDataNewCustomers, dataNewCustomers, setDataNewCustomers, setCustomersBySeller, customersBySeller } = useContext(NewCustomerContext)
   const { excelDataSaleItem, dataSaleItem } = useContext(SaleItemContext)
+  const { dataCost, setDataCost } = useContext(DataContext)
 
   const handleReadNewCustomersFile = (event) => {
     const file = event.target.files[0]
@@ -44,10 +46,66 @@ const InputNewCustomersFile = ({ label }) => {
     setDataNewCustomers(customerData)
   }
 
+  const extractId = (array) => {
+    const regex = /\d+/
+    const id = array.map(el => el.match(regex)[0])
+    return id
+  }
+
+  const findNewClients = (dataSaleItem = [], dataNewCustomers = []) => {
+    const customersBySeller = {}
+    dataSaleItem.forEach(element => {
+      dataNewCustomers.forEach(newCustomer => {
+        const customerId = newCustomer.id
+        const elementCustomerId = extractId(element.clientes)
+        if (elementCustomerId.includes(customerId)) {
+          const sellerName = element.vendedor
+          if (customersBySeller[sellerName]) {
+            customersBySeller[sellerName]++
+          } else {
+            customersBySeller[sellerName] = 1
+          }
+        }
+      })
+    })
+    setCustomersBySeller(customersBySeller)
+  }
+
+  // const addCustomersToData = (customerBySeller, data) => {
+  //   for (const seller in customerBySeller) {
+  //     for (const key in data) {
+  //       const sellerData = data[key]
+  //       const obj = Object.values(sellerData)
+  //       // console.log(obj)
+  //       if (obj.includes(seller)) {
+  //         sellerData.clientesNuevo = customerBySeller[seller]
+  //       }
+  //     }
+  //   }
+  // }
+
+  const addCustomersToData = (customerBySeller, data) => {
+    for (const key in data) {
+      const sellerData = data[key]
+      const vendedor = sellerData.vendedor
+
+      if (customerBySeller[vendedor] !== undefined) {
+        sellerData.clientesNuevos = customerBySeller[vendedor]
+      } else {
+        sellerData.clientesNuevos = 0
+      }
+    }
+    setDataCost([...data])
+  }
+
   useEffect(() => {
     extractNewCustomersData(formattedDataNewCustomers)
     findNewClients(dataSaleItem, dataNewCustomers)
   }, [excelDataNewCustomers, excelDataSaleItem, dataSaleItem])
+
+  useEffect(() => {
+    addCustomersToData(customersBySeller, dataCost)
+  }, [customersBySeller])
 
   return (
     <>
