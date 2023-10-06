@@ -475,6 +475,32 @@ const excelStyles = {
   },
 
   // Orange
+  orangeStyle: {
+    numFmt: '0',
+    fill: { fgColor: { rgb: 'F79646' } },
+    alignment: { horizontal: 'right' },
+    font: {
+      bold: true
+    },
+    border: {
+      right: {
+        style: 'thin',
+        color: '000000'
+      },
+      left: {
+        style: 'thin',
+        color: '000000'
+      },
+      top: {
+        style: 'thin',
+        color: '000000'
+      },
+      bottom: {
+        style: 'thin',
+        color: '000000'
+      }
+    }
+  },
   headerOrangeStyle: {
     fill: { fgColor: { rgb: 'F79646' } },
     alignment: { horizontal: 'left' },
