@@ -37,7 +37,7 @@ const InputCollectionFile = ({ label, toFixed, salesGoalBySeller, collectionGoal
     return collectionFileToModel(collectionFile)
   }
 
-  const dateFile = excelDataCollection[1]
+  const dateCollectionFile = excelDataCollection[1]
 
   const headersCollectionFile = excelDataCollection[2]
   const rowsCollectionFile = excelDataCollection.slice(3)
@@ -130,7 +130,7 @@ const InputCollectionFile = ({ label, toFixed, salesGoalBySeller, collectionGoal
 
   useEffect(() => {
     extractCollectionData(formattedDataCollectionFile, totalDebitByDocNum, collectionGoalBySeller)
-    setDateCollectionFile(dateFile)
+    setDateCollectionFile(dateCollectionFile)
   }, [excelDataCollection, totalDebitByDocNum, salesGoalBySeller, collectionGoalBySeller])
 
   return (
