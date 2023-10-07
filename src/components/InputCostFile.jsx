@@ -6,7 +6,7 @@ import { DateContext } from './context/dateFile'
 
 const InputCostFile = ({ label, toFixed, salesGoalBySeller, collectionGoalBySeller }) => {
   const { setDataCost, excelDataCost, setExcelDataCost } = useContext(DataContext)
-  const { setDateCostFile } = useContext(DateContext)
+  const { setDateCostFile, setCostReportName } = useContext(DateContext)
 
   const handleReadCostFile = (event) => {
     const file = event.target.files[0]
@@ -37,11 +37,12 @@ const InputCostFile = ({ label, toFixed, salesGoalBySeller, collectionGoalBySell
     return costFileToModel(costFile)
   }
 
-  const dateFile = excelDataCost[2]
+  const reportName = excelDataCost[1]
+  const reportDate = excelDataCost[2]
 
-  const headersCostFile = excelDataCost[3]
-  const rowsCostFile = excelDataCost.slice(4)
-  const formattedDataCost = formatDataCost(headersCostFile, rowsCostFile)
+  const reportHeader = excelDataCost[3]
+  const reportRows = excelDataCost.slice(4)
+  const formattedDataCost = formatDataCost(reportHeader, reportRows)
 
   const extractCostData = (formattedData, salesGoalBySeller = {}, collectionGoalBySeller = {}) => {
     const saleData = {}
@@ -165,7 +166,7 @@ const InputCostFile = ({ label, toFixed, salesGoalBySeller, collectionGoalBySell
       if (currentSeller && sellerSales) {
         totalWithFreight += row.ventas || 0
       }
-      if (currentSeller && sellerSales && !splitChain[1].startsWith('Flete')) {
+      if (currentSeller && sellerSales && splitChain !== undefined && !splitChain[1].startsWith('Flete')) {
         sellerSales.push(row)
         total += row.ventas || 0
         totalCost += row.totalCosto || 0
@@ -188,7 +189,8 @@ const InputCostFile = ({ label, toFixed, salesGoalBySeller, collectionGoalBySell
 
   useEffect(() => {
     extractCostData(formattedDataCost, salesGoalBySeller, collectionGoalBySeller)
-    setDateCostFile(dateFile)
+    setCostReportName(reportName)
+    setDateCostFile(reportDate)
   }, [excelDataCost, salesGoalBySeller, collectionGoalBySeller])
 
   return (
