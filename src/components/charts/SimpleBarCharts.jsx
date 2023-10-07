@@ -4,7 +4,7 @@ import { Bar, CartesianGrid, ComposedChart, LabelList, Legend, Line, ResponsiveC
 import ButtonDownloadImg from '../ButtonDownloadImg'
 import Calendar from '../Calendar'
 
-const SimpleBarCharts = ({ dataset, dateData }) => {
+const SimpleBarCharts = ({ dataset, extractDateFromData }) => {
   const localData = JSON.parse(localStorage.getItem('data')) || {}
   const localDateData = JSON.parse(localStorage.getItem('dateData')) || {}
 
@@ -15,10 +15,10 @@ const SimpleBarCharts = ({ dataset, dateData }) => {
     return lengthOfObject
   }
 
-  if (getLengthOfObject(localDateData) === 0 && dateData(dataset)) {
-    porcentajeDiasTranscurridos = dateData(dataset).porcentajeDiasTranscurridos
-    dia = dateData(dataset).dia
-    mes = dateData(dataset).mes
+  if (getLengthOfObject(localDateData) === 0 && extractDateFromData(dataset)) {
+    porcentajeDiasTranscurridos = extractDateFromData(dataset).porcentajeDiasTranscurridos
+    dia = extractDateFromData(dataset).dia
+    mes = extractDateFromData(dataset).mes
   } else {
     porcentajeDiasTranscurridos = localDateData.porcentajeDiasTranscurridos
     dia = localDateData.dia
