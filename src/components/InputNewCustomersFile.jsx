@@ -71,19 +71,6 @@ const InputNewCustomersFile = ({ label }) => {
     setCustomersBySeller(customersBySeller)
   }
 
-  // const addCustomersToData = (customerBySeller, data) => {
-  //   for (const seller in customerBySeller) {
-  //     for (const key in data) {
-  //       const sellerData = data[key]
-  //       const obj = Object.values(sellerData)
-  //       // console.log(obj)
-  //       if (obj.includes(seller)) {
-  //         sellerData.clientesNuevo = customerBySeller[seller]
-  //       }
-  //     }
-  //   }
-  // }
-
   const addCustomersToData = (customerBySeller, data) => {
     for (const key in data) {
       const sellerData = data[key]
