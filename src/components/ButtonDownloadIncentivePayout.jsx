@@ -3,7 +3,7 @@ import XLSX from 'xlsx-js-style'
 import excelStyles from '../styles/excelStyles'
 import { DataContext } from './context/data'
 
-const ButtonDownloadIncentivePayout = ({ title, data, formatDate }) => {
+const ButtonDownloadIncentivePayout = ({ title, data, convertExcelDateToReadable }) => {
   const { dateExcel, errorRc, dataCollection } = useContext(DataContext)
 
   const excelPercentageFormat = (percentageValue) => {
@@ -208,7 +208,7 @@ const ButtonDownloadIncentivePayout = ({ title, data, formatDate }) => {
                 const totalSales = totalSalesPerCustomer[key]
                 total += totalSales
                 sellerWsDataSale[seller].push([
-                  { v: formatDate(date), s: excelStyles.whiteStyle },
+                  { v: convertExcelDateToReadable(date), s: excelStyles.whiteStyle },
                   { v: key, s: excelStyles.whiteStyle },
                   { v: totalSales, s: excelStyles.yellowStyleCurrencyFormat, t: 'n' }
                 ])
@@ -265,7 +265,7 @@ const ButtonDownloadIncentivePayout = ({ title, data, formatDate }) => {
         res.forEach(element => {
           total += element.recaudo
           sellerWsDataCollection[seller].push([
-            { v: formatDate(element.fecha), s: excelStyles.whiteStyle },
+            { v: convertExcelDateToReadable(element.fecha), s: excelStyles.whiteStyle },
             { v: element.factura, s: excelStyles.whiteStyle },
             { v: element.cliente, s: excelStyles.whiteStyle },
             { v: element.recaudo, s: excelStyles.yellowStyleCurrencyFormat, t: 'n' }
