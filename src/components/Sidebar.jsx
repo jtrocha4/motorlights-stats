@@ -6,7 +6,10 @@ const Sidebar = () => {
     <>
       <ul className='nav sidebar'>
         <li className='nav-item'>
-          <Link className='nav-link' to='/'><i className='fa-solid fa-house' /> Inicio</Link>
+          <Link className='nav-link' to='/'><i className='fa-solid fa-file-arrow-up' /> Cargar Informes</Link>
+        </li>
+        <li className='nav-item'>
+          <Link className='nav-link' to='/how-are-we-doing'><i className='fa-solid fa-table' /> Como Vamos</Link>
         </li>
         <li className='nav-item'>
           <Link className='nav-link' to='/graphics'><i className='fa-solid fa-chart-line' /> Graficos</Link>
