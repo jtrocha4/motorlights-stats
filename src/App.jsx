@@ -3,11 +3,12 @@ import { Route, Routes } from 'react-router-dom'
 import './App.css'
 import Navbar from './components/Navbar'
 import Sidebar from './components/Sidebar'
-import Home from './pages/Home'
+import UploadReports from './pages/UploadReports'
 import Graphics from './pages/Graphics'
 import DataBase from './pages/DataBase'
 import { getData, createNewData } from './services/dataService'
 import { useEffect, useState } from 'react'
+import HowAreWeDoing from './pages/HowAreWeDoing'
 
 function App () {
   const [dataset, setDataset] = useState([])
@@ -32,7 +33,7 @@ function App () {
     }
   }
 
-  const dateData = (dataArray = []) => {
+  const extractDateFromData = (dataArray = []) => {
     let date
     dataArray.forEach(el => { date = el.fecha })
     if (date !== undefined) {
@@ -96,6 +97,32 @@ function App () {
     }
   }
 
+  const currencyFormat = (number) => {
+    if (number) {
+      return number.toLocaleString('es-CO', { style: 'currency', currency: 'COP' })
+    } else {
+      return number
+    }
+  }
+
+  const toFixed = (number, digitAfterPoint) => {
+    return parseFloat(number.toFixed(digitAfterPoint))
+  }
+
+  const convertExcelDateToReadable = (excelDate) => {
+    const excelBaseDate = new Date(1900, 0, 1)
+    const days = excelDate - 1
+    const formattedDate = new Date(excelBaseDate.getTime() + days * 24 * 60 * 60 * 1000)
+
+    const month = formattedDate.getMonth() + 1
+    const day = formattedDate.getDate()
+    const year = formattedDate.getFullYear()
+
+    const formattedDateString = `${month.toString().padStart(2, '0')}/${day.toString().padStart(2, '0')}/${year}`
+
+    return formattedDateString
+  }
+
   useEffect(() => {
     fetchDataFromApi()
   }, [newData])
@@ -105,8 +132,9 @@ function App () {
       <Navbar />
       <Sidebar />
       <Routes>
-        <Route path='/' element={<Home postDataToApi={postDataToApi} />} />
-        <Route path='/graphics' element={<Graphics dataset={dataset} dateData={dateData} />} />
+        <Route path='/' element={<UploadReports postDataToApi={postDataToApi} toFixed={toFixed} />} />
+        <Route path='/how-are-we-doing' element={<HowAreWeDoing postDataToApi={postDataToApi} toFixed={toFixed} convertExcelDateToReadable={convertExcelDateToReadable} currencyFormat={currencyFormat} />} />
+        <Route path='/graphics' element={<Graphics dataset={dataset} extractDateFromData={extractDateFromData} />} />
         <Route path='/database' element={<DataBase />} />
       </Routes>
     </div>
