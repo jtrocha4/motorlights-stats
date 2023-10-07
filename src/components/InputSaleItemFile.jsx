@@ -2,9 +2,11 @@ import React, { useContext, useEffect } from 'react'
 import * as XLSX from 'xlsx'
 import { saleItemFileToModel } from '../mappers'
 import { SaleItemContext } from './context/saleItem'
+import { DateContext } from './context/dateFile'
 
 const InputSaleItemFile = ({ label }) => {
   const { excelDataSaleItem, setExcelDataSaleItem, setDataSaleItem } = useContext(SaleItemContext)
+  const { setDateSaleItemFile } = useContext(DateContext)
 
   const handleReadSaleItemFile = (event) => {
     const file = event.target.files[0]
@@ -32,6 +34,8 @@ const InputSaleItemFile = ({ label }) => {
     })
     return saleItemFileToModel(saleItemFile)
   }
+
+  const dateSaleItemFile = excelDataSaleItem[1]
 
   const headersSaleItemFile = excelDataSaleItem[3]
   const rowsSaleItemFile = excelDataSaleItem.slice(4)
@@ -68,6 +72,7 @@ const InputSaleItemFile = ({ label }) => {
 
   useEffect(() => {
     extractSaleItemData(formattedDataSaleItem)
+    setDateSaleItemFile(dateSaleItemFile)
   }, [excelDataSaleItem])
 
   return (
