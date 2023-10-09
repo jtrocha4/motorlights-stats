@@ -401,7 +401,12 @@ const ButtonDownloadIncentivePayout = ({ title, data, convertExcelDateToReadable
       sellerData[seller].forEach(el => {
         // el => el.totalRecaudo * 0.07
       })
-      const fifthBonus = 0
+      let fifthBonus = 0
+      sellerData[seller].forEach(el => {
+        if (el.clientesNuevos > 0) {
+          fifthBonus = (el.totalRecaudo * 0.001) * el.clientesNuevos
+        }
+      })
 
       if (incentiveWsData[seller]) {
         resultBonus.forEach(bonus => {
