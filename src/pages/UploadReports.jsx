@@ -143,8 +143,8 @@ const UploadReports = ({ toFixed }) => {
 
   const joinData = (dataCollection = [], dataCost = []) => {
     const collectionBySeller = []
-    dataCollection.forEach(({ vendedor, totalRecaudo, metaRecaudoSinIva, porcentajeRecaudo, recaudoPendiente, comisionRecaudo, bonoResultado }) => {
-      collectionBySeller.push({ vendedor, totalRecaudo, metaRecaudoSinIva, porcentajeRecaudo, recaudoPendiente, comisionRecaudo, bonoResultado })
+    dataCollection.forEach(({ vendedor, totalRecaudo, metaRecaudoSinIva, porcentajeRecaudo, recaudoPendiente, comisionRecaudo, bonoResultado, clientesNuevos }) => {
+      collectionBySeller.push({ vendedor, totalRecaudo, metaRecaudoSinIva, porcentajeRecaudo, recaudoPendiente, comisionRecaudo, bonoResultado, clientesNuevos })
     })
     dataCost.forEach(el => {
       const combinedData = collectionBySeller.find(element => element.vendedor === el.vendedor)
@@ -155,8 +155,13 @@ const UploadReports = ({ toFixed }) => {
         el.recaudoPendiente = combinedData.recaudoPendiente
         el.bonoResultado = combinedData.bonoResultado || 0
 
+        // Bonos resultados
         if (el.porcentajeVentas > 100 && el.porcentajeRecaudo > 100) {
           el.bonoResultado = (el.totalRecaudo * 0.012) + combinedData.bonoResultado
+        }
+
+        if (el.clientesNuevos > 0) {
+          el.bonoResultado = ((el.totalRecaudo * 0.001) * el.clientesNuevos) + combinedData.bonoResultado
         }
 
         el.comisionTotal = (el.comisionVenta + combinedData.comisionRecaudo + el.bonoResultado) || 0
