@@ -11,7 +11,7 @@ import InputNewCustomersFile from '../components/InputNewCustomersFile'
 import InputSaleItemFile from '../components/InputSaleItemFile'
 
 const UploadReports = ({ toFixed }) => {
-  const { dataCost, dataCollection, dateExcel, setDateExcel, excelDataCost, salesGoalBySeller, setSalesGoalBySeller, collectionGoalBySeller, setCollectionGoalBySeller } = useContext(DataContext)
+  const { data, dataCollection, dateExcel, setDateExcel, excelDataCost, salesGoalBySeller, setSalesGoalBySeller, collectionGoalBySeller, setCollectionGoalBySeller } = useContext(DataContext)
 
   const { dateCostFile, dateCollectionFile, dateAuxiliaryBookFile, dateSaleItemFile, costReportName } = useContext(DateContext)
 
@@ -170,9 +170,9 @@ const UploadReports = ({ toFixed }) => {
     })
   }
 
-  joinData(dataCollection, dataCost)
+  joinData(dataCollection, data)
 
-  localStorage.setItem('data', JSON.stringify(dataCost))
+  localStorage.setItem('data', JSON.stringify(data))
   localStorage.setItem('dateData', JSON.stringify(dateExcel))
 
   const sendForm = () => {
@@ -207,7 +207,7 @@ const UploadReports = ({ toFixed }) => {
           <InputNewCustomersFile label='Informe Clientes Nuevos' />
           <InputSaleItemFile label='Informe Ventas Items' />
           <div className='button-group'>
-            <ModalGoals title='Modificar metas' data={dataCost} sendForm={sendForm} />
+            <ModalGoals title='Modificar metas' data={data} sendForm={sendForm} />
           </div>
         </div>
       </div>
