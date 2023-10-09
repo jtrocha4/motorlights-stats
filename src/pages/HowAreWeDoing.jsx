@@ -6,7 +6,7 @@ import ButtonUploadDb from '../components/ButtonUploadDb'
 import Table from '../components/Table'
 
 const HowAreWeDoing = ({ toFixed, postDataToApi, convertExcelDateToReadable, currencyFormat }) => {
-  const { dateExcel, dataCost } = useContext(DataContext)
+  const { dateExcel, data } = useContext(DataContext)
 
   return (
     <div className='flex'>
@@ -17,20 +17,20 @@ const HowAreWeDoing = ({ toFixed, postDataToApi, convertExcelDateToReadable, cur
       <div className='mt-4'>
         <div className='d-grid gap-2 d-md-flex justify-content-md-end mb-2'>
           <ButtonDownloadExcel
-            title='Descargar informe' data={dataCost} toFixed={toFixed}
+            title='Descargar informe' data={data} toFixed={toFixed}
           />
           <ButtonDownloadIncentivePayout
-            title='Descargar Liq. de incentivos' data={dataCost}
+            title='Descargar Liq. de incentivos' data={data}
             convertExcelDateToReadable={convertExcelDateToReadable} errorRc={[]}
           />
           <ButtonUploadDb
             title='Guardar informacion' background='primary'
-            data={dataCost}
+            data={data}
             postDataToApi={postDataToApi}
           />
         </div>
         <div className='table-responsive'>
-          <Table data={dataCost} currencyFormat={currencyFormat} toFixed={toFixed} />
+          <Table data={data} currencyFormat={currencyFormat} toFixed={toFixed} />
         </div>
       </div>
     </div>
