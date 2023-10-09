@@ -8,7 +8,7 @@ import { DataContext } from './context/data'
 const InputNewCustomersFile = ({ label }) => {
   const { excelDataNewCustomers, setExcelDataNewCustomers, dataNewCustomers, setDataNewCustomers, setCustomersBySeller, customersBySeller } = useContext(NewCustomerContext)
   const { excelDataSaleItem, dataSaleItem } = useContext(SaleItemContext)
-  const { dataCost, setDataCost } = useContext(DataContext)
+  const { data, setData } = useContext(DataContext)
 
   const handleReadNewCustomersFile = (event) => {
     const file = event.target.files[0]
@@ -82,7 +82,7 @@ const InputNewCustomersFile = ({ label }) => {
         sellerData.clientesNuevos = 0
       }
     }
-    setDataCost([...data])
+    setData([...data])
   }
 
   useEffect(() => {
@@ -91,7 +91,7 @@ const InputNewCustomersFile = ({ label }) => {
   }, [excelDataNewCustomers, excelDataSaleItem, dataSaleItem])
 
   useEffect(() => {
-    addCustomersToData(customersBySeller, dataCost)
+    addCustomersToData(customersBySeller, data)
   }, [customersBySeller])
 
   return (

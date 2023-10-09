@@ -5,7 +5,7 @@ import { DataContext } from './context/data'
 import { DateContext } from './context/dateFile'
 
 const InputCostFile = ({ label, toFixed, salesGoalBySeller, collectionGoalBySeller }) => {
-  const { setDataCost, excelDataCost, setExcelDataCost } = useContext(DataContext)
+  const { setData, excelDataCost, setExcelDataCost } = useContext(DataContext)
   const { setDateCostFile, setCostReportName } = useContext(DateContext)
 
   const handleReadCostFile = (event) => {
@@ -184,7 +184,7 @@ const InputCostFile = ({ label, toFixed, salesGoalBySeller, collectionGoalBySell
         sale.push(motorlightsObject)
       }
     }
-    setDataCost(sale)
+    setData(sale)
   }
 
   useEffect(() => {
