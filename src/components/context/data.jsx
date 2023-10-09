@@ -3,7 +3,7 @@ import { createContext, useState } from 'react'
 export const DataContext = createContext()
 
 export const DataProvider = ({ children }) => {
-  const [dataCost, setDataCost] = useState([])
+  const [data, setData] = useState([])
   const [dataCollection, setDataCollection] = useState([])
   const [dataAuxiliaryBook, setDataAuxiliaryBook] = useState([])
   const [totalDebitByDocNum, setTotalDebitByDocNum] = useState({})
@@ -27,8 +27,8 @@ export const DataProvider = ({ children }) => {
       setExcelDataCollection,
       excelDataAuxiliaryBook,
       setExcelDataAuxiliaryBook,
-      dataCost,
-      setDataCost,
+      data,
+      setData,
       dataCollection,
       setDataCollection,
       dataAuxiliaryBook,
