@@ -48,7 +48,7 @@ const InputNewCustomersFile = ({ label }) => {
 
   const extractId = (array) => {
     const regex = /\d+/
-    const id = array.map(el => el.match(regex)[0])
+    const id = array.map(el => (el !== undefined) ? (el.match(regex)[0]) : (console.error('ID is undefined')))
     return id
   }
 
