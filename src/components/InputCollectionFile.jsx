@@ -92,15 +92,16 @@ const InputCollectionFile = ({ label, toFixed, salesGoalBySeller, collectionGoal
 
             collectionData[currentSeller] = sellerSales
             sellerCollection.push({
-              vendedor: currentSeller,
-              recaudo: collectionData[currentSeller],
-              totalRecaudo: totalWithoutVAT,
-              metaRecaudoSinIva: 0,
-              porcentajeRecaudo: percentageCollected,
-              recaudoPendiente: pendingCollectionTarget,
+              bonoResultado: resultBonus,
+              clientesNuevos: 0,
               comisionRecaudo: commission,
               comisionTotal: 0,
-              bonoResultado: resultBonus
+              metaRecaudoSinIva: 0,
+              porcentajeRecaudo: percentageCollected,
+              recaudo: collectionData[currentSeller],
+              recaudoPendiente: pendingCollectionTarget,
+              totalRecaudo: totalWithoutVAT,
+              vendedor: currentSeller
             })
           }
           currentSeller = null
