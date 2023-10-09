@@ -5,10 +5,10 @@ import Navbar from './components/Navbar'
 import Sidebar from './components/Sidebar'
 import UploadReports from './pages/UploadReports'
 import Graphics from './pages/Graphics'
-import DataBase from './pages/DataBase'
 import { getData, createNewData } from './services/dataService'
 import { useEffect, useState } from 'react'
 import HowAreWeDoing from './pages/HowAreWeDoing'
+import Analytics from './pages/Analytics'
 
 function App () {
   const [dataset, setDataset] = useState([])
@@ -135,7 +135,7 @@ function App () {
         <Route path='/' element={<UploadReports postDataToApi={postDataToApi} toFixed={toFixed} />} />
         <Route path='/how-are-we-doing' element={<HowAreWeDoing postDataToApi={postDataToApi} toFixed={toFixed} convertExcelDateToReadable={convertExcelDateToReadable} currencyFormat={currencyFormat} />} />
         <Route path='/graphics' element={<Graphics dataset={dataset} extractDateFromData={extractDateFromData} />} />
-        <Route path='/database' element={<DataBase />} />
+        <Route path='/analytics' element={<Analytics />} />
       </Routes>
     </div>
   )

@@ -15,7 +15,7 @@ const Sidebar = () => {
           <Link className='nav-link' to='/graphics'><i className='fa-solid fa-chart-line' /> Graficos</Link>
         </li>
         <li className='nav-item'>
-          <Link className='nav-link' to='/database'><i className='fa-solid fa-database' /> Base de datos</Link>
+          <Link className='nav-link' to='/analytics'><i className='fa-solid fa-magnifying-glass-chart' /> Analitica</Link>
         </li>
       </ul>
     </>
