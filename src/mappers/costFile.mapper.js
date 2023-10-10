@@ -11,7 +11,7 @@ export const costFileToModel = (costFile) => {
     Vendedor,
     Ventas
   }) => ({
-    clientes: Nombres,
+    cliente: Nombres,
     codigoInventario: CódigoInventario,
     costoUnitario,
     doc: Doc,
