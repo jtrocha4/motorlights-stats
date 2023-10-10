@@ -105,7 +105,7 @@ function App () {
     }
   }
 
-  const toFixed = (number, digitAfterPoint) => {
+  const toFixed = (number, digitAfterPoint = 2) => {
     return parseFloat(number.toFixed(digitAfterPoint))
   }
 
@@ -135,7 +135,7 @@ function App () {
         <Route path='/' element={<UploadReports postDataToApi={postDataToApi} toFixed={toFixed} />} />
         <Route path='/how-are-we-doing' element={<HowAreWeDoing postDataToApi={postDataToApi} toFixed={toFixed} convertExcelDateToReadable={convertExcelDateToReadable} currencyFormat={currencyFormat} />} />
         <Route path='/graphics' element={<Graphics dataset={dataset} extractDateFromData={extractDateFromData} />} />
-        <Route path='/analytics' element={<Analytics />} />
+        <Route path='/analytics' element={<Analytics convertExcelDateToReadable={convertExcelDateToReadable} currencyFormat={currencyFormat} toFixed={toFixed} />} />
       </Routes>
     </div>
   )
