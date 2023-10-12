@@ -46,7 +46,7 @@ const InputNewCustomersFile = ({ label }) => {
     setDataNewCustomers(customerData)
   }
 
-  const extractId = (array) => {
+  const extractIdNumberFromAnArray = (array) => {
     const regex = /\d+/
     const id = array.map(el => (el !== undefined) ? (el.match(regex)[0]) : (console.error('ID is undefined')))
     return id
@@ -57,7 +57,7 @@ const InputNewCustomersFile = ({ label }) => {
     dataSaleItem.forEach(element => {
       dataNewCustomers.forEach(newCustomer => {
         const customerId = newCustomer.id
-        const elementCustomerId = extractId(element.clientes)
+        const elementCustomerId = extractIdNumberFromAnArray(element.clientes)
         if (elementCustomerId.includes(customerId)) {
           const sellerName = element.vendedor
           if (customersBySeller[sellerName]) {
