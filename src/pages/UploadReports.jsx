@@ -9,6 +9,7 @@ import { DataContext } from '../components/context/data'
 import { DateContext } from '../components/context/dateFile'
 import InputNewCustomersFile from '../components/InputNewCustomersFile'
 import InputSaleItemFile from '../components/InputSaleItemFile'
+import InputThirdParties from '../components/InputThirdParties'
 
 const UploadReports = ({ toFixed }) => {
   const { data, dataCollection, dateExcel, setDateExcel, excelDataCost, salesGoalBySeller, setSalesGoalBySeller, collectionGoalBySeller, setCollectionGoalBySeller } = useContext(DataContext)
@@ -206,6 +207,7 @@ const UploadReports = ({ toFixed }) => {
           <InputAuxiliaryBookFile label='Informe Libro auxiliar' salesGoalBySeller={salesGoalBySeller} collectionGoalBySeller={collectionGoalBySeller} />
           <InputNewCustomersFile label='Informe Clientes Nuevos' />
           <InputSaleItemFile label='Informe Ventas Items' />
+          <InputThirdParties label='Informe de Terceros' />
           <div className='button-group'>
             <ModalGoals title='Modificar metas' data={data} sendForm={sendForm} />
           </div>
