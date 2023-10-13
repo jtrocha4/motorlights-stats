@@ -36,8 +36,6 @@ const InputDepartmentAndMunicipalities = ({ label }) => {
   const rowsDeptAndMunic = excelDeptAndMunic.slice(1)
   const formattedDataDeptAndMunic = formatDataDeptAndMunic(headersDeptAndMunic, rowsDeptAndMunic)
 
-  console.log(formattedDataDeptAndMunic)
-
   return (
     <>
       <label className='form-label'>{label}</label>
