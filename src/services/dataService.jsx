@@ -19,4 +19,13 @@ const createNewData = async (newData) => {
   }
 }
 
-export { getData, createNewData }
+const getDepartment = async () => {
+  try {
+    const response = await axios.get(`${baseUrl}/api/department`)
+    return response.data
+  } catch (error) {
+    throw new Error(error)
+  }
+}
+
+export { getData, createNewData, getDepartment }
