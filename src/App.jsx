@@ -5,7 +5,7 @@ import Navbar from './components/Navbar'
 import Sidebar from './components/Sidebar'
 import UploadReports from './pages/UploadReports'
 import Graphics from './pages/Graphics'
-import { getData, createNewData } from './services/dataService'
+import { getData, createNewData, getDepartment } from './services/dataService'
 import { useEffect, useState } from 'react'
 import HowAreWeDoing from './pages/HowAreWeDoing'
 import Analytics from './pages/Analytics'
@@ -13,12 +13,23 @@ import Analytics from './pages/Analytics'
 function App () {
   const [dataset, setDataset] = useState([])
   const [newData, setNewData] = useState([])
+
+  const [department, setDepartment] = useState([])
   // const [loading, setLoading] = useState(false)
 
   const fetchDataFromApi = async () => {
     try {
       const response = await getData()
       setDataset(response)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  const fetchDepartmentFromApi = async () => {
+    try {
+      const response = await getDepartment()
+      setDepartment(response)
     } catch (error) {
       console.log(error)
     }
@@ -125,6 +136,7 @@ function App () {
 
   useEffect(() => {
     fetchDataFromApi()
+    fetchDepartmentFromApi()
   }, [newData])
 
   return (
@@ -135,7 +147,7 @@ function App () {
         <Route path='/' element={<UploadReports postDataToApi={postDataToApi} toFixed={toFixed} />} />
         <Route path='/how-are-we-doing' element={<HowAreWeDoing postDataToApi={postDataToApi} toFixed={toFixed} convertExcelDateToReadable={convertExcelDateToReadable} currencyFormat={currencyFormat} />} />
         <Route path='/graphics' element={<Graphics dataset={dataset} extractDateFromData={extractDateFromData} />} />
-        <Route path='/analytics' element={<Analytics convertExcelDateToReadable={convertExcelDateToReadable} currencyFormat={currencyFormat} toFixed={toFixed} />} />
+        <Route path='/analytics' element={<Analytics convertExcelDateToReadable={convertExcelDateToReadable} currencyFormat={currencyFormat} toFixed={toFixed} department={department} />} />
       </Routes>
     </div>
   )
