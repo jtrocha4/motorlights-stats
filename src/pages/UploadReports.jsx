@@ -208,6 +208,7 @@ const UploadReports = ({ toFixed }) => {
           <InputNewCustomersFile label='Informe Clientes Nuevos' />
           <InputSaleItemFile label='Informe Ventas Items' />
           <InputThirdParties label='Informe de Terceros' />
+          {/* <InputDepartmentAndMunicipalities label='Informe de Depart. y Munic.' /> */}
           <div className='button-group'>
             <ModalGoals title='Modificar metas' data={data} sendForm={sendForm} />
           </div>
