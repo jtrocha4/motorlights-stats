@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react'
 import { DataContext } from './context/data'
 import { ThirdPartiesContext } from './context/thirdParties'
 
-const TableAnalytics = ({ data, convertExcelDateToReadable, currencyFormat, toFixed }) => {
+const TableAnalytics = ({ data, convertExcelDateToReadable, currencyFormat, toFixed, department }) => {
   const { excelDataCost } = useContext(DataContext)
   const { excelDataThirdParties, thirdPartiesData } = useContext(ThirdPartiesContext)
   const [salesData, setSalesData] = useState([])
@@ -24,7 +24,7 @@ const TableAnalytics = ({ data, convertExcelDateToReadable, currencyFormat, toFi
     return product[1]
   }
 
-  const extractUniqueThirdParties = (dataThirdParties = []) => {
+  const extractUniqueThirdParties = (dataThirdParties = [], dataDepartment = []) => {
     const uniqueCustomers = []
     const uniqueCustomerNames = new Set()
 
@@ -34,7 +34,18 @@ const TableAnalytics = ({ data, convertExcelDateToReadable, currencyFormat, toFi
         uniqueCustomers.push(customer)
       }
     })
-    setUniqueCustomers(uniqueCustomers)
+
+    const uniqueCustomersWithDepartment = uniqueCustomers.map(cliente => {
+      const municipality = dataDepartment.find(depart => (
+        depart.municipios.some(munic => munic.nombre === cliente.ciudad)
+      ))
+      const department = municipality ? municipality.nombre : undefined
+      return {
+        ...cliente,
+        departamento: department
+      }
+    })
+    setUniqueCustomers(uniqueCustomersWithDepartment)
   }
 
   const extractSalesFromData = (dataArray = [], dataThirdParties = []) => {
@@ -46,6 +57,7 @@ const TableAnalytics = ({ data, convertExcelDateToReadable, currencyFormat, toFi
               ...el,
               idTercero: extractIdNumber(customer.id),
               ciudadTercero: customer.ciudad,
+              departamentoTercero: customer.departamento,
               vendedor: element.vendedor,
               producto: extractProductText(el.codigoInventario),
               idProducto: extractIdNumber(el.codigoInventario),
@@ -59,7 +71,7 @@ const TableAnalytics = ({ data, convertExcelDateToReadable, currencyFormat, toFi
   }
 
   useEffect(() => {
-    extractUniqueThirdParties(thirdPartiesData)
+    extractUniqueThirdParties(thirdPartiesData, department)
   }, [excelDataCost, excelDataThirdParties])
 
   useEffect(() => {
@@ -77,6 +89,7 @@ const TableAnalytics = ({ data, convertExcelDateToReadable, currencyFormat, toFi
             <th>Tercero</th>
             <th>ID Tercero</th>
             <th>Municipio</th>
+            <th>Departamento</th>
             <th>Producto</th>
             <th>ID Producto</th>
             <th>Unidades</th>
@@ -97,6 +110,7 @@ const TableAnalytics = ({ data, convertExcelDateToReadable, currencyFormat, toFi
                       <td>{el.cliente}</td>
                       <td>{el.idTercero}</td>
                       <td>{el.ciudadTercero}</td>
+                      <td>{el.departamentoTercero}</td>
                       <td>{el.producto}</td>
                       <td>{el.idProducto}</td>
                       <td>{el.unidades}</td>
