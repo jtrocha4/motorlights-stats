@@ -5,7 +5,7 @@ import { SaleItemContext } from './context/saleItem'
 import { DateContext } from './context/dateFile'
 
 const InputSaleItemFile = ({ label }) => {
-  const { excelDataSaleItem, setExcelDataSaleItem, setDataSaleItem } = useContext(SaleItemContext)
+  const { excelDataSaleItem, setExcelDataSaleItem, setSellersCustomers, setDataSaleItem } = useContext(SaleItemContext)
   const { setDateSaleItemFile } = useContext(DateContext)
 
   const handleReadSaleItemFile = (event) => {
@@ -41,7 +41,7 @@ const InputSaleItemFile = ({ label }) => {
   const rowsSaleItemFile = excelDataSaleItem.slice(4)
   const formattedDataSaleItem = formatDataSaleItemFile(headersSaleItemFile, rowsSaleItemFile)
 
-  const extractSaleItemData = (formattedData) => {
+  const extractCustomersFromSeller = (formattedData) => {
     let currentSeller
     let customers = []
 
@@ -67,11 +67,47 @@ const InputSaleItemFile = ({ label }) => {
         customers.push(row.cliente)
       }
     })
-    setDataSaleItem(seller)
+    setSellersCustomers(seller)
+  }
+
+  const extractDataSaleItems = (formattedData) => {
+    let currentSeller
+    const salesItem = {}
+    let soldItems = []
+
+    const dataSalesItems = []
+
+    let splitChain
+
+    formattedData.forEach(row => {
+      if (row.descripcion !== undefined) {
+        splitChain = row.descripcion.split(' ')
+      }
+      if (row.vendedor) {
+        if (row.vendedor.startsWith('Total')) {
+          if (currentSeller) {
+            salesItem[currentSeller] = soldItems
+            dataSalesItems.push({
+              vendedor: currentSeller,
+              itemsVendidos: salesItem[currentSeller]
+            })
+            currentSeller = null
+            soldItems = []
+          }
+        } else {
+          currentSeller = row.vendedor
+        }
+      }
+      if (currentSeller && soldItems && splitChain !== undefined && !splitChain[1].startsWith('Flete')) {
+        soldItems.push(row)
+      }
+    })
+    setDataSaleItem(dataSalesItems)
   }
 
   useEffect(() => {
-    extractSaleItemData(formattedDataSaleItem)
+    extractCustomersFromSeller(formattedDataSaleItem)
+    extractDataSaleItems(formattedDataSaleItem)
     setDateSaleItemFile(dateSaleItemFile)
   }, [excelDataSaleItem])
 
