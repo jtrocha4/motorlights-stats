@@ -139,6 +139,22 @@ function App () {
     return stringLowerCase.replace(/\b\w/g, match => match.toUpperCase())
   }
 
+  const extractIdNumber = (string) => {
+    const regex = /\d+/
+    const id = string.match(regex)
+    if (id !== null) {
+      return id[0]
+    } else {
+      console.error('the string must contain numbers')
+    }
+  }
+
+  const extractText = (string) => {
+    const regex = /^\d+\s*(.+)/
+    const product = string.match(regex)
+    return product[1]
+  }
+
   useEffect(() => {
     fetchDataFromApi()
   }, [newData])
@@ -155,7 +171,7 @@ function App () {
         <Route path='/' element={<UploadReports postDataToApi={postDataToApi} toFixed={toFixed} />} />
         <Route path='/how-are-we-doing' element={<HowAreWeDoing postDataToApi={postDataToApi} toFixed={toFixed} convertExcelDateToReadable={convertExcelDateToReadable} currencyFormat={currencyFormat} />} />
         <Route path='/graphics' element={<Graphics dataset={dataset} extractDateFromData={extractDateFromData} />} />
-        <Route path='/analytics' element={<Analytics convertExcelDateToReadable={convertExcelDateToReadable} currencyFormat={currencyFormat} toFixed={toFixed} department={department} capitalizeWords={capitalizeWords} />} />
+        <Route path='/analytics' element={<Analytics convertExcelDateToReadable={convertExcelDateToReadable} currencyFormat={currencyFormat} toFixed={toFixed} department={department} capitalizeWords={capitalizeWords} extractIdNumber={extractIdNumber} extractText={extractText} />} />
       </Routes>
     </div>
   )
