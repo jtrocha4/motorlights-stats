@@ -134,6 +134,11 @@ function App () {
     return formattedDateString
   }
 
+  const capitalizeWords = (string) => {
+    const stringLowerCase = string.toLowerCase()
+    return stringLowerCase.replace(/\b\w/g, match => match.toUpperCase())
+  }
+
   useEffect(() => {
     fetchDataFromApi()
     fetchDepartmentFromApi()
@@ -147,7 +152,7 @@ function App () {
         <Route path='/' element={<UploadReports postDataToApi={postDataToApi} toFixed={toFixed} />} />
         <Route path='/how-are-we-doing' element={<HowAreWeDoing postDataToApi={postDataToApi} toFixed={toFixed} convertExcelDateToReadable={convertExcelDateToReadable} currencyFormat={currencyFormat} />} />
         <Route path='/graphics' element={<Graphics dataset={dataset} extractDateFromData={extractDateFromData} />} />
-        <Route path='/analytics' element={<Analytics convertExcelDateToReadable={convertExcelDateToReadable} currencyFormat={currencyFormat} toFixed={toFixed} department={department} />} />
+        <Route path='/analytics' element={<Analytics convertExcelDateToReadable={convertExcelDateToReadable} currencyFormat={currencyFormat} toFixed={toFixed} department={department} capitalizeWords={capitalizeWords} />} />
       </Routes>
     </div>
   )
