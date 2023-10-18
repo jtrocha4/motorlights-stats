@@ -141,8 +141,11 @@ function App () {
 
   useEffect(() => {
     fetchDataFromApi()
-    fetchDepartmentFromApi()
   }, [newData])
+
+  useEffect(() => {
+    fetchDepartmentFromApi()
+  }, [])
 
   return (
     <div className='App'>
