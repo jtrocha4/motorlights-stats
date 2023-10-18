@@ -7,7 +7,7 @@ import { DataContext } from './context/data'
 
 const InputNewCustomersFile = ({ label }) => {
   const { excelDataNewCustomers, setExcelDataNewCustomers, dataNewCustomers, setDataNewCustomers, setCustomersBySeller, customersBySeller } = useContext(NewCustomerContext)
-  const { excelDataSaleItem, dataSaleItem } = useContext(SaleItemContext)
+  const { excelDataSaleItem, sellersCustomers } = useContext(SaleItemContext)
   const { data, setData } = useContext(DataContext)
 
   const handleReadNewCustomersFile = (event) => {
@@ -52,9 +52,9 @@ const InputNewCustomersFile = ({ label }) => {
     return id
   }
 
-  const findNewClients = (dataSaleItem = [], dataNewCustomers = []) => {
+  const findNewClients = (sellersCustomers = [], dataNewCustomers = []) => {
     const customersBySeller = {}
-    dataSaleItem.forEach(element => {
+    sellersCustomers.forEach(element => {
       dataNewCustomers.forEach(newCustomer => {
         const customerId = newCustomer.id
         const elementCustomerId = extractIdNumberFromAnArray(element.clientes)
@@ -87,8 +87,8 @@ const InputNewCustomersFile = ({ label }) => {
 
   useEffect(() => {
     extractNewCustomersData(formattedDataNewCustomers)
-    findNewClients(dataSaleItem, dataNewCustomers)
-  }, [excelDataNewCustomers, excelDataSaleItem, dataSaleItem])
+    findNewClients(sellersCustomers, dataNewCustomers)
+  }, [excelDataNewCustomers, excelDataSaleItem, sellersCustomers])
 
   useEffect(() => {
     addCustomersToData(customersBySeller, data)
