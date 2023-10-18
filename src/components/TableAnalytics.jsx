@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react'
 import { DataContext } from './context/data'
 import { ThirdPartiesContext } from './context/thirdParties'
 
-const TableAnalytics = ({ dataSaleItem, convertExcelDateToReadable, currencyFormat, department }) => {
+const TableAnalytics = ({ dataSaleItem, convertExcelDateToReadable, currencyFormat, department, extractText, extractIdNumber }) => {
   const { excelDataCost } = useContext(DataContext)
   const { excelDataThirdParties, thirdPartiesData } = useContext(ThirdPartiesContext)
   const [salesData, setSalesData] = useState([])
@@ -29,22 +29,6 @@ const TableAnalytics = ({ dataSaleItem, convertExcelDateToReadable, currencyForm
     if (product.includes('Guardapolvo')) return 'Guardapolvos'
 
     return 'Sin Categoria'
-  }
-
-  const extractIdNumber = (string) => {
-    const regex = /\d+/
-    const id = string.match(regex)
-    if (id !== null) {
-      return id[0]
-    } else {
-      console.error('the string must contain numbers')
-    }
-  }
-
-  const extractText = (string) => {
-    const regex = /^\d+\s*(.+)/
-    const product = string.match(regex)
-    return product[1]
   }
 
   const extractUniqueThirdParties = (dataThirdParties = [], dataDepartment = []) => {
