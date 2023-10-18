@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react'
 import { DataContext } from './context/data'
 import { ThirdPartiesContext } from './context/thirdParties'
 
-const TableAnalytics = ({ dataSaleItem, convertExcelDateToReadable, currencyFormat, toFixed, department, capitalizeWords }) => {
+const TableAnalytics = ({ dataSaleItem, convertExcelDateToReadable, currencyFormat, department }) => {
   const { excelDataCost } = useContext(DataContext)
   const { excelDataThirdParties, thirdPartiesData } = useContext(ThirdPartiesContext)
   const [salesData, setSalesData] = useState([])
@@ -106,9 +106,6 @@ const TableAnalytics = ({ dataSaleItem, convertExcelDateToReadable, currencyForm
     const salesWithCategory = addCategory(sales)
     setSalesData(salesWithCategory)
   }
-
-  // console.log(salesData)
-  // console.log(thirdPartiesData)
 
   useEffect(() => {
     extractUniqueThirdParties(thirdPartiesData, department)
