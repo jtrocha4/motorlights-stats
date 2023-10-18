@@ -6,15 +6,15 @@ import InputCostFile from '../components/InputCostFile'
 import InputCollectionFile from '../components/InputCollectionFile'
 import InputAuxiliaryBookFile from '../components/InputAuxiliaryBookFile'
 import { DataContext } from '../components/context/data'
-import { DateContext } from '../components/context/dateFile'
 import InputNewCustomersFile from '../components/InputNewCustomersFile'
 import InputSaleItemFile from '../components/InputSaleItemFile'
 import InputThirdParties from '../components/InputThirdParties'
+import { ReportDetailsContext } from '../components/context/reportDetails'
 
 const UploadReports = ({ toFixed }) => {
   const { data, dataCollection, dateExcel, setDateExcel, excelDataCost, salesGoalBySeller, setSalesGoalBySeller, collectionGoalBySeller, setCollectionGoalBySeller } = useContext(DataContext)
 
-  const { dateCostFile, costReportName, collectionReportName, auxiliaryBookReportName, salesItemsReportName, thirdPartiesReportName } = useContext(DateContext)
+  const { dateCostFile, costReportName, collectionReportName, auxiliaryBookReportName, salesItemsReportName, thirdPartiesReportName } = useContext(ReportDetailsContext)
 
   const extractDateFromExcel = (dateCostFile = []) => {
     if (dateCostFile.length !== 0) {
