@@ -28,9 +28,7 @@ const InputCostFile = ({ label, toFixed, salesGoalBySeller, collectionGoalBySell
     const costFile = rows.map(row => {
       const rowData = {}
       headers.forEach((header, index) => {
-        if (header !== 'PorMargen' && header !== 'Costo Unitario' && header !== 'Margen') { // Filtrado de columnas
-          rowData[header] = row[index]
-        }
+        rowData[header] = row[index]
       })
       return rowData
     })
