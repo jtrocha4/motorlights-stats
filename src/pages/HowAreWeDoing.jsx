@@ -29,7 +29,7 @@ const HowAreWeDoing = ({ toFixed, postDataToApi, convertExcelDateToReadable, cur
             postDataToApi={postDataToApi}
           />
         </div>
-        <div className='table-responsive'>
+        <div className='mt-2 table-responsive'>
           <Table data={data} currencyFormat={currencyFormat} toFixed={toFixed} />
         </div>
       </div>
