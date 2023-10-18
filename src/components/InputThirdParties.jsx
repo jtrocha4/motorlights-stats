@@ -2,12 +2,12 @@ import React, { useContext, useEffect } from 'react'
 import * as XLSX from 'xlsx'
 import { thirdPartiesFileToModel } from '../mappers'
 import { ThirdPartiesContext } from './context/thirdParties'
-import { DateContext } from './context/dateFile'
+import { ReportDetailsContext } from './context/reportDetails'
 
 const InputThirdParties = ({ label }) => {
   const { excelDataThirdParties, setExcelDataThirdParties, setThirdPartiesData } = useContext(ThirdPartiesContext)
 
-  const { setThirdPartiesReportName } = useContext(DateContext)
+  const { setThirdPartiesReportName } = useContext(ReportDetailsContext)
 
   const handleReadThirdParties = (event) => {
     const file = event.target.files[0]

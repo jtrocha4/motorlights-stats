@@ -2,11 +2,11 @@ import React, { useContext, useEffect } from 'react'
 import * as XLSX from 'xlsx'
 import { collectionFileToModel } from '../mappers'
 import { DataContext } from './context/data'
-import { DateContext } from './context/dateFile'
+import { ReportDetailsContext } from './context/reportDetails'
 
 const InputCollectionFile = ({ label, toFixed, salesGoalBySeller, collectionGoalBySeller }) => {
   const { totalDebitByDocNum, setDataCollection, setErrorRc, excelDataCollection, setExcelDataCollection } = useContext(DataContext)
-  const { setCollectionReportName } = useContext(DateContext)
+  const { setCollectionReportName } = useContext(ReportDetailsContext)
 
   const handleReadCollectionFile = (event) => {
     const file = event.target.files[0]
