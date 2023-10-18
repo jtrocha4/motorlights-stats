@@ -187,12 +187,12 @@ const ButtonDownloadIncentivePayout = ({ title, data, convertExcelDateToReadable
       if (sellerWsDataSale[seller]) {
         customer[seller] = []
         sellerDataSale[seller].forEach(element => {
-          if (totalSalesPerCustomer[element.clientes]) {
-            totalSalesPerCustomer[element.clientes] += element.ventas
-            dateSalesPerCustomer[element.clientes] = element.fecha
+          if (totalSalesPerCustomer[element.cliente]) {
+            totalSalesPerCustomer[element.cliente] += element.ventas
+            dateSalesPerCustomer[element.cliente] = element.fecha
           } else {
-            totalSalesPerCustomer[element.clientes] = element.ventas
-            dateSalesPerCustomer[element.clientes] = element.fecha
+            totalSalesPerCustomer[element.cliente] = element.ventas
+            dateSalesPerCustomer[element.cliente] = element.fecha
           }
         })
       }
