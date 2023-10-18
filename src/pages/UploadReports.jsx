@@ -14,7 +14,7 @@ import InputThirdParties from '../components/InputThirdParties'
 const UploadReports = ({ toFixed }) => {
   const { data, dataCollection, dateExcel, setDateExcel, excelDataCost, salesGoalBySeller, setSalesGoalBySeller, collectionGoalBySeller, setCollectionGoalBySeller } = useContext(DataContext)
 
-  const { dateCostFile, dateCollectionFile, dateAuxiliaryBookFile, dateSaleItemFile, costReportName } = useContext(DateContext)
+  const { dateCostFile, costReportName, collectionReportName, auxiliaryBookReportName, salesItemsReportName, thirdPartiesReportName } = useContext(DateContext)
 
   const extractDateFromExcel = (dateCostFile = []) => {
     if (dateCostFile.length !== 0) {
@@ -89,7 +89,7 @@ const UploadReports = ({ toFixed }) => {
     }
   }
 
-  const reportInputValidator = (costReportName = [], collectionReportName = [], auxiliaryBookReportName = [], saleItemReportName = []) => {
+  const reportInputValidator = (costReportName = [], collectionReportName = [], auxiliaryBookReportName = [], saleItemReportName = [], thirdPartiesReportName = []) => {
     if (costReportName.length) {
       const reportHeader = costReportName.join()
       const costReportRegex = /Costo de Ventas Por Vendedor Detallado/
@@ -137,6 +137,18 @@ const UploadReports = ({ toFixed }) => {
           icon: 'error',
           title: 'Error en el Informe Venta Items',
           text: 'El Informe de Venta Items proporcionado no es válido o está incorrecto. Por favor, revise y vuelva a intentarlo.'
+        })
+      }
+    }
+    if (thirdPartiesReportName.length) {
+      const reportHeader = thirdPartiesReportName.join()
+      const saleItemReportRegex = /Listado de Terceros con Direcciones/
+      const excelHeader = reportHeader.match(saleItemReportRegex)
+      if (!excelHeader) {
+        return Swal.fire({
+          icon: 'error',
+          title: 'Error en el Informe Terceros',
+          text: 'El Informe de Terceros proporcionado no es válido o está incorrecto. Por favor, revise y vuelva a intentarlo.'
         })
       }
     }
@@ -189,8 +201,8 @@ const UploadReports = ({ toFixed }) => {
 
   useEffect(() => {
     extractDateFromExcel(dateCostFile)
-    reportInputValidator(costReportName, dateCollectionFile, dateAuxiliaryBookFile, dateSaleItemFile)
-  }, [dateCostFile, dateCollectionFile, dateAuxiliaryBookFile, dateSaleItemFile])
+    reportInputValidator(costReportName, collectionReportName, auxiliaryBookReportName, salesItemsReportName, thirdPartiesReportName)
+  }, [dateCostFile, collectionReportName, auxiliaryBookReportName, salesItemsReportName, thirdPartiesReportName])
 
   useEffect(() => {
     sendForm()
