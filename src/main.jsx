@@ -4,15 +4,15 @@ import App from './App.jsx'
 import './index.css'
 import { BrowserRouter } from 'react-router-dom'
 import { DataProvider } from './components/context/data.jsx'
-import { DateProvider } from './components/context/dateFile.jsx'
 import { NewCustomerProvider } from './components/context/newCustomers.jsx'
 import { SaleItemProvider } from './components/context/saleItem.jsx'
 import { ThirdPartiesProvider } from './components/context/thirdParties.jsx'
+import { ReportDetailsProvider } from './components/context/reportDetails.jsx'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <DataProvider>
-      <DateProvider>
+      <ReportDetailsProvider>
         <NewCustomerProvider>
           <SaleItemProvider>
             <ThirdPartiesProvider>
@@ -22,7 +22,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
             </ThirdPartiesProvider>
           </SaleItemProvider>
         </NewCustomerProvider>
-      </DateProvider>
+      </ReportDetailsProvider>
     </DataProvider>
   </React.StrictMode>
 )
