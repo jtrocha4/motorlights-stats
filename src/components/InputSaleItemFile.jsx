@@ -6,7 +6,7 @@ import { DateContext } from './context/dateFile'
 
 const InputSaleItemFile = ({ label }) => {
   const { excelDataSaleItem, setExcelDataSaleItem, setSellersCustomers, setDataSaleItem } = useContext(SaleItemContext)
-  const { setDateSaleItemFile } = useContext(DateContext)
+  const { setSalesItemsReportName } = useContext(DateContext)
 
   const handleReadSaleItemFile = (event) => {
     const file = event.target.files[0]
@@ -35,11 +35,12 @@ const InputSaleItemFile = ({ label }) => {
     return saleItemFileToModel(saleItemFile)
   }
 
-  const dateSaleItemFile = excelDataSaleItem[1]
+  // const reportDate = excelDataSaleItem[1]
+  const reportName = excelDataSaleItem[1]
 
-  const headersSaleItemFile = excelDataSaleItem[3]
-  const rowsSaleItemFile = excelDataSaleItem.slice(4)
-  const formattedDataSaleItem = formatDataSaleItemFile(headersSaleItemFile, rowsSaleItemFile)
+  const reportHeaders = excelDataSaleItem[3]
+  const reportRows = excelDataSaleItem.slice(4)
+  const formattedDataSaleItem = formatDataSaleItemFile(reportHeaders, reportRows)
 
   const extractCustomersFromSeller = (formattedData) => {
     let currentSeller
@@ -108,7 +109,7 @@ const InputSaleItemFile = ({ label }) => {
   useEffect(() => {
     extractCustomersFromSeller(formattedDataSaleItem)
     extractDataSaleItems(formattedDataSaleItem)
-    setDateSaleItemFile(dateSaleItemFile)
+    setSalesItemsReportName(reportName)
   }, [excelDataSaleItem])
 
   return (

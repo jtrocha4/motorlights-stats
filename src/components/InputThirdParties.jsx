@@ -2,9 +2,12 @@ import React, { useContext, useEffect } from 'react'
 import * as XLSX from 'xlsx'
 import { thirdPartiesFileToModel } from '../mappers'
 import { ThirdPartiesContext } from './context/thirdParties'
+import { DateContext } from './context/dateFile'
 
 const InputThirdParties = ({ label }) => {
   const { excelDataThirdParties, setExcelDataThirdParties, setThirdPartiesData } = useContext(ThirdPartiesContext)
+
+  const { setThirdPartiesReportName } = useContext(DateContext)
 
   const handleReadThirdParties = (event) => {
     const file = event.target.files[0]
@@ -34,10 +37,11 @@ const InputThirdParties = ({ label }) => {
   }
 
   //   const dateThirdParties = excelDataThirdParties[1]
+  const reportName = excelDataThirdParties[1]
 
-  const headersThirdParties = excelDataThirdParties[2]
-  const rowsThirdParties = excelDataThirdParties.slice(3)
-  const formattedDataThirdParties = formatDataThirdParties(headersThirdParties, rowsThirdParties)
+  const reportHeaders = excelDataThirdParties[2]
+  const reportRows = excelDataThirdParties.slice(3)
+  const formattedDataThirdParties = formatDataThirdParties(reportHeaders, reportRows)
 
   const extractThirdPartiesData = (formattedDataThirdParties = []) => {
     const thirdPartiesData = formattedDataThirdParties
@@ -46,6 +50,7 @@ const InputThirdParties = ({ label }) => {
 
   useEffect(() => {
     extractThirdPartiesData(formattedDataThirdParties)
+    setThirdPartiesReportName(reportName)
   }, [excelDataThirdParties])
 
   return (

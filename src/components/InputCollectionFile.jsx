@@ -6,7 +6,7 @@ import { DateContext } from './context/dateFile'
 
 const InputCollectionFile = ({ label, toFixed, salesGoalBySeller, collectionGoalBySeller }) => {
   const { totalDebitByDocNum, setDataCollection, setErrorRc, excelDataCollection, setExcelDataCollection } = useContext(DataContext)
-  const { setDateCollectionFile } = useContext(DateContext)
+  const { setCollectionReportName } = useContext(DateContext)
 
   const handleReadCollectionFile = (event) => {
     const file = event.target.files[0]
@@ -37,11 +37,12 @@ const InputCollectionFile = ({ label, toFixed, salesGoalBySeller, collectionGoal
     return collectionFileToModel(collectionFile)
   }
 
-  const dateCollectionFile = excelDataCollection[1]
+  // const reportDate = excelDataCollection[1]
+  const reportName = excelDataCollection[1]
 
-  const headersCollectionFile = excelDataCollection[2]
-  const rowsCollectionFile = excelDataCollection.slice(3)
-  const formattedDataCollectionFile = formatDataCollectionFile(headersCollectionFile, rowsCollectionFile)
+  const reportHeaders = excelDataCollection[2]
+  const reportRows = excelDataCollection.slice(3)
+  const formattedDataCollectionFile = formatDataCollectionFile(reportHeaders, reportRows)
 
   const extractCollectionData = async (formattedDataCollectionFile, debitForDocNum, collectionGoalBySeller = {}) => {
     const collectionData = {}
@@ -131,7 +132,7 @@ const InputCollectionFile = ({ label, toFixed, salesGoalBySeller, collectionGoal
 
   useEffect(() => {
     extractCollectionData(formattedDataCollectionFile, totalDebitByDocNum, collectionGoalBySeller)
-    setDateCollectionFile(dateCollectionFile)
+    setCollectionReportName(reportName)
   }, [excelDataCollection, totalDebitByDocNum, salesGoalBySeller, collectionGoalBySeller])
 
   return (
