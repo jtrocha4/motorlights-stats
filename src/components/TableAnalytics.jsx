@@ -126,8 +126,8 @@ const TableAnalytics = ({ dataSaleItem, convertExcelDateToReadable, currencyForm
             <th>Vendedor</th>
             <th>Documento</th>
             <th>Fecha</th>
-            <th>Tercero</th>
             <th>ID Tercero</th>
+            <th>Tercero</th>
             <th>Municipio</th>
             <th>Departamento</th>
             <th>ID Producto</th>
@@ -152,8 +152,8 @@ const TableAnalytics = ({ dataSaleItem, convertExcelDateToReadable, currencyForm
                       <td> {el.vendedor}</td>
                       <td>{el.doc}</td>
                       <td>{el.fecha}</td>
-                      <td>{el.cliente}</td>
                       <td>{el.idCliente}</td>
+                      <td>{el.cliente}</td>
                       <td>{el.ciudadCliente}</td>
                       <td>{el.departamentoCliente}</td>
                       <td>{el.idProducto}</td>
