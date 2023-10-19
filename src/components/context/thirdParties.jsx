@@ -7,12 +7,16 @@ export const ThirdPartiesProvider = ({ children }) => {
 
   const [thirdPartiesData, setThirdPartiesData] = useState([])
 
+  const [customerData, setCustomerData] = useState([])
+
   return (
     <ThirdPartiesContext.Provider value={{
       excelDataThirdParties,
       setExcelDataThirdParties,
       thirdPartiesData,
-      setThirdPartiesData
+      setThirdPartiesData,
+      customerData,
+      setCustomerData
     }}
     >
       {children}
