@@ -7,9 +7,11 @@ export const SaleItemProvider = ({ children }) => {
   const [dataSaleItem, setDataSaleItem] = useState([])
   const [sellersCustomers, setSellersCustomers] = useState([])
 
+  const [sellerSalesData, setSellerSalesData] = useState([])
+
   return (
     <SaleItemContext.Provider value={{
-      excelDataSaleItem, setExcelDataSaleItem, dataSaleItem, setDataSaleItem, sellersCustomers, setSellersCustomers
+      excelDataSaleItem, setExcelDataSaleItem, dataSaleItem, setDataSaleItem, sellersCustomers, setSellersCustomers, sellerSalesData, setSellerSalesData
     }}
     >
       {children}
