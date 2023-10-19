@@ -4,8 +4,8 @@ import { thirdPartiesFileToModel } from '../mappers'
 import { ThirdPartiesContext } from './context/thirdParties'
 import { ReportDetailsContext } from './context/reportDetails'
 
-const InputThirdParties = ({ label }) => {
-  const { excelDataThirdParties, setExcelDataThirdParties, setThirdPartiesData } = useContext(ThirdPartiesContext)
+const InputThirdParties = ({ label, department }) => {
+  const { excelDataThirdParties, setExcelDataThirdParties, setThirdPartiesData, thirdPartiesData, setCustomerData } = useContext(ThirdPartiesContext)
 
   const { setThirdPartiesReportName } = useContext(ReportDetailsContext)
 
@@ -48,10 +48,38 @@ const InputThirdParties = ({ label }) => {
     setThirdPartiesData(thirdPartiesData)
   }
 
+  const extractUniqueThirdParties = (dataThirdParties = [], dataDepartment = []) => {
+    const uniqueCustomers = []
+    const uniqueCustomerNames = new Set()
+
+    dataThirdParties.forEach(customer => {
+      if (!uniqueCustomerNames.has(customer.nombre)) {
+        uniqueCustomerNames.add(customer.nombre)
+        uniqueCustomers.push(customer)
+      }
+    })
+
+    const uniqueCustomersWithDepartment = uniqueCustomers.map(cliente => {
+      const municipality = dataDepartment.find(depart => (
+        depart.municipios.some(munic => munic.nombre === cliente.ciudad)
+      ))
+      const department = municipality ? municipality.nombre : 'n/a'
+      return {
+        ...cliente,
+        departamento: department
+      }
+    })
+    setCustomerData(uniqueCustomersWithDepartment)
+  }
+
   useEffect(() => {
     extractThirdPartiesData(formattedDataThirdParties)
     setThirdPartiesReportName(reportName)
   }, [excelDataThirdParties])
+
+  useEffect(() => {
+    extractUniqueThirdParties(thirdPartiesData, department)
+  }, [thirdPartiesData])
 
   return (
     <>
