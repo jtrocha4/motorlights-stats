@@ -11,7 +11,7 @@ import InputSaleItemFile from '../components/InputSaleItemFile'
 import InputThirdParties from '../components/InputThirdParties'
 import { ReportDetailsContext } from '../components/context/reportDetails'
 
-const UploadReports = ({ toFixed }) => {
+const UploadReports = ({ toFixed, department, convertExcelDateToReadable, extractIdNumber, extractText }) => {
   const { data, dataCollection, dateExcel, setDateExcel, excelDataCost, salesGoalBySeller, setSalesGoalBySeller, collectionGoalBySeller, setCollectionGoalBySeller } = useContext(DataContext)
 
   const { dateCostFile, costReportName, collectionReportName, auxiliaryBookReportName, salesItemsReportName, thirdPartiesReportName } = useContext(ReportDetailsContext)
@@ -218,8 +218,8 @@ const UploadReports = ({ toFixed }) => {
           <InputCollectionFile label='Informe de Recaudo' toFixed={toFixed} salesGoalBySeller={salesGoalBySeller} collectionGoalBySeller={collectionGoalBySeller} />
           <InputAuxiliaryBookFile label='Informe Libro auxiliar' salesGoalBySeller={salesGoalBySeller} collectionGoalBySeller={collectionGoalBySeller} />
           <InputNewCustomersFile label='Informe Clientes Nuevos' />
-          <InputSaleItemFile label='Informe Ventas Items' />
-          <InputThirdParties label='Informe de Terceros' />
+          <InputSaleItemFile label='Informe Ventas Items' convertExcelDateToReadable={convertExcelDateToReadable} extractIdNumber={extractIdNumber} extractText={extractText} />
+          <InputThirdParties label='Informe de Terceros' department={department} />
           {/* <InputDepartmentAndMunicipalities label='Informe de Depart. y Munic.' /> */}
           <div className='button-group'>
             <ModalGoals title='Modificar metas' data={data} sendForm={sendForm} />

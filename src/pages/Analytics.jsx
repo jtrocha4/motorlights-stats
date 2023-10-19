@@ -5,8 +5,8 @@ import { DataContext } from '../components/context/data'
 import ButtonDownloadAnalytics from '../components/ButtonDownloadAnalytics'
 
 const Analytics = ({ convertExcelDateToReadable, currencyFormat, toFixed, department, capitalizeWords, extractText, extractIdNumber }) => {
-  const { dataSaleItem } = useContext(SaleItemContext)
   const { dateExcel } = useContext(DataContext)
+  const { sellerSalesData } = useContext(SaleItemContext)
 
   return (
     <div className='flex'>
@@ -19,7 +19,7 @@ const Analytics = ({ convertExcelDateToReadable, currencyFormat, toFixed, depart
           </div>
         </div>
         <div className='mt-2'>
-          <TableAnalytics dataSaleItem={dataSaleItem} convertExcelDateToReadable={convertExcelDateToReadable} currencyFormat={currencyFormat} toFixed={toFixed} department={department} capitalizeWords={capitalizeWords} extractIdNumber={extractIdNumber} extractText={extractText} />
+          <TableAnalytics sellerSalesData={sellerSalesData} convertExcelDateToReadable={convertExcelDateToReadable} currencyFormat={currencyFormat} toFixed={toFixed} department={department} capitalizeWords={capitalizeWords} extractIdNumber={extractIdNumber} extractText={extractText} />
         </div>
       </div>
     </div>
