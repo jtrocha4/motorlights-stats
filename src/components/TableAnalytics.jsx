@@ -1,107 +1,42 @@
-import React, { useContext, useEffect, useState } from 'react'
-import { DataContext } from './context/data'
-import { ThirdPartiesContext } from './context/thirdParties'
+import React, { useState } from 'react'
 
-const TableAnalytics = ({ dataSaleItem, convertExcelDateToReadable, currencyFormat, department, extractText, extractIdNumber }) => {
-  const { excelDataCost } = useContext(DataContext)
-  const { excelDataThirdParties, thirdPartiesData } = useContext(ThirdPartiesContext)
-  const [salesData, setSalesData] = useState([])
-  const [uniqueCustomers, setUniqueCustomers] = useState([])
+const TableAnalytics = ({ sellerSalesData, currencyFormat }) => {
+  const [currentPage, setCurrentPage] = useState(1)
 
-  const productCategory = (product) => {
-    if (product.includes('Alarma')) return 'Alarmas'
-    if (product.includes('Bombillo Farola')) return 'Bombillos de Faro'
-    if (product.includes('Bombillo Stop') || product.includes('Bombilllo Stop')) return 'Bombillos de Stop'
-    if (product.includes('Bombillo Direccional') || product.includes('Direccionales') || product.includes('Bombillo Piloto') || product.includes('Direccional')) return 'Bombillos de Direccional'
+  const itemsPerPage = 20
 
-    if (product.includes('Bombillo Techo')) return 'Bombillos de Techo'
-    if (product.includes('Lagrima')) return 'Lagrimas'
-    if (product.includes('Exploradora') || product.includes('Explorador')) return 'Exploradoras'
+  const startIndex = (currentPage - 1) * itemsPerPage
+  const endIndex = startIndex + itemsPerPage
 
-    if (product.includes('Switche') || product.includes('Terminal') || product.includes('Socket') || product.includes('Fusible') || product.includes('Flasher')) { return 'Electricos' }
+  const totalPages = Math.ceil(sellerSalesData.length / itemsPerPage)
 
-    if (product.includes('Protector') || product.includes('Maniguetas')) return 'Protectores'
-    if (product.includes('Tornillo')) return 'Tornillos'
-    if (product.includes('Modulo Led') || product.includes('Modulo')) return 'Modulos LED'
-    if (product.includes('Cinta Led') || product.includes('Modulo') || product.includes('Amarra') || product.includes('Luz Maletero') || product.includes('Ojo')) return 'Otros'
-    if (product.includes('Guardabarros')) return 'Guardabarros'
-    if (product.includes('Lubricante')) return 'Linea de Mtto'
-    if (product.includes('Guardapolvo')) return 'Guardapolvos'
-
-    return 'Sin Categoria'
+  const pagination = () => {
+    const currentItems = sellerSalesData.slice(startIndex, endIndex)
+    return currentItems
   }
 
-  const extractUniqueThirdParties = (dataThirdParties = [], dataDepartment = []) => {
-    const uniqueCustomers = []
-    const uniqueCustomerNames = new Set()
-
-    dataThirdParties.forEach(customer => {
-      if (!uniqueCustomerNames.has(customer.nombre)) {
-        uniqueCustomerNames.add(customer.nombre)
-        uniqueCustomers.push(customer)
-      }
-    })
-
-    const uniqueCustomersWithDepartment = uniqueCustomers.map(cliente => {
-      const municipality = dataDepartment.find(depart => (
-        depart.municipios.some(munic => munic.nombre === cliente.ciudad)
-      ))
-      const department = municipality ? municipality.nombre : 'n/a'
-      return {
-        ...cliente,
-        departamento: department
-      }
-    })
-    setUniqueCustomers(uniqueCustomersWithDepartment)
+  const nextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1)
+    }
   }
 
-  const addCategory = (salesData = []) => {
-    const categorizedSalesData = salesData.map(el => {
-      const category = productCategory(el.producto)
-      return {
-        ...el,
-        categoriaProducto: category
-      }
-    })
-    return categorizedSalesData
+  const previousPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1)
+    }
   }
-
-  const extractSalesFromData = (dataArray = [], dataThirdParties = []) => {
-    const sales = dataThirdParties.flatMap(customer =>
-      dataArray.filter(element => element.itemsVendidos !== undefined)
-        .map(element =>
-          element.itemsVendidos.filter(el => {
-            const idCustomer = extractIdNumber(el.cliente)
-            return idCustomer === extractIdNumber(customer.id)
-          }).map(({ fecha, cliente, descripcion, cantidad, ...restOfData }) => ({
-            ...restOfData,
-            fecha: convertExcelDateToReadable(fecha),
-            cliente: extractText(cliente),
-            idCliente: extractIdNumber(cliente),
-            ciudadCliente: customer.ciudad,
-            departamentoCliente: customer.departamento,
-            idProducto: extractIdNumber(descripcion),
-            producto: extractText(descripcion),
-            unidadesProducto: cantidad
-          }))
-        )
-        .flat()
-    )
-    const salesWithCategory = addCategory(sales)
-    setSalesData(salesWithCategory)
-  }
-
-  useEffect(() => {
-    extractUniqueThirdParties(thirdPartiesData, department)
-  }, [excelDataCost, excelDataThirdParties])
-
-  useEffect(() => {
-    extractSalesFromData(dataSaleItem, uniqueCustomers)
-  }, [uniqueCustomers])
 
   return (
     <div>
-      <table className='table table-hover table-sm'>
+      <nav aria-label='Page navigation' className='pagination-buttons'>
+        <ul className='pagination'>
+          <li className='page-item'><a type='button' className='page-link' onClick={previousPage}><i className='fa-solid fa-chevron-left' /> Anterior</a></li>
+          <li className='page-item'><p className='page-link'>{currentPage}</p></li>
+          <li className='page-item'><a type='button' className='page-link' onClick={nextPage}>Siguiente <i className='fa-solid fa-chevron-right' /></a></li>
+        </ul>
+      </nav>
+      <table className='table table-hover' id='table-analytics'>
         <thead>
           <tr>
             <th>Vendedor</th>
@@ -125,10 +60,10 @@ const TableAnalytics = ({ dataSaleItem, convertExcelDateToReadable, currencyForm
         </thead>
         <tbody className='table-group-divider'>
           {
-            (dataSaleItem.length === 0)
+            (sellerSalesData.length === 0)
               ? (<tr><td colSpan={17} className='text-center'>No hay datos para mostrar, por favor cargue todos los informes</td></tr>)
               : (
-                  salesData.map((el, index) => (
+                  pagination().map((el, index) => (
                     <tr key={index}>
                       <td> {el.vendedor}</td>
                       <td>{el.doc}</td>
