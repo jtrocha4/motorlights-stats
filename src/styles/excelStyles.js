@@ -340,6 +340,59 @@ const excelStyles = {
     }
   },
 
+  whiteStyleRow: {
+    numFmt: '0',
+    fill: { fgColor: { rgb: 'FFFFFF' } },
+    alignment: { horizontal: 'left' },
+    font: {
+      bold: false
+    },
+    border: {
+      right: {
+        style: 'thin',
+        color: '000000'
+      },
+      left: {
+        style: 'thin',
+        color: '000000'
+      },
+      top: {
+        style: 'thin',
+        color: '000000'
+      },
+      bottom: {
+        style: 'thin',
+        color: '000000'
+      }
+    }
+  },
+  whiteStyleRowCurrencyFormat: {
+    numFmt: '"$"#,##0.00;[Red]("$"#,##0.00)',
+    fill: { fgColor: { rgb: 'FFFFFF' } },
+    alignment: { horizontal: 'right' },
+    font: {
+      bold: false
+    },
+    border: {
+      right: {
+        style: 'thin',
+        color: '000000'
+      },
+      left: {
+        style: 'thin',
+        color: '000000'
+      },
+      top: {
+        style: 'thin',
+        color: '000000'
+      },
+      bottom: {
+        style: 'thin',
+        color: '000000'
+      }
+    }
+  },
+
   // Black
   headerBlackStyle: {
     fill: { fgColor: { rgb: '000000' } },
