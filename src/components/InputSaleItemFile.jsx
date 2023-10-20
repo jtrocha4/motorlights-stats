@@ -5,7 +5,7 @@ import { SaleItemContext } from './context/saleItem'
 import { ReportDetailsContext } from './context/reportDetails'
 import { ThirdPartiesContext } from './context/thirdParties'
 
-const InputSaleItemFile = ({ label, convertExcelDateToReadable, extractIdNumber, extractText }) => {
+const InputSaleItemFile = ({ label, convertExcelDateToReadable, extractIdNumber, extractText, capitalizeWords }) => {
   const { excelDataSaleItem, setExcelDataSaleItem, setSellersCustomers, setDataSaleItem, dataSaleItem, setSellerSalesData } = useContext(SaleItemContext)
   const { setSalesItemsReportName } = useContext(ReportDetailsContext)
 
@@ -158,7 +158,7 @@ const InputSaleItemFile = ({ label, convertExcelDateToReadable, extractIdNumber,
             ciudadCliente: customer.ciudad,
             departamentoCliente: customer.departamento,
             idProducto: extractIdNumber(descripcion),
-            producto: extractText(descripcion),
+            producto: capitalizeWords(extractText(descripcion)),
             unidadesProducto: cantidad
           }))
         )
