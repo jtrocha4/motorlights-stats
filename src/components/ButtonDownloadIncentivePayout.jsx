@@ -516,12 +516,12 @@ const ButtonDownloadIncentivePayout = ({ title, data, convertExcelDateToReadable
     errorWs['!cols'] = columnWidths.map(width => ({ wch: width + 5 }))
     XLSX.utils.book_append_sheet(workbook, errorWs, 'ERROR RC')
 
-    const excelFileName = `Liq Incentivos ${dateExcel.dia} ${dateExcel.mes}.xlsx`
+    const excelFileName = `Informe Liq Incentivos ${dateExcel.dia} ${dateExcel.mes}.xlsx`
     XLSX.writeFile(workbook, excelFileName)
   }
   return (
     <div>
-      <button type='button' className='btn btn-outline-success' onClick={handleDownload}><i className='fa-regular fa-file-excel' /> {title}</button>
+      <button type='button' className='btn btn-outline-success' onClick={handleDownload}><i className='fa-solid fa-file-invoice-dollar' /> {title}</button>
     </div>
   )
 }
