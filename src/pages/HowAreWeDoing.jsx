@@ -4,6 +4,7 @@ import ButtonDownloadExcel from '../components/ButtonDownloadExcel'
 import ButtonDownloadIncentivePayout from '../components/ButtonDownloadIncentivePayout'
 import ButtonUploadDb from '../components/ButtonUploadDb'
 import Table from '../components/Table'
+import ButtonDownloadDetailSaleAndCollection from '../components/ButtonDownloadDetailSaleAndCollection'
 
 const HowAreWeDoing = ({ toFixed, postDataToApi, convertExcelDateToReadable, currencyFormat }) => {
   const { dateExcel, data } = useContext(DataContext)
@@ -21,6 +22,10 @@ const HowAreWeDoing = ({ toFixed, postDataToApi, convertExcelDateToReadable, cur
           />
           <ButtonDownloadIncentivePayout
             title='Descargar Liq. de incentivos' data={data}
+            convertExcelDateToReadable={convertExcelDateToReadable} errorRc={[]}
+          />
+          <ButtonDownloadDetailSaleAndCollection
+            title='Descargar Detalle Ventas y Recaudo' data={data}
             convertExcelDateToReadable={convertExcelDateToReadable} errorRc={[]}
           />
           <ButtonUploadDb
