@@ -168,10 +168,10 @@ function App () {
       <Navbar />
       <Sidebar />
       <Routes>
-        <Route path='/' element={<UploadReports postDataToApi={postDataToApi} toFixed={toFixed} department={department} convertExcelDateToReadable={convertExcelDateToReadable} extractIdNumber={extractIdNumber} extractText={extractText} />} />
+        <Route path='/' element={<UploadReports toFixed={toFixed} department={department} convertExcelDateToReadable={convertExcelDateToReadable} extractIdNumber={extractIdNumber} extractText={extractText} capitalizeWords={capitalizeWords} />} />
         <Route path='/how-are-we-doing' element={<HowAreWeDoing postDataToApi={postDataToApi} toFixed={toFixed} convertExcelDateToReadable={convertExcelDateToReadable} currencyFormat={currencyFormat} />} />
         <Route path='/graphics' element={<Graphics dataset={dataset} extractDateFromData={extractDateFromData} />} />
-        <Route path='/analytics' element={<Analytics convertExcelDateToReadable={convertExcelDateToReadable} currencyFormat={currencyFormat} toFixed={toFixed} department={department} capitalizeWords={capitalizeWords} extractIdNumber={extractIdNumber} extractText={extractText} />} />
+        <Route path='/analytics' element={<Analytics convertExcelDateToReadable={convertExcelDateToReadable} currencyFormat={currencyFormat} />} />
       </Routes>
     </div>
   )
