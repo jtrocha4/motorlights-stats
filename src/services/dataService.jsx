@@ -1,31 +1,62 @@
 import axios from 'axios'
 const baseUrl = 'https://motorlights-api.vercel.app'
 
-const getData = async () => {
+const getSellerPerformance = async () => {
   try {
-    const response = await axios.get(`${baseUrl}/api/data`)
+    const response = await axios.get(`${baseUrl}/api/sellerPerformance`)
     return response.data
   } catch (error) {
-    throw new Error(error)
+    console.error(error)
+    throw error
   }
 }
 
-const createNewData = async (newData) => {
+const createSellerPerformance = async (newData) => {
   try {
-    const request = await axios.post(`${baseUrl}/api/data`, newData)
-    return { message: 'Los datos se han guardado con éxito', request }
+    const response = await axios.post(`${baseUrl}/api/sellerPerformance`, newData)
+    if (response.status === 201) {
+      return response.data
+    } else {
+      throw new Error('Error en la creacion de la data. Verifica los datos y vuelve a intentarlo.')
+    }
   } catch (error) {
-    throw new Error(error)
+    console.error(error)
+    throw error
   }
 }
 
 const getDepartment = async () => {
   try {
-    const response = await axios.get(`${baseUrl}/api/department`)
+    const response = await axios.get(`${baseUrl}/api/departments`)
     return response.data
   } catch (error) {
-    throw new Error(error)
+    console.error(error)
+    throw error
   }
 }
 
-export { getData, createNewData, getDepartment }
+const createNewSeller = async (newSeller) => {
+  try {
+    const response = await axios.post(`${baseUrl}/api/sellers`, newSeller)
+    if (response.status === 201) {
+      return response.data
+    } else {
+      throw new Error('Error al crear el vendedor. Verifica los datos y vuelve a intentarlo.')
+    }
+  } catch (error) {
+    console.error(error)
+    throw error
+  }
+}
+
+const getSeller = async () => {
+  try {
+    const response = await axios.get(`${baseUrl}/api/sellers`)
+    return response.data
+  } catch (error) {
+    console.error(error)
+    throw error
+  }
+}
+
+export { getSellerPerformance, createSellerPerformance, getDepartment, createNewSeller, getSeller }
