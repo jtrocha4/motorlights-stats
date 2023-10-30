@@ -2,7 +2,7 @@ import React, { useContext } from 'react'
 import Swal from 'sweetalert2'
 import { DataContext } from './context/data'
 
-const ButtonUploadDb = ({ title, background = 'primary', data, postDataToApi }) => {
+const ButtonUploadDb = ({ title, background = 'primary', data, postSellerPerformanceToApi, seller }) => {
   const { dateExcel } = useContext(DataContext)
   const { fechaFinal } = dateExcel
 
@@ -17,12 +17,19 @@ const ButtonUploadDb = ({ title, background = 'primary', data, postDataToApi }) 
     }
   }
 
-  const leakedData = data.map(el => {
-    const { venta, ...restOfData } = el
-    return {
-      ...restOfData,
-      fecha: dateOfData(fechaFinal)
-    }
+  const leakedData = []
+
+  data.forEach(el => {
+    seller.forEach(sell => {
+      if (el.vendedor === sell.identificacion) {
+        const { venta, vendedor, ...restOfData } = el
+        leakedData.push({
+          ...restOfData,
+          idVendedor: sell.id,
+          fecha: dateOfData(fechaFinal)
+        })
+      }
+    })
   })
 
   const handleUploadDb = async () => {
@@ -40,7 +47,7 @@ const ButtonUploadDb = ({ title, background = 'primary', data, postDataToApi }) 
         if (data.length > 0) {
           try {
             for (const key in leakedData) {
-              await postDataToApi(leakedData[key])
+              await postSellerPerformanceToApi(leakedData[key])
             }
             Swal.fire({
               title: 'Los datos se han guardado con éxito.',
