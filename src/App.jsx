@@ -5,24 +5,28 @@ import Navbar from './components/Navbar'
 import Sidebar from './components/Sidebar'
 import UploadReports from './pages/UploadReports'
 import Graphics from './pages/Graphics'
-import { getData, createNewData, getDepartment } from './services/dataService'
+import { getSellerPerformance, createSellerPerformance, getDepartment, createNewSeller, getSeller } from './services/dataService'
 import { useEffect, useState } from 'react'
 import HowAreWeDoing from './pages/HowAreWeDoing'
 import Analytics from './pages/Analytics'
+import ManageSellers from './pages/ManageSellers'
 
 function App () {
-  const [dataset, setDataset] = useState([])
-  const [newData, setNewData] = useState([])
+  const [sellerPerformance, setSellerPerformance] = useState([])
+  const [newSellerPerformance, setNewSellerPerformance] = useState([])
+
+  const [seller, setSeller] = useState([])
+  const [newSeller, setNewSeller] = useState([])
 
   const [department, setDepartment] = useState([])
   // const [loading, setLoading] = useState(false)
 
-  const fetchDataFromApi = async () => {
+  const fetchSellerPerformanceFromApi = async () => {
     try {
-      const response = await getData()
-      setDataset(response)
+      const response = await getSellerPerformance()
+      setSellerPerformance(response)
     } catch (error) {
-      console.log(error)
+      console.error(error)
     }
   }
 
@@ -31,16 +35,38 @@ function App () {
       const response = await getDepartment()
       setDepartment(response)
     } catch (error) {
-      console.log(error)
+      console.error(error)
     }
   }
 
-  const postDataToApi = async (newData) => {
+  const postSellerPerformanceToApi = async (newData) => {
     try {
-      const request = await createNewData(newData)
-      setNewData(request)
+      const request = await createSellerPerformance(newData)
+      setNewSellerPerformance(request)
+      return request
     } catch (error) {
-      console.log(error)
+      console.error(error)
+      throw error
+    }
+  }
+
+  const postSellerToApi = async (newSeller) => {
+    try {
+      const request = await createNewSeller(newSeller)
+      setNewSeller(request)
+      return request
+    } catch (error) {
+      console.error(error)
+      throw error
+    }
+  }
+
+  const fetchSellerFromApi = async () => {
+    try {
+      const response = await getSeller()
+      setSeller(response)
+    } catch (error) {
+      console.error(error)
     }
   }
 
@@ -156,12 +182,16 @@ function App () {
   }
 
   useEffect(() => {
-    fetchDataFromApi()
-  }, [newData])
+    fetchSellerPerformanceFromApi()
+  }, [newSellerPerformance])
 
   useEffect(() => {
     fetchDepartmentFromApi()
   }, [])
+
+  useEffect(() => {
+    fetchSellerFromApi()
+  }, [newSeller])
 
   return (
     <div className='App'>
@@ -169,9 +199,10 @@ function App () {
       <Sidebar />
       <Routes>
         <Route path='/' element={<UploadReports toFixed={toFixed} department={department} convertExcelDateToReadable={convertExcelDateToReadable} extractIdNumber={extractIdNumber} extractText={extractText} capitalizeWords={capitalizeWords} />} />
-        <Route path='/how-are-we-doing' element={<HowAreWeDoing postDataToApi={postDataToApi} toFixed={toFixed} convertExcelDateToReadable={convertExcelDateToReadable} currencyFormat={currencyFormat} />} />
-        <Route path='/graphics' element={<Graphics dataset={dataset} extractDateFromData={extractDateFromData} />} />
+        <Route path='/how-are-we-doing' element={<HowAreWeDoing postSellerPerformanceToApi={postSellerPerformanceToApi} seller={seller} toFixed={toFixed} convertExcelDateToReadable={convertExcelDateToReadable} currencyFormat={currencyFormat} />} />
+        <Route path='/graphics' element={<Graphics sellerPerformance={sellerPerformance} extractDateFromData={extractDateFromData} />} />
         <Route path='/analytics' element={<Analytics convertExcelDateToReadable={convertExcelDateToReadable} currencyFormat={currencyFormat} />} />
+        <Route path='/manage-sellers' element={<ManageSellers postSellerToApi={postSellerToApi} capitalizeWords={capitalizeWords} seller={seller} />} />
       </Routes>
     </div>
   )
