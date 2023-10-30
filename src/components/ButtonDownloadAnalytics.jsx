@@ -20,7 +20,7 @@ const ButtonDownloadAnalytics = ({ title, background = 'primary', sellerSalesDat
       { v: 'Valor Unitario', s: excelStyles.headerGrayStyle },
       { v: 'Venta Bruta', s: excelStyles.headerGrayStyle },
       { v: 'Descuento', s: excelStyles.headerGrayStyle },
-      { v: 'Venta Nea', s: excelStyles.headerGrayStyle },
+      { v: 'Venta Neta', s: excelStyles.headerGrayStyle },
       { v: 'IVA', s: excelStyles.headerGrayStyle },
       { v: 'Valor Total', s: excelStyles.headerGrayStyle }
     ])
