@@ -83,6 +83,14 @@ button i {
   justify-content: space-between;
 }
 
+.simple-bar-charts{
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
 .pagination-buttons{
   display: flex;
   justify-content: center;
