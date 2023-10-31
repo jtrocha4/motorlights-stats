@@ -201,10 +201,10 @@ function App () {
       <Sidebar />
       <Routes>
         <Route path='/' element={<UploadReports toFixed={toFixed} department={department} convertExcelDateToReadable={convertExcelDateToReadable} extractIdNumber={extractIdNumber} extractText={extractText} capitalizeWords={capitalizeWords} />} />
-        <Route path='/how-are-we-doing' element={<HowAreWeDoing postSellerPerformanceToApi={postSellerPerformanceToApi} seller={seller} toFixed={toFixed} convertExcelDateToReadable={convertExcelDateToReadable} currencyFormat={currencyFormat} />} />
-        <Route path='/graphics' element={<Graphics sellerPerformance={sellerPerformance} extractDateFromData={extractDateFromData} />} />
-        <Route path='/analytics' element={<Analytics convertExcelDateToReadable={convertExcelDateToReadable} currencyFormat={currencyFormat} />} />
-        <Route path='/manage-sellers' element={<ManageSellers postSellerToApi={postSellerToApi} capitalizeWords={capitalizeWords} seller={seller} />} />
+        <Route path='how-are-we-doing' element={<HowAreWeDoing postSellerPerformanceToApi={postSellerPerformanceToApi} seller={seller} toFixed={toFixed} convertExcelDateToReadable={convertExcelDateToReadable} currencyFormat={currencyFormat} />} />
+        <Route path='graphics' element={<Graphics sellerPerformance={sellerPerformance} extractDateFromData={extractDateFromData} />} />
+        <Route path='analytics' element={<Analytics convertExcelDateToReadable={convertExcelDateToReadable} currencyFormat={currencyFormat} />} />
+        <Route path='manage-sellers' element={<ManageSellers postSellerToApi={postSellerToApi} capitalizeWords={capitalizeWords} seller={seller} />} />
       </Routes>
     </div>
   )
