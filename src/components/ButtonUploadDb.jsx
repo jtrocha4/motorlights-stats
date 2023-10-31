@@ -21,7 +21,7 @@ const ButtonUploadDb = ({ title, background = 'primary', data, postSellerPerform
 
   data.forEach(el => {
     seller.forEach(sell => {
-      if (el.vendedor === sell.identificacion) {
+      if (el.vendedor === sell.identificacion && sell.estado === true) {
         const { venta, vendedor, ...restOfData } = el
         leakedData.push({
           ...restOfData,
@@ -56,6 +56,7 @@ const ButtonUploadDb = ({ title, background = 'primary', data, postSellerPerform
           } catch (error) {
             Swal.fire({
               title: 'Lo sentimos, ha ocurrido un error al guardar los datos.',
+              text: 'Por favor, asegúrese de haber cargado todos los informes necesarios.',
               icon: 'error'
             })
           }
