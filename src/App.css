@@ -80,7 +80,17 @@ button i {
 
 .charts-button-group{
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
+}
+
+.charts-button-group .chart-button{
+  margin: 5px;
+  padding: 0px;
+}
+
+.charts-button-download{
+  display: flex;
+  justify-content: flex-end;
 }
 
 .simple-bar-charts{
@@ -98,6 +108,10 @@ button i {
 
 .pagination-buttons a{
   user-select: none;
+}
+
+.form-check{
+  padding-left: 30px;
 }
 
 @media (max-width: 1024px){
