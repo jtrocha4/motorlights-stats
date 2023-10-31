@@ -1,11 +1,17 @@
 /* eslint-disable no-undef */
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import { Bar, CartesianGrid, ComposedChart, LabelList, Legend, Line, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import ButtonDownloadImg from '../ButtonDownloadImg'
 import Calendar from '../Calendar'
+import Filters from '../Filters'
+import { FiltersContext } from '../context/filters'
+import { DataContext } from '../context/data'
 
 const SimpleBarCharts = ({ sellerPerformance, extractDateFromData }) => {
   const [screenSize, setScreenSize] = useState(0)
+
+  const { filters } = useContext(FiltersContext)
+  const { seller } = useContext(DataContext)
 
   const localData = JSON.parse(localStorage.getItem('data')) || {}
   const localDateData = JSON.parse(localStorage.getItem('dateData')) || {}
@@ -42,18 +48,29 @@ const SimpleBarCharts = ({ sellerPerformance, extractDateFromData }) => {
       let firstAndMiddleName = ''
       if (vendedor) {
         firstAndMiddleName = splitName(vendedor)
+        seller.forEach(element => {
+          if (vendedor === element.identificacion) {
+            percentageArray.push({
+              vendedor: firstAndMiddleName,
+              idVendedor: element.id,
+              porcentajeVentas,
+              porcentajeRecaudo,
+              porcentajeMes: porcentajeDiasTranscurridos
+            })
+          }
+        })
       } else {
         if (idVendedor) {
           firstAndMiddleName = splitName(idVendedor.nombre)
+          percentageArray.push({
+            vendedor: firstAndMiddleName,
+            idVendedor: idVendedor.id,
+            porcentajeVentas,
+            porcentajeRecaudo,
+            porcentajeMes: porcentajeDiasTranscurridos
+          })
         }
       }
-
-      percentageArray.push({
-        vendedor: firstAndMiddleName,
-        porcentajeVentas,
-        porcentajeRecaudo,
-        porcentajeMes: porcentajeDiasTranscurridos
-      })
     })
   }
 
@@ -63,7 +80,9 @@ const SimpleBarCharts = ({ sellerPerformance, extractDateFromData }) => {
     addDataToPercentageData(localData, percentageData)
   }
 
-  const leakedData = percentageData.filter(({ vendedor }) => vendedor !== 'MOTORLIGHTS S.A.S')
+  // const leakedData = percentageData.filter(({ vendedor }) => vendedor !== 'MOTORLIGHTS S.A.S')
+
+  const leakedData = percentageData.filter(({ idVendedor }) => filters.seller.includes(idVendedor))
 
   const customLegendFormatter = (value, entry) => {
     return <span style={{ color: '#7d7a79' }}>{value}</span>
@@ -86,9 +105,12 @@ const SimpleBarCharts = ({ sellerPerformance, extractDateFromData }) => {
 
   return (
     <>
-      <h4 className='text-center'>{(dia !== undefined && mes !== undefined) ? (`Como Vamos ${dia} ${mes}`) : 'Como Vamos'}</h4>
+      <h4 className='text-center mb-4'>{(dia !== undefined && mes !== undefined) ? (`Como Vamos ${dia} ${mes}`) : 'Como Vamos'}</h4>
       <section className='charts-button-group'>
-        <Calendar />
+        <button className='chart-button'><Calendar /></button>
+        <button className='chart-button'><Filters splitName={splitName} /></button>
+      </section>
+      <section className='charts-button-download'>
         <ButtonDownloadImg title='Descargar grafica' screenSize={screenSize} containerRef={containerRef} date={`${dia} ${mes}`} />
       </section>
       <section>
