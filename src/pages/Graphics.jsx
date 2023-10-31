@@ -1,5 +1,6 @@
 import React from 'react'
 import SimpleBarCharts from '../components/charts/SimpleBarCharts'
+import { FiltersProvider } from '../components/context/filters'
 
 const Graphics = ({ sellerPerformance, extractDateFromData }) => {
   return (
@@ -7,7 +8,9 @@ const Graphics = ({ sellerPerformance, extractDateFromData }) => {
       <div className='container-fluid'>
         <h2>Graficos</h2>
         <div className='chart-container'>
-          <SimpleBarCharts sellerPerformance={sellerPerformance} extractDateFromData={extractDateFromData} />
+          <FiltersProvider>
+            <SimpleBarCharts sellerPerformance={sellerPerformance} extractDateFromData={extractDateFromData} />
+          </FiltersProvider>
         </div>
       </div>
     </div>
