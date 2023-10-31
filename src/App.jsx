@@ -6,16 +6,18 @@ import Sidebar from './components/Sidebar'
 import UploadReports from './pages/UploadReports'
 import Graphics from './pages/Graphics'
 import { getSellerPerformance, createSellerPerformance, getDepartment, createNewSeller, getSeller } from './services/dataService'
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import HowAreWeDoing from './pages/HowAreWeDoing'
 import Analytics from './pages/Analytics'
 import ManageSellers from './pages/ManageSellers'
+import { DataContext } from './components/context/data'
 
 function App () {
+  const { seller, setSeller } = useContext(DataContext)
+
   const [sellerPerformance, setSellerPerformance] = useState([])
   const [newSellerPerformance, setNewSellerPerformance] = useState([])
 
-  const [seller, setSeller] = useState([])
   const [newSeller, setNewSeller] = useState([])
 
   const [department, setDepartment] = useState([])
