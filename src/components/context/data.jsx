@@ -9,7 +9,7 @@ export const DataProvider = ({ children }) => {
   const [totalDebitByDocNum, setTotalDebitByDocNum] = useState({})
   const [errorRc, setErrorRc] = useState([])
 
-  // Hacer un contexto independiente solo par alos excelData (?
+  // Hacer un contexto independiente solo para los excelData (?
   const [excelDataCost, setExcelDataCost] = useState([])
   const [excelDataCollection, setExcelDataCollection] = useState([])
   const [excelDataAuxiliaryBook, setExcelDataAuxiliaryBook] = useState([])
@@ -18,6 +18,9 @@ export const DataProvider = ({ children }) => {
   const [collectionGoalBySeller, setCollectionGoalBySeller] = useState({})
 
   const [dateExcel, setDateExcel] = useState({})
+
+  //
+  const [seller, setSeller] = useState([])
 
   return (
     <DataContext.Provider value={{
@@ -42,7 +45,9 @@ export const DataProvider = ({ children }) => {
       collectionGoalBySeller,
       setCollectionGoalBySeller,
       dateExcel,
-      setDateExcel
+      setDateExcel,
+      seller,
+      setSeller
     }}
     >
       {children}
