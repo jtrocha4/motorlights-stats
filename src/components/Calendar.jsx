@@ -53,7 +53,7 @@ const Calendar = () => {
 
   return (
     <div className='dropdown'>
-      <button className='form-select ' type='button' data-bs-toggle='dropdown'>
+      <button className='form-select' type='button' data-bs-toggle='dropdown'>
         {`${day} ${month} ${year}`}
       </button>
       <div className='dropdown-menu'>
