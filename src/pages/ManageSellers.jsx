@@ -11,14 +11,16 @@ const ManageSellers = ({ postSellerToApi, capitalizeWords, seller }) => {
         </div>
         <section className='mt-4'>
           {
-          seller.map(el => (
-            <div className='card mt-2' key={el.id}>
-              <div className='card-body'>
-                <h5 className='card-title'>{el.nombre}</h5>
-                <h6 className='card-subtitle mb-2 text-body-secondary'>{el.id}</h6>
+          seller
+            .filter(el => el.estado !== false)
+            .map(el => (
+              <div className='card mt-2' key={el.id}>
+                <div className='card-body'>
+                  <h5 className='card-title'>{el.nombre}</h5>
+                  <h6 className='card-subtitle mb-2 text-body-secondary'>{el.id}</h6>
+                </div>
               </div>
-            </div>
-          ))
+            ))
          }
         </section>
       </div>
