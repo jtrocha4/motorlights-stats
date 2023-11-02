@@ -11,7 +11,7 @@ const SimpleBarCharts = ({ sellerPerformance, extractDateFromData }) => {
   const [screenSize, setScreenSize] = useState(0)
 
   const { filters } = useContext(FiltersContext)
-  const { seller } = useContext(DataContext)
+  const { sellers } = useContext(DataContext)
 
   const localData = JSON.parse(localStorage.getItem('data')) || {}
   const localDateData = JSON.parse(localStorage.getItem('dateData')) || {}
@@ -48,7 +48,7 @@ const SimpleBarCharts = ({ sellerPerformance, extractDateFromData }) => {
       let firstAndMiddleName = ''
       if (vendedor) {
         firstAndMiddleName = splitName(vendedor)
-        seller.forEach(element => {
+        sellers.forEach(element => {
           if (vendedor === element.identificacion) {
             percentageArray.push({
               vendedor: firstAndMiddleName,
@@ -107,8 +107,8 @@ const SimpleBarCharts = ({ sellerPerformance, extractDateFromData }) => {
     <>
       <h4 className='text-center mb-4'>{(dia !== undefined && mes !== undefined) ? (`Como Vamos ${dia} ${mes}`) : 'Como Vamos'}</h4>
       <section className='charts-button-group'>
-        <button className='chart-button'><Calendar /></button>
-        <button className='chart-button'><Filters splitName={splitName} /></button>
+        <div className='chart-button'><Calendar /></div>
+        <div className='chart-button'><Filters splitName={splitName} /></div>
       </section>
       <section className='charts-button-download'>
         <ButtonDownloadImg title='Descargar grafica' screenSize={screenSize} containerRef={containerRef} date={`${dia} ${mes}`} />

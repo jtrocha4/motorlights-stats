@@ -2,7 +2,7 @@ import React, { useContext } from 'react'
 import Swal from 'sweetalert2'
 import { DataContext } from './context/data'
 
-const ButtonUploadDb = ({ title, background = 'primary', data, postSellerPerformanceToApi, seller }) => {
+const ButtonUploadDb = ({ title, background = 'primary', data, postSellerPerformanceToApi, sellers }) => {
   const { dateExcel } = useContext(DataContext)
   const { fechaFinal } = dateExcel
 
@@ -20,7 +20,7 @@ const ButtonUploadDb = ({ title, background = 'primary', data, postSellerPerform
   const leakedData = []
 
   data.forEach(el => {
-    seller.forEach(sell => {
+    sellers.forEach(sell => {
       if (el.vendedor === sell.identificacion && sell.estado === true) {
         const { venta, vendedor, ...restOfData } = el
         leakedData.push({
