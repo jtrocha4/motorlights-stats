@@ -114,6 +114,12 @@ button i {
   padding-left: 30px;
 }
 
+.card:hover{
+  box-shadow: 5px 5px #888;
+  zoom: 1.02;
+  /* cursor: pointer; */
+}
+
 @media (max-width: 1024px){
   body{
     margin: 0;
