@@ -19,8 +19,7 @@ export const DataProvider = ({ children }) => {
 
   const [dateExcel, setDateExcel] = useState({})
 
-  //
-  const [seller, setSeller] = useState([])
+  const [sellers, setSellers] = useState([])
 
   return (
     <DataContext.Provider value={{
@@ -46,8 +45,8 @@ export const DataProvider = ({ children }) => {
       setCollectionGoalBySeller,
       dateExcel,
       setDateExcel,
-      seller,
-      setSeller
+      sellers,
+      setSellers
     }}
     >
       {children}
