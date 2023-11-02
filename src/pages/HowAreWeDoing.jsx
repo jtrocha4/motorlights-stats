@@ -6,7 +6,7 @@ import ButtonUploadDb from '../components/ButtonUploadDb'
 import Table from '../components/Table'
 import ButtonDownloadDetailSaleAndCollection from '../components/ButtonDownloadDetailSaleAndCollection'
 
-const HowAreWeDoing = ({ toFixed, postSellerPerformanceToApi, seller, convertExcelDateToReadable, currencyFormat }) => {
+const HowAreWeDoing = ({ toFixed, postSellerPerformanceToApi, sellers, convertExcelDateToReadable, currencyFormat }) => {
   const { dateExcel, data } = useContext(DataContext)
 
   return (
@@ -32,7 +32,7 @@ const HowAreWeDoing = ({ toFixed, postSellerPerformanceToApi, seller, convertExc
             title='Guardar informacion' background='primary'
             data={data}
             postSellerPerformanceToApi={postSellerPerformanceToApi}
-            seller={seller}
+            sellers={sellers}
           />
         </div>
         <div className='mt-2 table-responsive'>
