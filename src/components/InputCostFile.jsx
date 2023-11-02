@@ -4,7 +4,7 @@ import { costFileToModel } from '../mappers'
 import { DataContext } from './context/data'
 import { ReportDetailsContext } from './context/reportDetails'
 
-const InputCostFile = ({ label, toFixed, salesGoalBySeller, collectionGoalBySeller }) => {
+const InputCostFile = ({ label, toFixed, salesGoalBySeller, collectionGoalBySeller, extractIdNumber, extractText, removeExtraSpaces }) => {
   const { setData, excelDataCost, setExcelDataCost } = useContext(DataContext)
   const { setDateCostFile, setCostReportName } = useContext(ReportDetailsContext)
 
@@ -124,6 +124,21 @@ const InputCostFile = ({ label, toFixed, salesGoalBySeller, collectionGoalBySell
             }
 
             saleData[currentSeller] = sellerSales
+
+            const processedSalesData = sellerSales.map(sales => {
+              const { doc, codigoInventario, ...restOfData } = sales
+              const productId = extractIdNumber(codigoInventario)
+              const product = extractText(codigoInventario)
+              return {
+                ...restOfData,
+                doc: removeExtraSpaces(doc),
+                idProducto: productId,
+                producto: product
+              }
+            })
+
+            saleData[currentSeller] = processedSalesData
+
             sale.push(
               {
                 cantidadFacturas: billCounter,
