@@ -1,7 +1,8 @@
 import React from 'react'
 import ModalAddSeller from '../components/ModalAddSeller'
+import { Link } from 'react-router-dom'
 
-const ManageSellers = ({ postSellerToApi, capitalizeWords, seller }) => {
+const ManageSellers = ({ postSellerToApi, capitalizeWords, sellers }) => {
   return (
     <div className='flex'>
       <div className='container-fluid'>
@@ -11,17 +12,19 @@ const ManageSellers = ({ postSellerToApi, capitalizeWords, seller }) => {
         </div>
         <section className='mt-4'>
           {
-          seller
-            .filter(el => el.estado !== false)
-            .map(el => (
-              <div className='card mt-2' key={el.id}>
-                <div className='card-body'>
-                  <h5 className='card-title'>{el.nombre}</h5>
-                  <h6 className='card-subtitle mb-2 text-body-secondary'>{el.id}</h6>
+            sellers
+              .filter(el => el.estado !== false)
+              .map(el => (
+                <div className='card mt-3' key={el.id}>
+                  <Link to={`/manage-sellers/${el.id}`}>
+                    <div className='card-body'>
+                      <h5 className='card-title'>{el.nombre}</h5>
+                      <h6 className='card-subtitle mb-2 text-body-secondary'>{el.id}</h6>
+                    </div>
+                  </Link>
                 </div>
-              </div>
-            ))
-         }
+              ))
+          }
         </section>
       </div>
     </div>
