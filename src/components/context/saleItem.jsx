@@ -9,9 +9,11 @@ export const SaleItemProvider = ({ children }) => {
 
   const [sellerSalesData, setSellerSalesData] = useState([])
 
+  const [costAndSalesData, setCostAndSalesData] = useState([])
+
   return (
     <SaleItemContext.Provider value={{
-      excelDataSaleItem, setExcelDataSaleItem, dataSaleItem, setDataSaleItem, sellersCustomers, setSellersCustomers, sellerSalesData, setSellerSalesData
+      excelDataSaleItem, setExcelDataSaleItem, dataSaleItem, setDataSaleItem, sellersCustomers, setSellersCustomers, sellerSalesData, setSellerSalesData, costAndSalesData, setCostAndSalesData
     }}
     >
       {children}
