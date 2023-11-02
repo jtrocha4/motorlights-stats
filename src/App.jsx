@@ -11,9 +11,10 @@ import HowAreWeDoing from './pages/HowAreWeDoing'
 import Analytics from './pages/Analytics'
 import ManageSellers from './pages/ManageSellers'
 import { DataContext } from './components/context/data'
+import SellerProfile from './pages/SellerProfile'
 
 function App () {
-  const { seller, setSeller } = useContext(DataContext)
+  const { sellers, setSellers } = useContext(DataContext)
 
   const [sellerPerformance, setSellerPerformance] = useState([])
   const [newSellerPerformance, setNewSellerPerformance] = useState([])
@@ -66,7 +67,7 @@ function App () {
   const fetchSellerFromApi = async () => {
     try {
       const response = await getSeller()
-      setSeller(response)
+      setSellers(response)
     } catch (error) {
       console.error(error)
     }
@@ -183,6 +184,10 @@ function App () {
     return product[1]
   }
 
+  const removeExtraSpaces = (string) => {
+    return string.replace(/\s+/g, ' ')
+  }
+
   useEffect(() => {
     fetchSellerPerformanceFromApi()
   }, [newSellerPerformance])
@@ -200,11 +205,12 @@ function App () {
       <Navbar />
       <Sidebar />
       <Routes>
-        <Route path='/' element={<UploadReports toFixed={toFixed} department={department} convertExcelDateToReadable={convertExcelDateToReadable} extractIdNumber={extractIdNumber} extractText={extractText} capitalizeWords={capitalizeWords} />} />
-        <Route path='how-are-we-doing' element={<HowAreWeDoing postSellerPerformanceToApi={postSellerPerformanceToApi} seller={seller} toFixed={toFixed} convertExcelDateToReadable={convertExcelDateToReadable} currencyFormat={currencyFormat} />} />
-        <Route path='graphics' element={<Graphics sellerPerformance={sellerPerformance} extractDateFromData={extractDateFromData} />} />
-        <Route path='analytics' element={<Analytics convertExcelDateToReadable={convertExcelDateToReadable} currencyFormat={currencyFormat} />} />
-        <Route path='manage-sellers' element={<ManageSellers postSellerToApi={postSellerToApi} capitalizeWords={capitalizeWords} seller={seller} />} />
+        <Route path='/' element={<UploadReports toFixed={toFixed} department={department} convertExcelDateToReadable={convertExcelDateToReadable} extractIdNumber={extractIdNumber} extractText={extractText} capitalizeWords={capitalizeWords} removeExtraSpaces={removeExtraSpaces} />} />
+        <Route path='/how-are-we-doing' element={<HowAreWeDoing postSellerPerformanceToApi={postSellerPerformanceToApi} sellers={sellers} toFixed={toFixed} convertExcelDateToReadable={convertExcelDateToReadable} currencyFormat={currencyFormat} />} />
+        <Route path='/graphics' element={<Graphics sellerPerformance={sellerPerformance} extractDateFromData={extractDateFromData} />} />
+        <Route path='/analytics' element={<Analytics convertExcelDateToReadable={convertExcelDateToReadable} currencyFormat={currencyFormat} />} />
+        <Route path='/manage-sellers' element={<ManageSellers postSellerToApi={postSellerToApi} capitalizeWords={capitalizeWords} sellers={sellers} />} />
+        <Route path='/manage-sellers/:id' element={<SellerProfile />} />
       </Routes>
     </div>
   )
