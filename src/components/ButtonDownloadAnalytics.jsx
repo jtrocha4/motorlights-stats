@@ -3,7 +3,7 @@ import XLSX from 'xlsx-js-style'
 import excelStyles from '../styles/excelStyles'
 
 const ButtonDownloadAnalytics = ({ title, background = 'primary', sellerSalesData }) => {
-  const handleDownload = (event) => {
+  const handleDownload = () => {
     const tableHeaders = []
     tableHeaders.push([
       { v: 'Vendedor', s: excelStyles.headerGrayStyle },
@@ -48,7 +48,7 @@ const ButtonDownloadAnalytics = ({ title, background = 'primary', sellerSalesDat
     const worksheet = XLSX.utils.json_to_sheet(wsData)
 
     const workbook = XLSX.utils.book_new()
-    const sheetName = 'Datos'
+    const sheetName = 'Macro ventas'
 
     // Tamaño de las columnas
     worksheet['!cols'] = []
@@ -83,7 +83,7 @@ const ButtonDownloadAnalytics = ({ title, background = 'primary', sellerSalesDat
     XLSX.utils.book_append_sheet(workbook, worksheet, sheetName)
     XLSX.utils.sheet_add_aoa(worksheet, tableHeaders, { origin: 'A1' })
 
-    const excelFileName = 'Informe Ventas.xlsx'
+    const excelFileName = 'Informe Macro Ventas.xlsx'
     XLSX.writeFile(workbook, excelFileName)
   }
 
