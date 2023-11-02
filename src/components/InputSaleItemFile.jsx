@@ -5,7 +5,7 @@ import { SaleItemContext } from './context/saleItem'
 import { ReportDetailsContext } from './context/reportDetails'
 import { ThirdPartiesContext } from './context/thirdParties'
 
-const InputSaleItemFile = ({ label, convertExcelDateToReadable, extractIdNumber, extractText, capitalizeWords }) => {
+const InputSaleItemFile = ({ label, convertExcelDateToReadable, extractIdNumber, extractText, capitalizeWords, removeExtraSpaces }) => {
   const { excelDataSaleItem, setExcelDataSaleItem, setSellersCustomers, setDataSaleItem, dataSaleItem, setSellerSalesData } = useContext(SaleItemContext)
   const { setSalesItemsReportName } = useContext(ReportDetailsContext)
 
@@ -91,6 +91,17 @@ const InputSaleItemFile = ({ label, convertExcelDateToReadable, extractIdNumber,
         if (row.vendedor.startsWith('Total')) {
           if (currentSeller) {
             salesItem[currentSeller] = soldItems
+
+            const processedSoldItems = soldItems.map(item => {
+              const { doc, ...restOfData } = item
+              return {
+                ...restOfData,
+                doc: removeExtraSpaces(doc)
+              }
+            })
+
+            salesItem[currentSeller] = processedSoldItems
+
             dataSalesItems.push({
               vendedor: currentSeller,
               itemsVendidos: salesItem[currentSeller]
@@ -102,7 +113,8 @@ const InputSaleItemFile = ({ label, convertExcelDateToReadable, extractIdNumber,
           currentSeller = row.vendedor
         }
       }
-      if (currentSeller && soldItems && splitChain !== undefined && !splitChain[1].startsWith('Flete')) {
+      // && !splitChain[1].startsWith('Flete')
+      if (currentSeller && soldItems && splitChain !== undefined) {
         soldItems.push(row)
       }
     })
