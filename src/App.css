@@ -78,6 +78,15 @@ button i {
   padding-right: 0.2rem;
 }
 
+.button-group{
+  display: flex;
+  justify-content: flex-start;
+}
+
+.button-group button {
+  margin-inline-end: 15px;
+}
+
 .charts-button-group{
   display: flex;
   justify-content: flex-start;
