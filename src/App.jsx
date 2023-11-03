@@ -7,11 +7,12 @@ import UploadReports from './pages/UploadReports'
 import Graphics from './pages/Graphics'
 import { getSellerPerformance, createSellerPerformance, getDepartment, createNewSeller, getSeller } from './services/dataService'
 import { useContext, useEffect, useState } from 'react'
-import HowAreWeDoing from './pages/HowAreWeDoing'
 import Analytics from './pages/Analytics'
 import ManageSellers from './pages/ManageSellers'
 import { DataContext } from './components/context/data'
 import SellerProfile from './pages/SellerProfile'
+import SalesPage from './pages/SalesPage'
+import DetailedSalesPage from './pages/DetailedSalesPage'
 
 function App () {
   const { sellers, setSellers } = useContext(DataContext)
@@ -206,7 +207,10 @@ function App () {
       <Sidebar />
       <Routes>
         <Route path='/' element={<UploadReports toFixed={toFixed} department={department} convertExcelDateToReadable={convertExcelDateToReadable} extractIdNumber={extractIdNumber} extractText={extractText} capitalizeWords={capitalizeWords} removeExtraSpaces={removeExtraSpaces} />} />
-        <Route path='/how-are-we-doing' element={<HowAreWeDoing postSellerPerformanceToApi={postSellerPerformanceToApi} sellers={sellers} toFixed={toFixed} convertExcelDateToReadable={convertExcelDateToReadable} currencyFormat={currencyFormat} />} />
+        <Route path='/sales' element={<SalesPage postSellerPerformanceToApi={postSellerPerformanceToApi} sellers={sellers} toFixed={toFixed} convertExcelDateToReadable={convertExcelDateToReadable} currencyFormat={currencyFormat} sellerPerformance={sellerPerformance} extractDateFromData={extractDateFromData} />} />
+
+        <Route path='/detailed-sales' element={<DetailedSalesPage />} />
+
         <Route path='/graphics' element={<Graphics sellerPerformance={sellerPerformance} extractDateFromData={extractDateFromData} />} />
         <Route path='/analytics' element={<Analytics convertExcelDateToReadable={convertExcelDateToReadable} currencyFormat={currencyFormat} />} />
         <Route path='/manage-sellers' element={<ManageSellers postSellerToApi={postSellerToApi} capitalizeWords={capitalizeWords} sellers={sellers} />} />
