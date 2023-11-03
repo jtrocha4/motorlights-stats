@@ -83,7 +83,8 @@ const InputCostFile = ({ label, toFixed, salesGoalBySeller, collectionGoalBySell
       ventasPendiente: 0,
       comisionTotal: 0,
       margen: 0,
-      porcentajeMargen: 0
+      porcentajeMargen: 0,
+      clientesNuevos: 0
     }
 
     formattedData.forEach(row => {
@@ -157,7 +158,8 @@ const InputCostFile = ({ label, toFixed, salesGoalBySeller, collectionGoalBySell
                 totalVenta: total,
                 vendedor: currentSeller,
                 venta: saleData[currentSeller],
-                ventasPendiente: pendingSalesTarget
+                ventasPendiente: pendingSalesTarget,
+                clientesNuevos: 0
               }
             )
           }
