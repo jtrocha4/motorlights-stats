@@ -348,9 +348,9 @@ const ButtonDownloadDetailSaleAndCollection = ({ title, data, convertExcelDateTo
     XLSX.writeFile(workbook, excelFileName)
   }
   return (
-    <div>
+    <>
       <button type='button' className='btn btn-outline-success' onClick={handleDownload}><i className='fa-solid fa-file-invoice' /> {title}</button>
-    </div>
+    </>
   )
 }
 

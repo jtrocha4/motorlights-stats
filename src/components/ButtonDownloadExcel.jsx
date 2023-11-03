@@ -390,9 +390,9 @@ const ButtonDownloadExcel = ({ title, data, toFixed }) => {
     XLSX.writeFile(workbook, excelFileName)
   }
   return (
-    <div>
+    <>
       <button type='button' className='btn btn-outline-success' onClick={handleDownload}><i className='fa-regular fa-file-excel' /> {title}</button>
-    </div>
+    </>
   )
 }
 

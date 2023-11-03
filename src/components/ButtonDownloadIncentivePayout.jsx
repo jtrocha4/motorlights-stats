@@ -520,9 +520,9 @@ const ButtonDownloadIncentivePayout = ({ title, data, convertExcelDateToReadable
     XLSX.writeFile(workbook, excelFileName)
   }
   return (
-    <div>
+    <>
       <button type='button' className='btn btn-outline-success' onClick={handleDownload}><i className='fa-solid fa-file-invoice-dollar' /> {title}</button>
-    </div>
+    </>
   )
 }
 
