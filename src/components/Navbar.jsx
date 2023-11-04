@@ -25,17 +25,9 @@ const Navbar = () => {
               <li className='nav-item'>
                 <Link className='nav-link' to='/detailed-sales'>Informe Detallado Ventas</Link>
               </li>
-
-              {/* <li className='nav-item'>
-                <Link className='nav-link' to='/graphics'>Graficos</Link>
-              </li>
-
-              <li className='nav-item'>
-                <Link className='nav-link' to='/analytics'>Analitica</Link>
-              </li>
               <li className='nav-item'>
                 <Link className='nav-link' to='/manage-sellers'>Vendedores</Link>
-              </li> */}
+              </li>
             </ul>
           </div>
         </div>
