@@ -4,10 +4,8 @@ import './App.css'
 import Navbar from './components/Navbar'
 import Sidebar from './components/Sidebar'
 import UploadReports from './pages/UploadReports'
-import Graphics from './pages/Graphics'
 import { getSellerPerformance, createSellerPerformance, getDepartment, createNewSeller, getSeller } from './services/dataService'
 import { useContext, useEffect, useState } from 'react'
-import Analytics from './pages/Analytics'
 import ManageSellers from './pages/ManageSellers'
 import { DataContext } from './components/context/data'
 import SellerProfile from './pages/SellerProfile'
@@ -208,11 +206,8 @@ function App () {
       <Routes>
         <Route path='/' element={<UploadReports toFixed={toFixed} department={department} convertExcelDateToReadable={convertExcelDateToReadable} extractIdNumber={extractIdNumber} extractText={extractText} capitalizeWords={capitalizeWords} removeExtraSpaces={removeExtraSpaces} />} />
         <Route path='/sales' element={<SalesPage postSellerPerformanceToApi={postSellerPerformanceToApi} sellers={sellers} toFixed={toFixed} convertExcelDateToReadable={convertExcelDateToReadable} currencyFormat={currencyFormat} sellerPerformance={sellerPerformance} extractDateFromData={extractDateFromData} />} />
-
         <Route path='/detailed-sales' element={<DetailedSalesPage />} />
 
-        <Route path='/graphics' element={<Graphics sellerPerformance={sellerPerformance} extractDateFromData={extractDateFromData} />} />
-        <Route path='/analytics' element={<Analytics convertExcelDateToReadable={convertExcelDateToReadable} currencyFormat={currencyFormat} />} />
         <Route path='/manage-sellers' element={<ManageSellers postSellerToApi={postSellerToApi} capitalizeWords={capitalizeWords} sellers={sellers} />} />
         <Route path='/manage-sellers/:id' element={<SellerProfile />} />
       </Routes>
