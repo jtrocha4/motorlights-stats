@@ -6,7 +6,7 @@ import ButtonDownloadAnalytics from '../components/ButtonDownloadAnalytics'
 import TableAnalyticsCostAndSales from '../components/TableAnalyticsCostAndSales'
 import ButtonDownloadAnalyticsCostAndSale from '../components/ButtonDownloadAnalyticsCostAndSale'
 
-const Analytics = ({ convertExcelDateToReadable, currencyFormat }) => {
+const Analytics = ({ currencyFormat }) => {
   const { dateExcel } = useContext(DataContext)
   const { sellerSalesData, costAndSalesData } = useContext(SaleItemContext)
 
