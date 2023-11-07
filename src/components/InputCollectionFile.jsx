@@ -75,7 +75,9 @@ const InputCollectionFile = ({ label, toFixed, salesGoalBySeller, collectionGoal
           if (currentSeller) {
             totalWithoutVAT = parseFloat(total / iva)
             collectionTarget = collectionGoalBySeller[currentSeller]
-            percentageCollected = (totalWithoutVAT * 100) / collectionTarget
+
+            percentageCollected = (collectionTarget !== 0) ? (((totalWithoutVAT * 100) / collectionTarget)) : (0)
+
             pendingCollectionTarget = collectionTarget - totalWithoutVAT
 
             percentageCollected = toFixed(percentageCollected, 1)
