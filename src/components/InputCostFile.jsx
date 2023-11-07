@@ -63,7 +63,6 @@ const InputCostFile = ({ label, toFixed, salesGoalBySeller, collectionGoalBySell
     let percentageMargin
 
     let collectionTarget
-    let percentageCollected
 
     let splitChain
 
@@ -108,7 +107,7 @@ const InputCostFile = ({ label, toFixed, salesGoalBySeller, collectionGoalBySell
             percentageMargin = (totalWithFreight !== 0) ? ((margin * 100) / totalWithFreight) : (0)
 
             collectionTarget = collectionGoalBySeller[currentSeller] || 0
-            percentageCollected = 100
+
             pendingCollectionTarget = collectionGoalBySeller[currentSeller] || 0
 
             // Aproximacion de los datos
@@ -149,7 +148,7 @@ const InputCostFile = ({ label, toFixed, salesGoalBySeller, collectionGoalBySell
                 metaRecaudoSinIva: collectionTarget,
                 metaVentas: goalSale,
                 porcentajeMargen: percentageMargin,
-                porcentajeRecaudo: percentageCollected,
+                porcentajeRecaudo: 0,
                 porcentajeVentas: percetageSale,
                 promedioVentas: averageSale,
                 recaudoPendiente: pendingCollectionTarget,
