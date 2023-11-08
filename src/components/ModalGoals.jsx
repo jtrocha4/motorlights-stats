@@ -1,7 +1,10 @@
 /* eslint-disable no-undef */
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
+import { DataContext } from './context/data'
 
 const ModalGoals = ({ title, buttonBackground = 'dark', data = [], sendForm }) => {
+  const { sellers } = useContext(DataContext)
+
   const salesGoals = JSON.parse(localStorage.getItem('metaVentas')) || {}
   const collectionGoals = JSON.parse(localStorage.getItem('metaRecaudo')) || {}
 
@@ -43,14 +46,14 @@ const ModalGoals = ({ title, buttonBackground = 'dark', data = [], sendForm }) =
             <div className='modal-body'>
               <form action='' onSubmit={handleSubmit}>
                 {
-                    (data.length === 0)
+                    (sellers.length === 0)
                       ? (<p>No hay vendedores al cual modificar sus metas</p>)
                       : (
-                          data.map(({ vendedor }) => (
-                            <div className='mb-3' key={vendedor}>
-                              <label htmlFor={vendedor} className='form-label'><b>{vendedor}</b></label>
-                              <input name={`${vendedor}`} type='number' className='form-control mb-2' placeholder='Meta de venta' onChange={handleChange} value={saleGoalsForm[`${vendedor}`]} id={vendedor} />
-                              <input name={`${vendedor}`} type='number' className='form-control' placeholder='Meta de recaudo' onChange={handleChangeCollectionGoal} value={collectionGoalForm[`${vendedor}`]} />
+                          sellers.map(({ identificacion, id }) => (
+                            <div className='mb-3' key={id}>
+                              <label htmlFor={identificacion} className='form-label'><b>{identificacion}</b></label>
+                              <input name={`${identificacion}`} type='number' className='form-control mb-2' placeholder='Meta de venta' onChange={handleChange} value={saleGoalsForm[`${identificacion}`] || 0} id={identificacion} />
+                              <input name={`${identificacion}`} type='number' className='form-control' placeholder='Meta de recaudo' onChange={handleChangeCollectionGoal} value={collectionGoalForm[`${identificacion}`] || 0} />
                             </div>
                           ))
                         )
