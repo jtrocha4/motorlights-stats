@@ -5,7 +5,7 @@ import { DataContext } from './context/data'
 import { ReportDetailsContext } from './context/reportDetails'
 
 const InputCostFile = ({ label, toFixed, salesGoalBySeller, collectionGoalBySeller, extractIdNumber, extractText, removeExtraSpaces }) => {
-  const { setData, excelDataCost, setExcelDataCost } = useContext(DataContext)
+  const { setData, excelDataCost, setExcelDataCost, sellers } = useContext(DataContext)
   const { setDateCostFile, setCostReportName } = useContext(ReportDetailsContext)
 
   const handleReadCostFile = (event) => {
@@ -42,6 +42,22 @@ const InputCostFile = ({ label, toFixed, salesGoalBySeller, collectionGoalBySell
   const reportRows = excelDataCost.slice(4)
   const formattedDataCost = formatDataCost(reportHeader, reportRows)
 
+  const getSalesGoal = (sellerName, salesGoalBySeller) => {
+    if (salesGoalBySeller[sellerName] !== undefined) {
+      return salesGoalBySeller[sellerName]
+    } else {
+      return 0
+    }
+  }
+
+  const getGoalCollection = (sellerName, collectionGoalBySeller) => {
+    if (collectionGoalBySeller[sellerName] !== undefined) {
+      return collectionGoalBySeller[sellerName]
+    } else {
+      return 0
+    }
+  }
+
   const extractCostData = (formattedData, salesGoalBySeller = {}, collectionGoalBySeller = {}) => {
     const saleData = {}
     const sale = []
@@ -70,8 +86,8 @@ const InputCostFile = ({ label, toFixed, salesGoalBySeller, collectionGoalBySell
 
     const motorlightsObject = {
       cantidadFacturas: 0,
-      metaRecaudoSinIva: (collectionGoalBySeller['MOTORLIGHTS S.A.S'] === undefined) ? (0) : (collectionGoalBySeller['MOTORLIGHTS S.A.S']),
-      metaVentas: (salesGoalBySeller['MOTORLIGHTS S.A.S'] === undefined) ? (0) : (salesGoalBySeller['MOTORLIGHTS S.A.S']),
+      metaRecaudoSinIva: getSalesGoal('MOTORLIGHTS S.A.S', salesGoalBySeller),
+      metaVentas: getGoalCollection('MOTORLIGHTS S.A.S', collectionGoalBySeller),
       porcentajeRecaudo: 0,
       porcentajeVentas: 0,
       promedioVentas: 0,
@@ -192,12 +208,37 @@ const InputCostFile = ({ label, toFixed, salesGoalBySeller, collectionGoalBySell
         }
       }
     })
+
     if (sale.length) {
-      const found = sale.find(el => el.vendedor === 'MOTORLIGHTS S.A.S')
-      if (found === undefined) {
+      const sellerSales = sale.map(({ vendedor }) => vendedor)
+      const filter = sellers.filter(({ identificacion }) => !sellerSales.includes(identificacion))
+      filter.map(el => {
+        const { identificacion } = el
+        return sale.push({
+          cantidadFacturas: 0,
+          metaVentas: getSalesGoal(identificacion, salesGoalBySeller),
+          metaRecaudoSinIva: getGoalCollection(identificacion, collectionGoalBySeller),
+          porcentajeRecaudo: 0,
+          porcentajeVentas: 0,
+          promedioVentas: 0,
+          recaudoPendiente: 0,
+          totalRecaudo: 0,
+          totalVenta: 0,
+          vendedor: identificacion,
+          ventasPendiente: 0,
+          comisionTotal: 0,
+          margen: 0,
+          porcentajeMargen: 0,
+          clientesNuevos: 0
+        })
+      })
+
+      const foundMotorlights = sale.find(el => el.vendedor === 'MOTORLIGHTS S.A.S')
+      if (foundMotorlights === undefined) {
         sale.push(motorlightsObject)
       }
     }
+
     setData(sale)
   }
 
@@ -205,7 +246,7 @@ const InputCostFile = ({ label, toFixed, salesGoalBySeller, collectionGoalBySell
     extractCostData(formattedDataCost, salesGoalBySeller, collectionGoalBySeller)
     setCostReportName(reportName)
     setDateCostFile(reportDate)
-  }, [excelDataCost, salesGoalBySeller, collectionGoalBySeller])
+  }, [excelDataCost, salesGoalBySeller, collectionGoalBySeller, sellers])
 
   return (
     <>
