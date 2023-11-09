@@ -199,41 +199,44 @@ const ButtonDownloadDetailSaleAndCollection = ({ title, data, convertExcelDateTo
     for (const key in data) {
       const seller = data[key].vendedor
       const customer = []
-      const totalSalesPerCustomer = []
-      const dateSalesPerCustomer = []
+      const dateSalesPerCustomer = {}
 
-      if (sellerWsData[seller]) {
+      if (sellerWsDataSale[seller]) {
         customer[seller] = []
         sellerDataSale[seller].forEach(element => {
-          if (totalSalesPerCustomer[element.cliente]) {
-            totalSalesPerCustomer[element.cliente] += element.ventas
-            dateSalesPerCustomer[element.cliente] = element.fecha
-          } else {
-            totalSalesPerCustomer[element.cliente] = element.ventas
-            dateSalesPerCustomer[element.cliente] = element.fecha
+          const date = element.fecha
+          const customer = element.cliente
+
+          if (!dateSalesPerCustomer[date]) {
+            dateSalesPerCustomer[date] = {}
           }
+          if (!dateSalesPerCustomer[date][customer]) {
+            dateSalesPerCustomer[date][customer] = 0
+          }
+
+          dateSalesPerCustomer[date][customer] += element.ventas
         })
       }
 
       for (const key in customer) {
         const seller = key
         let total = 0
-        for (const key in totalSalesPerCustomer) {
-          for (const keyDateSalesPerCustomer in dateSalesPerCustomer) {
-            if (sellerWsDataSale[seller]) {
-              if (keyDateSalesPerCustomer === key) {
-                const date = dateSalesPerCustomer[keyDateSalesPerCustomer]
-                const totalSales = totalSalesPerCustomer[key]
-                total += totalSales
-                sellerWsDataSale[seller].push([
-                  { v: convertExcelDateToReadable(date), s: excelStyles.whiteStyle },
-                  { v: key, s: excelStyles.whiteStyle },
-                  { v: totalSales, s: excelStyles.yellowStyleCurrencyFormat, t: 'n' }
-                ])
-              }
+        for (const key in dateSalesPerCustomer) {
+          if (sellerWsDataSale[seller]) {
+            const date = key
+            for (const item in dateSalesPerCustomer[key]) {
+              const customer = item
+              const totalSales = dateSalesPerCustomer[key][item]
+              total += totalSales
+              sellerWsDataSale[seller].push([
+                { v: convertExcelDateToReadable(date), s: excelStyles.whiteStyle },
+                { v: customer, s: excelStyles.whiteStyle },
+                { v: totalSales, s: excelStyles.yellowStyleCurrencyFormat, t: 'n' }
+              ])
             }
           }
         }
+
         sellerWsDataSale[seller].push([
           { v: 'Total', s: excelStyles.headerBlackStyle },
           { v: '', s: excelStyles.headerBlackStyle },
@@ -264,6 +267,7 @@ const ButtonDownloadDetailSaleAndCollection = ({ title, data, convertExcelDateTo
           const rc = element.rc
           const bill = element.factura
           const collectionWithoutVAT = element.recaudo / 1.19
+
           if (!equalRc[rc]) {
             equalRc[rc] = {
               vendedor: element.vendedor,
@@ -343,6 +347,12 @@ const ButtonDownloadDetailSaleAndCollection = ({ title, data, convertExcelDateTo
         worksheet['!cols'][7] = { wch: 25 }
       }
     })
+
+    const errorWs = XLSX.utils.aoa_to_sheet(errorRCWs)
+    errorWs['!cols'] = []
+    errorWs['!cols'][0] = { wch: 25 }
+
+    XLSX.utils.book_append_sheet(workbook, errorWs, 'ERROR RC')
 
     const excelFileName = `Informe Detalle de Ventas y Recaudo ${dateExcel.dia} ${dateExcel.mes}.xlsx`
     XLSX.writeFile(workbook, excelFileName)
