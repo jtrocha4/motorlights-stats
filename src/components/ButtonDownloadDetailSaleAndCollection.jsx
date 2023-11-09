@@ -248,6 +248,7 @@ const ButtonDownloadDetailSaleAndCollection = ({ title, data, convertExcelDateTo
     // Tabla Detalle Gestion Cobranza
     const collectionDetailTableHeaders = []
     collectionDetailTableHeaders.push([
+      { v: '', s: {} },
       { v: 'Detalle Archivo Gestion De Cobranza', s: excelStyles.headerYellowStyle }
     ])
     collectionDetailTableHeaders.push([
@@ -335,14 +336,13 @@ const ButtonDownloadDetailSaleAndCollection = ({ title, data, convertExcelDateTo
         XLSX.utils.sheet_add_aoa(worksheet, sellerWsDataCollection[seller], { origin: 'E19' })
 
         worksheet['!cols'] = []
-        const headerColumnSize = 20
 
-        worksheet['!cols'][0] = { wch: headerColumnSize }
+        worksheet['!cols'][0] = { wch: 20 }
         worksheet['!cols'][1] = { wch: 40 }
         worksheet['!cols'][2] = { wch: 25 }
         worksheet['!cols'][3] = { wch: 15 }
-        worksheet['!cols'][4] = { wch: 35 }
-        worksheet['!cols'][5] = { wch: 28 }
+        worksheet['!cols'][4] = { wch: 20 }
+        worksheet['!cols'][5] = { wch: 35 }
         worksheet['!cols'][6] = { wch: 40 }
         worksheet['!cols'][7] = { wch: 25 }
       }

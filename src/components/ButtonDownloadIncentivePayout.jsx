@@ -490,33 +490,37 @@ const ButtonDownloadIncentivePayout = ({ title, data, convertExcelDateToReadable
       return sellerName
     })
 
-    const columnWidths = wsData.reduce((acc, row) => {
-      row.forEach((cell, colIndex) => {
-        const cellValue = cell.v ? cell.toString() : ''
-        acc[colIndex] = Math.max(acc[colIndex] || 0, cellValue.length)
-      })
-      return acc
-    }, [])
-
     sellerName.forEach(seller => {
       if (sellerWsData[seller]) {
         const sheetName = seller.split(' ')
-        const ws = XLSX.utils.aoa_to_sheet(sellerWsData[seller])
-        XLSX.utils.sheet_add_aoa(ws, incentiveWsData[seller], { origin: 'D2' })
+        const worksheet = XLSX.utils.aoa_to_sheet(sellerWsData[seller])
+        XLSX.utils.sheet_add_aoa(worksheet, incentiveWsData[seller], { origin: 'D2' })
 
-        XLSX.utils.sheet_add_aoa(ws, salesDetailHeaderTable, { origin: 'A17' })
-        XLSX.utils.sheet_add_aoa(ws, sellerWsDataSale[seller], { origin: 'A19' })
+        XLSX.utils.sheet_add_aoa(worksheet, salesDetailHeaderTable, { origin: 'A17' })
+        XLSX.utils.sheet_add_aoa(worksheet, sellerWsDataSale[seller], { origin: 'A19' })
 
-        XLSX.utils.sheet_add_aoa(ws, collectionDetailHeaderTable, { origin: 'E17' })
-        XLSX.utils.sheet_add_aoa(ws, sellerWsDataCollection[seller], { origin: 'E19' })
+        XLSX.utils.sheet_add_aoa(worksheet, collectionDetailHeaderTable, { origin: 'E17' })
+        XLSX.utils.sheet_add_aoa(worksheet, sellerWsDataCollection[seller], { origin: 'E19' })
 
-        ws['!cols'] = columnWidths.map(width => ({ wch: width + 15 }))
-        XLSX.utils.book_append_sheet(workbook, ws, `INCENTIVO ${sheetName[0]} ${sheetName[1]}`)
+        worksheet['!cols'] = []
+
+        worksheet['!cols'][0] = { wch: 20 }
+        worksheet['!cols'][1] = { wch: 40 }
+        worksheet['!cols'][2] = { wch: 25 }
+        worksheet['!cols'][3] = { wch: 15 }
+        worksheet['!cols'][4] = { wch: 20 }
+        worksheet['!cols'][5] = { wch: 35 }
+        worksheet['!cols'][6] = { wch: 40 }
+        worksheet['!cols'][7] = { wch: 25 }
+
+        XLSX.utils.book_append_sheet(workbook, worksheet, `INCENTIVO ${sheetName[0]} ${sheetName[1]}`)
       }
     })
 
     const errorWs = XLSX.utils.aoa_to_sheet(errorRCWs)
-    errorWs['!cols'] = columnWidths.map(width => ({ wch: width + 5 }))
+    errorWs['!cols'] = []
+    errorWs['!cols'][0] = { wch: 25 }
+
     XLSX.utils.book_append_sheet(workbook, errorWs, 'ERROR RC')
 
     const excelFileName = `Informe Liq Incentivos ${dateExcel.dia} ${dateExcel.mes}.xlsx`
