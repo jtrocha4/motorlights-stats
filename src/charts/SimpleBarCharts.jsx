@@ -111,7 +111,7 @@ const SimpleBarCharts = ({ sellerPerformance, extractDateFromData }) => {
         <div className='chart-button'><Filters splitName={splitName} /></div>
       </section>
       <section className='charts-button-download'>
-        <ButtonDownloadImg title='Descargar grafica' screenSize={screenSize} containerRef={containerRef} date={`${dia} ${mes}`} />
+        <ButtonDownloadImg title='Descargar grafica' fileName='Como Vamos' screenSize={screenSize} containerRef={containerRef} date={`${dia} ${mes}`} />
       </section>
       <section>
         <div ref={containerRef} className='simple-bar-charts' id='simple-bar-charts'>
