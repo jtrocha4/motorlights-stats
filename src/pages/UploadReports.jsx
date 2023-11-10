@@ -1,18 +1,21 @@
 /* eslint-disable no-undef */
 import React, { useContext, useEffect } from 'react'
-import ModalGoals from '../components/ModalGoals'
 import Swal from 'sweetalert2'
-import InputCostFile from '../components/InputCostFile'
-import InputCollectionFile from '../components/InputCollectionFile'
-import InputAuxiliaryBookFile from '../components/InputAuxiliaryBookFile'
-import { DataContext } from '../components/context/data'
-import InputNewCustomersFile from '../components/InputNewCustomersFile'
-import InputSaleItemFile from '../components/InputSaleItemFile'
-import InputThirdParties from '../components/InputThirdParties'
-import { ReportDetailsContext } from '../components/context/reportDetails'
+import { ReportDetailsContext } from '../context/reportDetails'
+import InputCostFile from '../components/inputs/InputCostFile'
+import InputCollectionFile from '../components/inputs/InputCollectionFile'
+import InputAuxiliaryBookFile from '../components/inputs/InputAuxiliaryBookFile'
+import InputNewCustomersFile from '../components/inputs/InputNewCustomersFile'
+import InputSaleItemFile from '../components/inputs/InputSaleItemFile'
+import InputThirdParties from '../components/inputs/InputThirdParties'
+import ModalGoals from '../components/Modals/ModalGoals'
+import { DataContext } from '../context/data'
+import { DataExcelContext } from '../context/dataExcel'
 
 const UploadReports = ({ toFixed, department, convertExcelDateToReadable, extractIdNumber, extractText, capitalizeWords, removeExtraSpaces }) => {
-  const { data, dataCollection, dateExcel, setDateExcel, excelDataCost, salesGoalBySeller, setSalesGoalBySeller, collectionGoalBySeller, setCollectionGoalBySeller } = useContext(DataContext)
+  const { data, dataCollection, salesGoalBySeller, setSalesGoalBySeller, collectionGoalBySeller, setCollectionGoalBySeller } = useContext(DataContext)
+
+  const { dateExcel, setDateExcel, excelDataCost } = useContext(DataExcelContext)
 
   const { dateCostFile, costReportName, collectionReportName, auxiliaryBookReportName, salesItemsReportName, thirdPartiesReportName } = useContext(ReportDetailsContext)
 
@@ -220,7 +223,6 @@ const UploadReports = ({ toFixed, department, convertExcelDateToReadable, extrac
           <InputNewCustomersFile label='Informe Clientes Nuevos' />
           <InputSaleItemFile label='Informe Ventas Items' convertExcelDateToReadable={convertExcelDateToReadable} extractIdNumber={extractIdNumber} extractText={extractText} capitalizeWords={capitalizeWords} removeExtraSpaces={removeExtraSpaces} />
           <InputThirdParties label='Informe de Terceros' department={department} />
-          {/* <InputDepartmentAndMunicipalities label='Informe de Depart. y Munic.' /> */}
           <div className='button-group'>
             <ModalGoals title='Modificar metas' data={data} sendForm={sendForm} />
           </div>

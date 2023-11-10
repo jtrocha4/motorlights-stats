@@ -1,6 +1,6 @@
 import React from 'react'
 import XLSX from 'xlsx-js-style'
-import excelStyles from '../styles/excelStyles'
+import excelStyles from '../../styles/excelStyles'
 
 const ButtonDownloadAnalytics = ({ title, background = 'primary', sellerSalesData }) => {
   const handleDownload = () => {

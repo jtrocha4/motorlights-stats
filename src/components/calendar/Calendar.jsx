@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import '../components/calendar-style.css'
+import '../calendar/calendar-style.css'
 
 const Calendar = () => {
   const currentDay = new Date().getDate()

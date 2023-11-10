@@ -1,11 +1,13 @@
 import React, { useContext, useEffect } from 'react'
 import * as XLSX from 'xlsx'
-import { costFileToModel } from '../mappers'
-import { DataContext } from './context/data'
-import { ReportDetailsContext } from './context/reportDetails'
+import { costFileToModel } from '../../mappers'
+import { ReportDetailsContext } from '../../context/reportDetails'
+import { DataContext } from '../../context/data'
+import { DataExcelContext } from '../../context/dataExcel'
 
 const InputCostFile = ({ label, toFixed, salesGoalBySeller, collectionGoalBySeller, extractIdNumber, extractText, removeExtraSpaces }) => {
-  const { setData, excelDataCost, setExcelDataCost, sellers } = useContext(DataContext)
+  const { setData, sellers } = useContext(DataContext)
+  const { excelDataCost, setExcelDataCost } = useContext(DataExcelContext)
   const { setDateCostFile, setCostReportName } = useContext(ReportDetailsContext)
 
   const handleReadCostFile = (event) => {

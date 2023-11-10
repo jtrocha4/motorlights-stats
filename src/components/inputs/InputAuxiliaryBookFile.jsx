@@ -1,11 +1,14 @@
 import React, { useContext, useEffect } from 'react'
 import * as XLSX from 'xlsx'
-import { auxiliaryBookFileToModel } from '../mappers'
-import { DataContext } from './context/data'
-import { ReportDetailsContext } from './context/reportDetails'
+import { auxiliaryBookFileToModel } from '../../mappers'
+import { DataContext } from '../../context/data'
+import { ReportDetailsContext } from '../../context/reportDetails'
+import { DataExcelContext } from '../../context/dataExcel'
 
 const InputAuxiliaryBookFile = ({ label, salesGoalBySeller, collectionGoalBySeller }) => {
-  const { setDataAuxiliaryBook, setTotalDebitByDocNum, excelDataAuxiliaryBook, setExcelDataAuxiliaryBook } = useContext(DataContext)
+  const { setDataAuxiliaryBook, setTotalDebitByDocNum } = useContext(DataContext)
+  const { excelDataAuxiliaryBook, setExcelDataAuxiliaryBook } = useContext(DataExcelContext)
+
   const { setAuxiliaryBookReportName } = useContext(ReportDetailsContext)
 
   const handleReadAuxiliaryBookFile = (event) => {

@@ -1,11 +1,11 @@
 import React, { useContext } from 'react'
 import XLSX from 'xlsx-js-style'
 import _ from 'lodash'
-import excelStyles from '../styles/excelStyles'
-import { DataContext } from './context/data'
+import excelStyles from '../../styles/excelStyles'
+import { DataExcelContext } from '../../context/dataExcel'
 
 const ButtonDownloadExcel = ({ title, data, toFixed }) => {
-  const { dateExcel } = useContext(DataContext)
+  const { dateExcel } = useContext(DataExcelContext)
 
   const excelPercentageFormat = (percentageValue) => {
     const percentage = parseFloat(percentageValue / 100)
@@ -370,9 +370,9 @@ const ButtonDownloadExcel = ({ title, data, toFixed }) => {
     const workbook = XLSX.utils.book_new()
     const sheetName = 'Resumen'
 
-    const ws = XLSX.utils.aoa_to_sheet(wsData, { origin: 'A2' })
-    XLSX.utils.sheet_add_aoa(ws, wsDateData, { origin: 'A18' })
-    XLSX.utils.sheet_add_aoa(ws, wsDataPercentaje, { origin: 'A23' })
+    const worksheet = XLSX.utils.aoa_to_sheet(wsData, { origin: 'A2' })
+    XLSX.utils.sheet_add_aoa(worksheet, wsDateData, { origin: 'A18' })
+    XLSX.utils.sheet_add_aoa(worksheet, wsDataPercentaje, { origin: 'A23' })
 
     const columnWidths = wsData.reduce((acc, row) => {
       row.forEach((cell, colIndex) => {
@@ -382,9 +382,11 @@ const ButtonDownloadExcel = ({ title, data, toFixed }) => {
       return acc
     }, [])
 
-    ws['!cols'] = columnWidths.map(width => ({ wch: width + 5 }))
+    worksheet['!cols'] = []
+    worksheet['!cols'] = columnWidths.map(width => ({ wch: width + 5 }))
+    worksheet['!cols'][2] = { wch: 30 }
 
-    XLSX.utils.book_append_sheet(workbook, ws, sheetName)
+    XLSX.utils.book_append_sheet(workbook, worksheet, sheetName)
 
     const excelFileName = `Informe Como Vamos ${dateExcel.dia} ${dateExcel.mes}.xlsx`
     XLSX.writeFile(workbook, excelFileName)

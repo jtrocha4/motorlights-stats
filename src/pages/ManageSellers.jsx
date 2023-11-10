@@ -1,5 +1,5 @@
 import React from 'react'
-import ModalAddSeller from '../components/ModalAddSeller'
+import ModalAddSeller from '../components/Modals/ModalAddSeller'
 import { Link } from 'react-router-dom'
 
 const ManageSellers = ({ postSellerToApi, capitalizeWords, sellers }) => {

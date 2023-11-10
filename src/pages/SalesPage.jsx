@@ -1,13 +1,15 @@
 import React, { useContext } from 'react'
-import ButtonDownloadExcel from '../components/ButtonDownloadExcel'
-import { DataContext } from '../components/context/data'
-import ButtonDownloadIncentivePayout from '../components/ButtonDownloadIncentivePayout'
-import ButtonDownloadDetailSaleAndCollection from '../components/ButtonDownloadDetailSaleAndCollection'
-import { FiltersProvider } from '../components/context/filters'
-import SimpleBarCharts from '../components/charts/SimpleBarCharts'
+import ButtonDownloadIncentivePayout from '../components/buttonsDownload/ButtonDownloadIncentivePayout'
+import ButtonDownloadDetailSaleAndCollection from '../components/buttonsDownload/ButtonDownloadDetailSaleAndCollection'
+import ButtonDownloadExcel from '../components/ButtonsDownload/buttonDownloadExcel'
+import { FiltersProvider } from '../context/filters'
+import SimpleBarCharts from '../charts/SimpleBarCharts'
+import { DataExcelContext } from '../context/dataExcel'
+import { DataContext } from '../context/data'
 
 const SalesPage = ({ toFixed, postSellerPerformanceToApi, sellers, convertExcelDateToReadable, currencyFormat, sellerPerformance, extractDateFromData }) => {
-  const { dateExcel, data } = useContext(DataContext)
+  const { data } = useContext(DataContext)
+  const { dateExcel } = useContext(DataExcelContext)
 
   return (
     <div className='flex'>

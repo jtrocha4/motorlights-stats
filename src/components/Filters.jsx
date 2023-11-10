@@ -1,6 +1,6 @@
 import React, { useContext, useEffect } from 'react'
-import { DataContext } from './context/data'
-import { FiltersContext } from './context/filters'
+import { DataContext } from '../context/data'
+import { FiltersContext } from '../context/filters'
 
 const Filters = ({ splitName }) => {
   const { sellers } = useContext(DataContext)

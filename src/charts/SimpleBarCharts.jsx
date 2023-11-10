@@ -1,11 +1,11 @@
 /* eslint-disable no-undef */
 import React, { useContext, useEffect, useRef, useState } from 'react'
 import { Bar, CartesianGrid, ComposedChart, LabelList, Legend, Line, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
-import ButtonDownloadImg from '../ButtonDownloadImg'
-import Calendar from '../Calendar'
-import Filters from '../Filters'
-import { FiltersContext } from '../context/filters'
+import Calendar from '../components/calendar/Calendar'
+import Filters from '../components/Filters'
+import ButtonDownloadImg from '../components/ButtonsDownload/ButtonDownloadImg'
 import { DataContext } from '../context/data'
+import { FiltersContext } from '../context/filters'
 
 const SimpleBarCharts = ({ sellerPerformance, extractDateFromData }) => {
   const [screenSize, setScreenSize] = useState(0)

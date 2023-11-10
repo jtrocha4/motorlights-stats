@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { departAndMunicFileToModel } from '../mappers'
+import { departAndMunicFileToModel } from '../../mappers'
 import * as XLSX from 'xlsx'
 
 const InputDepartmentAndMunicipalities = ({ label }) => {
@@ -35,6 +35,7 @@ const InputDepartmentAndMunicipalities = ({ label }) => {
   const headersDeptAndMunic = excelDeptAndMunic[0]
   const rowsDeptAndMunic = excelDeptAndMunic.slice(1)
   const formattedDataDeptAndMunic = formatDataDeptAndMunic(headersDeptAndMunic, rowsDeptAndMunic)
+  console.log(formattedDataDeptAndMunic)
 
   return (
     <>

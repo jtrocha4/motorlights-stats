@@ -1,10 +1,12 @@
 import React, { useContext } from 'react'
 import XLSX from 'xlsx-js-style'
-import excelStyles from '../styles/excelStyles'
-import { DataContext } from './context/data'
+import excelStyles from '../../styles/excelStyles'
+import { DataContext } from '../../context/data'
+import { DataExcelContext } from '../../context/dataExcel'
 
 const ButtonDownloadDetailSaleAndCollection = ({ title, data, convertExcelDateToReadable }) => {
-  const { dateExcel, errorRc, dataCollection } = useContext(DataContext)
+  const { errorRc, dataCollection } = useContext(DataContext)
+  const { dateExcel } = useContext(DataExcelContext)
 
   const excelPercentageFormat = (percentageValue) => {
     const percentage = parseFloat(percentageValue / 100)

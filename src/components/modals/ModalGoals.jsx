@@ -1,6 +1,6 @@
 /* eslint-disable no-undef */
 import React, { useContext, useState } from 'react'
-import { DataContext } from './context/data'
+import { DataContext } from '../../context/data'
 
 const ModalGoals = ({ title, buttonBackground = 'dark', data = [], sendForm }) => {
   const { sellers } = useContext(DataContext)

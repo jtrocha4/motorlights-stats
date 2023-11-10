@@ -1,14 +1,17 @@
 import React, { useContext, useEffect } from 'react'
 import * as XLSX from 'xlsx'
-import { newCustomersFileToModel } from '../mappers'
-import { NewCustomerContext } from './context/newCustomers'
-import { SaleItemContext } from './context/saleItem'
-import { DataContext } from './context/data'
+import { newCustomersFileToModel } from '../../mappers'
+import { NewCustomerContext } from '../../context/newCustomers'
+
+import { DataContext } from '../../context/data'
+import { DataExcelContext } from '../../context/dataExcel'
+import { SaleItemContext } from '../../context/saleItem'
 
 const InputNewCustomersFile = ({ label }) => {
-  const { excelDataNewCustomers, setExcelDataNewCustomers, dataNewCustomers, setDataNewCustomers, setCustomersBySeller, customersBySeller } = useContext(NewCustomerContext)
-  const { excelDataSaleItem, sellersCustomers } = useContext(SaleItemContext)
+  const { dataNewCustomers, setDataNewCustomers, setCustomersBySeller, customersBySeller } = useContext(NewCustomerContext)
   const { data, setData } = useContext(DataContext)
+  const { excelDataNewCustomers, setExcelDataNewCustomers, excelDataSaleItem } = useContext(DataExcelContext)
+  const { sellersCustomers } = useContext(SaleItemContext)
 
   const handleReadNewCustomersFile = (event) => {
     const file = event.target.files[0]

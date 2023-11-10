@@ -1,6 +1,6 @@
 import React, { useContext } from 'react'
 import { Link, useParams } from 'react-router-dom'
-import { DataContext } from '../components/context/data'
+import { DataContext } from '../context/data'
 
 const SellerProfile = () => {
   const { id } = useParams()

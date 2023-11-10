@@ -1,10 +1,11 @@
 import React, { useContext } from 'react'
-import { DataContext } from '../components/context/data'
-import ButtonDownloadAnalytics from '../components/ButtonDownloadAnalytics'
-import { SaleItemContext } from '../components/context/saleItem'
+import ButtonDownloadAnalytics from '../components/ButtonsDownload/ButtonDownloadAnalytics'
+
+import { SaleItemContext } from '../context/saleItem'
+import { DataExcelContext } from '../context/dataExcel'
 
 const DetailedSalesPage = () => {
-  const { dateExcel } = useContext(DataContext)
+  const { dateExcel } = useContext(DataExcelContext)
   const { sellerSalesData } = useContext(SaleItemContext)
 
   return (

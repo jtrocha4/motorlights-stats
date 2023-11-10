@@ -1,9 +1,9 @@
 import React, { useContext } from 'react'
 import Swal from 'sweetalert2'
-import { DataContext } from './context/data'
+import { DataExcelContext } from '../../context/dataExcel'
 
 const ButtonUploadDb = ({ title, background = 'primary', data, postSellerPerformanceToApi, sellers }) => {
-  const { dateExcel } = useContext(DataContext)
+  const { dateExcel } = useContext(DataExcelContext)
   const { fechaFinal } = dateExcel
 
   const dateOfData = (fechaFinal) => {

@@ -1,14 +1,15 @@
 import React, { useContext, useEffect } from 'react'
 import * as XLSX from 'xlsx'
-import { saleItemFileToModel } from '../mappers'
-import { SaleItemContext } from './context/saleItem'
-import { ReportDetailsContext } from './context/reportDetails'
-import { ThirdPartiesContext } from './context/thirdParties'
+import { saleItemFileToModel } from '../../mappers'
+import { SaleItemContext } from '../../context/saleItem'
+import { ReportDetailsContext } from '../../context/reportDetails'
+import { ThirdPartiesContext } from '../../context/thirdParties'
+import { DataExcelContext } from '../../context/dataExcel'
 
 const InputSaleItemFile = ({ label, convertExcelDateToReadable, extractIdNumber, extractText, capitalizeWords, removeExtraSpaces }) => {
-  const { excelDataSaleItem, setExcelDataSaleItem, setSellersCustomers, setDataSaleItem, dataSaleItem, setSellerSalesData } = useContext(SaleItemContext)
+  const { setSellersCustomers, setDataSaleItem, dataSaleItem, setSellerSalesData } = useContext(SaleItemContext)
+  const { excelDataSaleItem, setExcelDataSaleItem } = useContext(DataExcelContext)
   const { setSalesItemsReportName } = useContext(ReportDetailsContext)
-
   const { customerData } = useContext(ThirdPartiesContext)
 
   const handleReadSaleItemFile = (event) => {
