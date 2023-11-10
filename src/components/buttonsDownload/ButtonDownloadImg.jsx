@@ -2,9 +2,9 @@ import React from 'react'
 import html2canvas from 'html2canvas'
 import { saveAs } from 'file-saver'
 
-const ButtonDownloadImg = ({ title, background = 'primary', containerRef, date, screenSize }) => {
+const ButtonDownloadImg = ({ title, background = 'primary', fileName, containerRef, date, screenSize }) => {
   const saveBlob = (blob) => {
-    saveAs(blob, `Como Vamos ${date} .png`)
+    saveAs(blob, `${fileName} ${date} .png`)
   }
 
   const handleDownload = () => {

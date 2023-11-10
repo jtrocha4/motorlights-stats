@@ -4,6 +4,8 @@ import _ from 'lodash'
 import excelStyles from '../../styles/excelStyles'
 import { DataExcelContext } from '../../context/dataExcel'
 
+// Cambiar nombre del componente a ButtonDownloadHowAreYouDoing
+
 const ButtonDownloadExcel = ({ title, data, toFixed }) => {
   const { dateExcel } = useContext(DataExcelContext)
 
