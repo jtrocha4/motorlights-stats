@@ -129,6 +129,32 @@ const excelStyles = {
       }
     }
   },
+  yellowStyleRow: {
+    numFmt: '0',
+    fill: { fgColor: { rgb: 'FFFF00' } },
+    alignment: { horizontal: 'left' },
+    font: {
+      bold: false
+    },
+    border: {
+      right: {
+        style: 'thin',
+        color: '000000'
+      },
+      left: {
+        style: 'thin',
+        color: '000000'
+      },
+      top: {
+        style: 'thin',
+        color: '000000'
+      },
+      bottom: {
+        style: 'thin',
+        color: '000000'
+      }
+    }
+  },
 
   // Gray
   headerGrayStyle: {
