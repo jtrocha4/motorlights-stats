@@ -14,22 +14,22 @@ const ButtonDownloadSaleByMunicipalities = ({ title, sellerSalesData }) => {
 
     const salesByMunicipalities = {}
     sellerSalesData.forEach(element => {
-      const municaplity = element.ciudadCliente
+      const municipality = element.ciudadCliente
       const netSale = element.ventaNeta
-      if (!salesByMunicipalities[municaplity]) {
-        salesByMunicipalities[municaplity] = 0
+      if (!salesByMunicipalities[municipality]) {
+        salesByMunicipalities[municipality] = 0
       }
-      salesByMunicipalities[municaplity] += netSale
+      salesByMunicipalities[municipality] += netSale
     })
 
     let generalTotalSales = 0
 
     for (const key in salesByMunicipalities) {
-      const municaplity = key
+      const municipality = key
       const municipalitySale = salesByMunicipalities[key]
       generalTotalSales += municipalitySale
       wsData.push({
-        municipio: { v: municaplity, s: excelStyles.whiteStyleRow },
+        municipio: { v: municipality, s: excelStyles.whiteStyleRow },
         totalVentaNeta: { v: municipalitySale, s: excelStyles.whiteStyleRowCurrencyFormat, t: 'n' }
       })
     }
