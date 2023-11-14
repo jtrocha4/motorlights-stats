@@ -187,6 +187,12 @@ function App () {
     return string.replace(/\s+/g, ' ')
   }
 
+  const splitName = (name) => {
+    const string = name.split(' ')
+    const firstAndMiddleName = `${string[0]} ${string[1]}`
+    return firstAndMiddleName
+  }
+
   useEffect(() => {
     fetchSellerPerformanceFromApi()
   }, [newSellerPerformance])
@@ -205,8 +211,8 @@ function App () {
       <Sidebar />
       <Routes>
         <Route path='/' element={<UploadReports toFixed={toFixed} department={department} convertExcelDateToReadable={convertExcelDateToReadable} extractIdNumber={extractIdNumber} extractText={extractText} capitalizeWords={capitalizeWords} removeExtraSpaces={removeExtraSpaces} />} />
-        <Route path='/sales' element={<SalesPage postSellerPerformanceToApi={postSellerPerformanceToApi} sellers={sellers} toFixed={toFixed} convertExcelDateToReadable={convertExcelDateToReadable} currencyFormat={currencyFormat} sellerPerformance={sellerPerformance} extractDateFromData={extractDateFromData} />} />
-        <Route path='/detailed-sales' element={<DetailedSalesPage />} />
+        <Route path='/sales' element={<SalesPage postSellerPerformanceToApi={postSellerPerformanceToApi} toFixed={toFixed} convertExcelDateToReadable={convertExcelDateToReadable} sellerPerformance={sellerPerformance} extractDateFromData={extractDateFromData} splitName={splitName} />} />
+        <Route path='/detailed-sales' element={<DetailedSalesPage splitName={splitName} />} />
         <Route path='/manage-sellers' element={<ManageSellers postSellerToApi={postSellerToApi} capitalizeWords={capitalizeWords} sellers={sellers} />} />
         <Route path='/manage-sellers/:id' element={<SellerProfile />} />
       </Routes>
