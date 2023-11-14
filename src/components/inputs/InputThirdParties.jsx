@@ -65,11 +65,16 @@ const InputThirdParties = ({ label, department }) => {
         depart.municipios.some(munic => munic.nombre === cliente.ciudad)
       ))
       const department = municipality ? municipality.nombre : 'n/a'
+      const { ciudad, direccion, telefonos, ...restOfData } = cliente
       return {
-        ...cliente,
-        departamento: department
+        ...restOfData,
+        departamento: department,
+        ciudad: ciudad || 'n/a',
+        direccion: direccion || 'n/a',
+        telefonos: telefonos || 'n/a'
       }
     })
+
     setCustomerData(uniqueCustomersWithDepartment)
   }
 
