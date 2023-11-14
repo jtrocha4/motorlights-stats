@@ -6,7 +6,7 @@ import { DataExcelContext } from '../../context/dataExcel'
 
 // Cambiar nombre del componente a ButtonDownloadHowAreYouDoing
 
-const ButtonDownloadExcel = ({ title, data, toFixed }) => {
+const ButtonDownloadExcel = ({ title, data, toFixed, splitName }) => {
   const { dateExcel } = useContext(DataExcelContext)
 
   const excelPercentageFormat = (percentageValue) => {
@@ -48,8 +48,7 @@ const ButtonDownloadExcel = ({ title, data, toFixed }) => {
       }
       row = [cellHeader]
       data.forEach(element => {
-        const splitName = element.vendedor.split(' ')
-        const firstAndMiddleName = `${splitName[0]} ${splitName[1]}`
+        const firstAndMiddleName = splitName(element.vendedor)
         const cell = { v: '', s: {} }
         if (header === 'Vendedor') {
           cell.v = firstAndMiddleName
