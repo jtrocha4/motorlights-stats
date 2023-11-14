@@ -3,7 +3,7 @@ import React, { useContext, useEffect, useRef, useState } from 'react'
 import { Bar, CartesianGrid, ComposedChart, LabelList, Legend, Line, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import Calendar from '../components/calendar/Calendar'
 import Filters from '../components/Filters'
-import ButtonDownloadImg from '../components/ButtonsDownload/ButtonDownloadImg'
+import ButtonDownloadImg from '../components/buttonsDownload/ButtonDownloadImg'
 import { DataContext } from '../context/data'
 import { FiltersContext } from '../context/filters'
 

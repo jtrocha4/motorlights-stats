@@ -1,6 +1,5 @@
 import React, { useContext } from 'react'
-import ButtonDownloadAnalytics from '../components/ButtonsDownload/ButtonDownloadAnalytics'
-
+import ButtonDownloadAnalytics from '../components/buttonsDownload/ButtonDownloadAnalytics'
 import { SaleItemContext } from '../context/saleItem'
 import { DataExcelContext } from '../context/dataExcel'
 import ButtonDownloadSaleByMunicipalities from '../components/buttonsDownload/ButtonDownloadSaleByMunicipalities'

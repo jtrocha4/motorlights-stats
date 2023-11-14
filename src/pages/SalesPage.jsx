@@ -1,7 +1,7 @@
 import React, { useContext } from 'react'
 import ButtonDownloadIncentivePayout from '../components/buttonsDownload/ButtonDownloadIncentivePayout'
 import ButtonDownloadDetailSaleAndCollection from '../components/buttonsDownload/ButtonDownloadDetailSaleAndCollection'
-import ButtonDownloadExcel from '../components/ButtonsDownload/buttonDownloadExcel'
+import ButtonDownloadExcel from '../components/buttonsDownload/ButtonDownloadExcel'
 import { FiltersProvider } from '../context/filters'
 import SimpleBarCharts from '../charts/SimpleBarCharts'
 import { DataExcelContext } from '../context/dataExcel'

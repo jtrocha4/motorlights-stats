@@ -8,7 +8,7 @@ import InputAuxiliaryBookFile from '../components/inputs/InputAuxiliaryBookFile'
 import InputNewCustomersFile from '../components/inputs/InputNewCustomersFile'
 import InputSaleItemFile from '../components/inputs/InputSaleItemFile'
 import InputThirdParties from '../components/inputs/InputThirdParties'
-import ModalGoals from '../components/Modals/ModalGoals'
+import ModalGoals from '../components/modals/ModalGoals'
 import { DataContext } from '../context/data'
 import { DataExcelContext } from '../context/dataExcel'
 
