@@ -7,7 +7,7 @@ import SimpleBarCharts from '../charts/SimpleBarCharts'
 import { DataExcelContext } from '../context/dataExcel'
 import { DataContext } from '../context/data'
 
-const SalesPage = ({ toFixed, postSellerPerformanceToApi, sellers, convertExcelDateToReadable, currencyFormat, sellerPerformance, extractDateFromData }) => {
+const SalesPage = ({ toFixed, postSellerPerformanceToApi, convertExcelDateToReadable, sellerPerformance, extractDateFromData, splitName }) => {
   const { data } = useContext(DataContext)
   const { dateExcel } = useContext(DataExcelContext)
 
@@ -18,7 +18,7 @@ const SalesPage = ({ toFixed, postSellerPerformanceToApi, sellers, convertExcelD
         <span>{(dateExcel.dia !== undefined && dateExcel.mes !== undefined) ? (`Fecha de la última actualización: ${dateExcel.dia} de ${dateExcel.mes} de ${dateExcel.año}`) : ('Aun no hay informes cargados, por favor cargue los informes para tener una visualizacion de la data')}</span>
         <section className='button-group mt-4'>
           <ButtonDownloadExcel
-            title='Descargar Inf. Como Vamos' data={data} toFixed={toFixed}
+            title='Descargar Inf. Como Vamos' data={data} toFixed={toFixed} splitName={splitName}
           />
           <ButtonDownloadIncentivePayout
             title='Descargar Inf. Liq. de incentivos' data={data}
