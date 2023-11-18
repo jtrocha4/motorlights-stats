@@ -7,6 +7,12 @@ const ButtonDownloadSaleByMunicipalities = ({ title, sellerSalesData }) => {
     const tableHeaders = []
     const wsData = []
 
+    const reportDetailed = [
+      [{ v: 'MOTORLIGHTS S.A.S', s: excelStyles.reportDetailedStyle }],
+      [{ v: 'Ventas por Municipio', s: excelStyles.reportDetailedStyle }],
+      [{ v: 'Fecha', s: excelStyles.reportDetailedStyle }]
+    ]
+
     tableHeaders.push([
       { v: 'Departamento', s: excelStyles.headerYellowStyle },
       { v: 'Suma de Venta Neta', s: excelStyles.headerYellowStyle }
@@ -14,7 +20,7 @@ const ButtonDownloadSaleByMunicipalities = ({ title, sellerSalesData }) => {
 
     const salesByMunicipalities = {}
     sellerSalesData.forEach(element => {
-      const municipality = element.ciudadCliente
+      const municipality = `${element.departamentoCliente} - ${element.ciudadCliente}`
       const netSale = element.ventaNeta
       if (!salesByMunicipalities[municipality]) {
         salesByMunicipalities[municipality] = 0
@@ -39,7 +45,7 @@ const ButtonDownloadSaleByMunicipalities = ({ title, sellerSalesData }) => {
       totalVentaNeta: { v: generalTotalSales, s: excelStyles.blackStyleCurrencyFormat, t: 'n' }
     })
 
-    const worksheet = XLSX.utils.json_to_sheet(wsData)
+    const worksheet = XLSX.utils.json_to_sheet(wsData, { origin: 'A5' })
     const workbook = XLSX.utils.book_new()
     const sheetName = 'Ventas por Municipio'
 
@@ -49,10 +55,22 @@ const ButtonDownloadSaleByMunicipalities = ({ title, sellerSalesData }) => {
     worksheet['!cols'][0] = { wch: municipalityColumnSize + 5 }
     worksheet['!cols'][1] = { wch: 25 }
 
-    worksheet['!autofilter'] = { ref: 'A1:B1' }
+    worksheet['!autofilter'] = { ref: 'A5:B5' }
+
+    const mergeOptions = {
+      '!merge': [
+        { s: { r: 0, c: 0 }, e: { r: 0, c: 17 } },
+        { s: { r: 1, c: 0 }, e: { r: 1, c: 17 } },
+        { s: { r: 2, c: 0 }, e: { r: 2, c: 17 } }
+      ]
+    }
+
+    worksheet['!merges'] = mergeOptions['!merge']
 
     XLSX.utils.book_append_sheet(workbook, worksheet, sheetName)
-    XLSX.utils.sheet_add_aoa(worksheet, tableHeaders, { origin: 'A1' })
+    XLSX.utils.sheet_add_aoa(worksheet, reportDetailed, { origin: 'A1' })
+    XLSX.utils.sheet_add_aoa(worksheet, tableHeaders, { origin: 'A5' })
+
     const excelFileName = 'Informe Ventas por Municipio.xlsx'
     XLSX.writeFile(workbook, excelFileName)
   }

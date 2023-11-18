@@ -5,6 +5,13 @@ import excelStyles from '../../styles/excelStyles'
 const ButtonDownloadAnalytics = ({ title, background = 'primary', sellerSalesData }) => {
   const handleDownload = () => {
     const tableHeaders = []
+
+    const reportDetailed = [
+      [{ v: 'MOTORLIGHTS S.A.S', s: excelStyles.reportDetailedStyle }],
+      [{ v: 'Ventas Por Forma de Pago Detallado por Item', s: excelStyles.reportDetailedStyle }],
+      [{ v: 'Fecha', s: excelStyles.reportDetailedStyle }]
+    ]
+
     tableHeaders.push([
       { v: 'Vendedor', s: excelStyles.headerGrayStyle },
       { v: 'Documento', s: excelStyles.headerGrayStyle },
@@ -45,7 +52,7 @@ const ButtonDownloadAnalytics = ({ title, background = 'primary', sellerSalesDat
       valorTotal: { v: row.valorTotal, s: excelStyles.whiteStyleRowCurrencyFormat, t: 'n' }
     }))
 
-    const worksheet = XLSX.utils.json_to_sheet(wsData)
+    const worksheet = XLSX.utils.json_to_sheet(wsData, { origin: 'A5' })
 
     const workbook = XLSX.utils.book_new()
     const sheetName = 'Macro ventas'
@@ -78,10 +85,21 @@ const ButtonDownloadAnalytics = ({ title, background = 'primary', sellerSalesDat
     worksheet['!cols'][15] = { wch: currencyFormatColumnSize }
     worksheet['!cols'][16] = { wch: currencyFormatColumnSize }
 
-    worksheet['!autofilter'] = { ref: 'A1:Q1' }
+    worksheet['!autofilter'] = { ref: 'A5:Q5' }
+
+    const mergeOptions = {
+      '!merge': [
+        { s: { r: 0, c: 0 }, e: { r: 0, c: 16 } },
+        { s: { r: 1, c: 0 }, e: { r: 1, c: 16 } },
+        { s: { r: 2, c: 0 }, e: { r: 2, c: 16 } }
+      ]
+    }
+
+    worksheet['!merges'] = mergeOptions['!merge']
 
     XLSX.utils.book_append_sheet(workbook, worksheet, sheetName)
-    XLSX.utils.sheet_add_aoa(worksheet, tableHeaders, { origin: 'A1' })
+    XLSX.utils.sheet_add_aoa(worksheet, reportDetailed, { origin: 'A1' })
+    XLSX.utils.sheet_add_aoa(worksheet, tableHeaders, { origin: 'A5' })
 
     const excelFileName = 'Informe Macro Ventas.xlsx'
     XLSX.writeFile(workbook, excelFileName)

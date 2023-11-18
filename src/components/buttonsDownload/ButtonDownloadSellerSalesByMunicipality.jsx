@@ -7,6 +7,12 @@ const ButtonDownloadSellerSalesByMunicipality = ({ title, sellerSalesData, split
     const tableHeaders = []
     const wsData = []
 
+    const reportDetailed = [
+      [{ v: 'MOTORLIGHTS S.A.S', s: excelStyles.reportDetailedStyle }],
+      [{ v: 'Ventas Vendedor por Municipio', s: excelStyles.reportDetailedStyle }],
+      [{ v: 'Fecha', s: excelStyles.reportDetailedStyle }]
+    ]
+
     const sellersArray = [...new Set(sellerSalesData.map(el => el.vendedor))]
 
     tableHeaders.push([
@@ -18,7 +24,7 @@ const ButtonDownloadSellerSalesByMunicipality = ({ title, sellerSalesData, split
     const salesByMunicipalities = {}
     const totalSalesBySeller = {}
     sellerSalesData.forEach(element => {
-      const municipality = element.ciudadCliente
+      const municipality = `${element.departamentoCliente} - ${element.ciudadCliente}`
       const netSale = element.ventaNeta
       const seller = element.vendedor
 
@@ -57,7 +63,7 @@ const ButtonDownloadSellerSalesByMunicipality = ({ title, sellerSalesData, split
     }
     wsData.push(totalGeneralRow)
 
-    const worksheet = XLSX.utils.json_to_sheet(wsData)
+    const worksheet = XLSX.utils.json_to_sheet(wsData, { origin: 'A5' })
     const workbook = XLSX.utils.book_new()
     const sheetName = 'Ventas Vendedor por Municipio'
 
@@ -75,8 +81,19 @@ const ButtonDownloadSellerSalesByMunicipality = ({ title, sellerSalesData, split
       worksheet['!cols'][index + 1] = { wch: size }
     })
 
+    const mergeOptions = {
+      '!merge': [
+        { s: { r: 0, c: 0 }, e: { r: 0, c: 17 } },
+        { s: { r: 1, c: 0 }, e: { r: 1, c: 17 } },
+        { s: { r: 2, c: 0 }, e: { r: 2, c: 17 } }
+      ]
+    }
+
+    worksheet['!merges'] = mergeOptions['!merge']
+
     XLSX.utils.book_append_sheet(workbook, worksheet, sheetName)
-    XLSX.utils.sheet_add_aoa(worksheet, tableHeaders, { origin: 'A1' })
+    XLSX.utils.sheet_add_aoa(worksheet, reportDetailed, { origin: 'A1' })
+    XLSX.utils.sheet_add_aoa(worksheet, tableHeaders, { origin: 'A5' })
     const excelFileName = 'Informe Ventas Vendedor por Municipio.xlsx'
     XLSX.writeFile(workbook, excelFileName)
   }
