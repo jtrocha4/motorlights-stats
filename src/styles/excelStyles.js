@@ -1,9 +1,20 @@
 const excelStyles = {
+
+  reportDetailedStyle: {
+    alignment: { horizontal: 'center', vertical: 'center' },
+    font: {
+      name: 'MS Sans Serif',
+      bold: true,
+      color: { rgb: '000080' }
+    }
+  },
+
   // Blue
   headerBlueStyle: {
     fill: { fgColor: { rgb: 'B9D5FF' } },
     alignment: { horizontal: 'left' },
     font: {
+      name: 'MS Sans Serif',
       bold: true
     },
     border: {
@@ -31,6 +42,7 @@ const excelStyles = {
     fill: { fgColor: { rgb: 'FFFF00' } },
     alignment: { horizontal: 'left' },
     font: {
+      name: 'MS Sans Serif',
       bold: true
     },
     border: {
@@ -56,6 +68,7 @@ const excelStyles = {
     fill: { fgColor: { rgb: 'FFFF00' } },
     alignment: { horizontal: 'right' },
     font: {
+      name: 'MS Sans Serif',
       bold: true
     },
     border: {
@@ -134,6 +147,7 @@ const excelStyles = {
     fill: { fgColor: { rgb: 'FFFF00' } },
     alignment: { horizontal: 'left' },
     font: {
+      name: 'MS Sans Serif',
       bold: false
     },
     border: {
@@ -161,6 +175,7 @@ const excelStyles = {
     fill: { fgColor: { rgb: 'BFBFBF' } },
     alignment: { horizontal: 'left' },
     font: {
+      name: 'MS Sans Serif',
       bold: true
     },
     border: {
@@ -213,6 +228,7 @@ const excelStyles = {
     fill: { fgColor: { rgb: 'BFBFBF' } },
     alignment: { horizontal: 'right' },
     font: {
+      name: 'MS Sans Serif',
       bold: true
     },
     border: {
@@ -266,6 +282,7 @@ const excelStyles = {
     fill: { fgColor: { rgb: 'FFFFFF' } },
     alignment: { horizontal: 'left' },
     font: {
+      name: 'MS Sans Serif',
       bold: true
     },
     border: {
@@ -292,6 +309,7 @@ const excelStyles = {
     fill: { fgColor: { rgb: 'FFFFFF' } },
     alignment: { horizontal: 'right' },
     font: {
+      name: 'MS Sans Serif',
       bold: true
     },
     border: {
@@ -371,6 +389,7 @@ const excelStyles = {
     fill: { fgColor: { rgb: 'FFFFFF' } },
     alignment: { horizontal: 'left' },
     font: {
+      name: 'MS Sans Serif',
       bold: false
     },
     border: {
@@ -424,6 +443,7 @@ const excelStyles = {
     fill: { fgColor: { rgb: '000000' } },
     alignment: { horizontal: 'left' },
     font: {
+      name: 'MS Sans Serif',
       bold: true,
       color: { rgb: 'FFFFFF' }
     },
@@ -450,6 +470,7 @@ const excelStyles = {
     fill: { fgColor: { rgb: '000000' } },
     alignment: { horizontal: 'right' },
     font: {
+      name: 'MS Sans Serif',
       bold: true,
       color: { rgb: 'FFFFFF' }
     },
@@ -505,6 +526,7 @@ const excelStyles = {
     fill: { fgColor: { rgb: '92D050' } },
     alignment: { horizontal: 'left' },
     font: {
+      name: 'MS Sans Serif',
       bold: true
     },
     border: {
@@ -530,6 +552,7 @@ const excelStyles = {
     fill: { fgColor: { rgb: '92D050' } },
     alignment: { horizontal: 'right' },
     font: {
+      name: 'MS Sans Serif',
       bold: true,
       color: { rgb: 'FFFFFF' }
     },
@@ -559,6 +582,7 @@ const excelStyles = {
     fill: { fgColor: { rgb: 'F79646' } },
     alignment: { horizontal: 'right' },
     font: {
+      name: 'MS Sans Serif',
       bold: true
     },
     border: {
@@ -584,6 +608,7 @@ const excelStyles = {
     fill: { fgColor: { rgb: 'F79646' } },
     alignment: { horizontal: 'left' },
     font: {
+      name: 'MS Sans Serif',
       bold: true
     },
     border: {
