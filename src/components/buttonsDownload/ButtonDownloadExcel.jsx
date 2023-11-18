@@ -22,6 +22,12 @@ const ButtonDownloadExcel = ({ title, data, toFixed, splitName }) => {
     const wsData = []
     const wsDataPercentaje = []
 
+    const reportDetailed = [
+      [{ v: 'MOTORLIGHTS S.A.S', s: excelStyles.reportDetailedStyle }],
+      [{ v: 'Como Vamos', s: excelStyles.reportDetailedStyle }],
+      [{ v: `Entre ${dateExcel.fechaInicial} Y ${dateExcel.fechaFinal}`, s: excelStyles.reportDetailedStyle }]
+    ]
+
     dates.forEach(date => {
       const cell = { v: '', s: {}, t: '' }
       let row = [date]
@@ -371,9 +377,10 @@ const ButtonDownloadExcel = ({ title, data, toFixed, splitName }) => {
     const workbook = XLSX.utils.book_new()
     const sheetName = 'Resumen'
 
-    const worksheet = XLSX.utils.aoa_to_sheet(wsData, { origin: 'A2' })
-    XLSX.utils.sheet_add_aoa(worksheet, wsDateData, { origin: 'A18' })
-    XLSX.utils.sheet_add_aoa(worksheet, wsDataPercentaje, { origin: 'A23' })
+    const worksheet = XLSX.utils.aoa_to_sheet(wsData, { origin: 'A5' })
+    XLSX.utils.sheet_add_aoa(worksheet, reportDetailed, { origin: 'A1' })
+    XLSX.utils.sheet_add_aoa(worksheet, wsDateData, { origin: 'A21' })
+    XLSX.utils.sheet_add_aoa(worksheet, wsDataPercentaje, { origin: 'A25' })
 
     const columnWidths = wsData.reduce((acc, row) => {
       row.forEach((cell, colIndex) => {
@@ -384,8 +391,19 @@ const ButtonDownloadExcel = ({ title, data, toFixed, splitName }) => {
     }, [])
 
     worksheet['!cols'] = []
-    worksheet['!cols'] = columnWidths.map(width => ({ wch: width + 5 }))
-    worksheet['!cols'][2] = { wch: 30 }
+    worksheet['!cols'] = columnWidths.map(width => ({ wch: width + 7 }))
+    worksheet['!cols'][0] = { wch: 21 }
+    worksheet['!cols'][2] = { wch: 33 }
+
+    const mergeOptions = {
+      '!merge': [
+        { s: { r: 0, c: 0 }, e: { r: 0, c: 9 } },
+        { s: { r: 1, c: 0 }, e: { r: 1, c: 9 } },
+        { s: { r: 2, c: 0 }, e: { r: 2, c: 9 } }
+      ]
+    }
+
+    worksheet['!merges'] = mergeOptions['!merge']
 
     XLSX.utils.book_append_sheet(workbook, worksheet, sheetName)
 
