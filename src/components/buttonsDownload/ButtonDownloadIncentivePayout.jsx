@@ -509,9 +509,9 @@ const ButtonDownloadIncentivePayout = ({ title, data, convertExcelDateToReadable
         worksheet['!cols'][0] = { wch: 20 }
         worksheet['!cols'][1] = { wch: 40 }
         worksheet['!cols'][2] = { wch: 25 }
-        worksheet['!cols'][3] = { wch: 15 }
+        worksheet['!cols'][3] = { wch: 20 }
         worksheet['!cols'][4] = { wch: 20 }
-        worksheet['!cols'][5] = { wch: 35 }
+        worksheet['!cols'][5] = { wch: 40 }
         worksheet['!cols'][6] = { wch: 40 }
         worksheet['!cols'][7] = { wch: 25 }
 
