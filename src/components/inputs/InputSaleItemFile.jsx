@@ -162,18 +162,20 @@ const InputSaleItemFile = ({ label, convertExcelDateToReadable, extractIdNumber,
         .map(element =>
           element.itemsVendidos.filter(el => {
             const idCustomer = extractIdNumber(el.cliente)
-            return idCustomer === extractIdNumber(customer.id)
-          }).map(({ fecha, cliente, descripcion, cantidad, ...restOfData }) => ({
-            ...restOfData,
-            fecha: convertExcelDateToReadable(fecha),
-            cliente: extractText(cliente),
-            idCliente: extractIdNumber(cliente),
-            ciudadCliente: customer.ciudad,
-            departamentoCliente: customer.departamento,
-            idProducto: extractIdNumber(descripcion),
-            producto: capitalizeWords(extractText(descripcion)),
-            unidadesProducto: cantidad
-          }))
+            // return idCustomer === extractIdNumber(customer.id)
+            return (customer.id !== undefined) ? (idCustomer === extractIdNumber(customer.id)) : ('Customer id is undefined')
+          })
+            .map(({ fecha, cliente, descripcion, cantidad, ...restOfData }) => ({
+              ...restOfData,
+              fecha: convertExcelDateToReadable(fecha),
+              cliente: extractText(cliente),
+              idCliente: extractIdNumber(cliente),
+              ciudadCliente: customer.ciudad,
+              departamentoCliente: customer.departamento,
+              idProducto: extractIdNumber(descripcion),
+              producto: capitalizeWords(extractText(descripcion)),
+              unidadesProducto: cantidad
+            }))
         )
         .flat()
     )
