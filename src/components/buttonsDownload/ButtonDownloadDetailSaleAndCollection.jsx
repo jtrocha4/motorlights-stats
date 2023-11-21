@@ -133,12 +133,12 @@ const ButtonDownloadDetailSaleAndCollection = ({ title, data, convertExcelDateTo
             const cellElement = { v: '', s: {}, t: '' }
             if (header === 'Vendedor') {
               cellElement.v = element.vendedor
-              cellElement.s = excelStyles.whiteStyle
+              cellElement.s = excelStyles.whiteStyleTextFormat
             }
             if (header === 'Facturas') {
               cellElement.v = element.cantidadFacturas
               cellElement.t = 'n'
-              cellElement.s = excelStyles.whiteStyle
+              cellElement.s = excelStyles.whiteStyleNumberFormat
             }
             if (header === 'Meta de Venta') {
               cellElement.v = element.metaVentas
@@ -231,8 +231,8 @@ const ButtonDownloadDetailSaleAndCollection = ({ title, data, convertExcelDateTo
               const totalSales = dateSalesPerCustomer[key][item]
               total += totalSales
               sellerWsDataSale[seller].push([
-                { v: convertExcelDateToReadable(date), s: excelStyles.whiteStyle },
-                { v: customer, s: excelStyles.whiteStyle },
+                { v: convertExcelDateToReadable(date), s: excelStyles.whiteRowStyleNumberFormat },
+                { v: customer, s: excelStyles.whiteRowStyleTextFormat },
                 { v: totalSales, s: excelStyles.yellowStyleCurrencyFormat, t: 'n' }
               ])
             }
@@ -289,9 +289,9 @@ const ButtonDownloadDetailSaleAndCollection = ({ title, data, convertExcelDateTo
         res.forEach(element => {
           total += element.recaudo
           sellerWsDataCollection[seller].push([
-            { v: convertExcelDateToReadable(element.fecha), s: excelStyles.whiteStyle },
-            { v: element.factura, s: excelStyles.whiteStyle },
-            { v: element.cliente, s: excelStyles.whiteStyle },
+            { v: convertExcelDateToReadable(element.fecha), s: excelStyles.whiteRowStyleNumberFormat },
+            { v: element.factura, s: excelStyles.whiteRowStyleTextFormat },
+            { v: element.cliente, s: excelStyles.whiteRowStyleTextFormat },
             { v: element.recaudo, s: excelStyles.yellowStyleCurrencyFormat, t: 'n' }
           ])
         })

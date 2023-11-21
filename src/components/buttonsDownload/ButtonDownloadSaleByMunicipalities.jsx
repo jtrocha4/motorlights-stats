@@ -38,8 +38,8 @@ const ButtonDownloadSaleByMunicipalities = ({ title, sellerSalesData }) => {
       const municipalitySale = salesByMunicipalities[key]
       generalTotalSales += municipalitySale
       wsData.push({
-        municipio: { v: municipality, s: excelStyles.whiteStyleRow },
-        totalVentaNeta: { v: municipalitySale, s: excelStyles.whiteStyleRowCurrencyFormat, t: 'n' }
+        municipio: { v: municipality, s: excelStyles.whiteRowStyleTextFormat },
+        totalVentaNeta: { v: municipalitySale, s: excelStyles.whiteStyleCurrencyFormat, t: 'n' }
       })
     }
 

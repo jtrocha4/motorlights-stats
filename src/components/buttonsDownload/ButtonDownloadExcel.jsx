@@ -134,7 +134,7 @@ const ButtonDownloadExcel = ({ title, data, toFixed, splitName }) => {
         if (value === 'Cantidad de facturas') {
           cell.v = item.cantidadFacturas
           cell.t = 'n'
-          cell.s = excelStyles.grayStyle
+          cell.s = excelStyles.grayStyleNumberFormat
         }
         if (value === 'Promedio de ventas') {
           cell.v = item.promedioVentas
@@ -144,7 +144,7 @@ const ButtonDownloadExcel = ({ title, data, toFixed, splitName }) => {
         if (value === 'Clientes nuevos') {
           cell.v = item.clientesNuevos
           cell.t = 'n'
-          cell.s = excelStyles.orangeStyle
+          cell.s = excelStyles.orangeStyleNumberFormat
         }
         if (value === 'Margen bruto') {
           cell.v = item.margen
@@ -247,7 +247,7 @@ const ButtonDownloadExcel = ({ title, data, toFixed, splitName }) => {
       if (value === 'Cantidad de facturas') {
         cell.v = total.facturas
         cell.t = 'n'
-        cell.s = excelStyles.grayStyle
+        cell.s = excelStyles.grayStyleNumberFormat
         row.push(cell)
       }
       if (value === 'Promedio de ventas') {
@@ -259,7 +259,7 @@ const ButtonDownloadExcel = ({ title, data, toFixed, splitName }) => {
       if (value === 'Clientes nuevos') {
         cell.v = total.clientesNuevos
         cell.t = 'n'
-        cell.s = excelStyles.orangeStyle
+        cell.s = excelStyles.orangeStyleNumberFormat
         row.push(cell)
       }
       if (value === 'Margen bruto') {
@@ -329,10 +329,10 @@ const ButtonDownloadExcel = ({ title, data, toFixed, splitName }) => {
     }, {
       v: dateExcel.diasLaborales,
       t: 'n',
-      s: excelStyles.whiteStyle
+      s: excelStyles.whiteStyleNumberFormat
     }, {
       v: `Desde ${dateExcel.fechaInicial} hasta ${dateExcel.fechaFinal}`,
-      s: excelStyles.whiteStyle
+      s: excelStyles.whiteStyleNumberFormat
     })
     daysElapsed.push({
       v: 'Dias transcurridos',
@@ -340,7 +340,7 @@ const ButtonDownloadExcel = ({ title, data, toFixed, splitName }) => {
     }, {
       v: dateExcel.diasTranscurridos,
       t: 'n',
-      s: excelStyles.whiteStyle
+      s: excelStyles.whiteStyleNumberFormat
     })
     PercentageDaysElapsed.push({
       v: '',

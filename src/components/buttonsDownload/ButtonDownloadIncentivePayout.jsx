@@ -125,12 +125,12 @@ const ButtonDownloadIncentivePayout = ({ title, data, convertExcelDateToReadable
             const cellElement = { v: '', s: {}, t: '' }
             if (value === 'Vendedor') {
               cellElement.v = element.vendedor
-              cellElement.s = excelStyles.whiteStyle
+              cellElement.s = excelStyles.whiteStyleTextFormat
             }
             if (value === 'Facturas') {
               cellElement.v = element.cantidadFacturas
               cellElement.t = 'n'
-              cellElement.s = excelStyles.whiteStyle
+              cellElement.s = excelStyles.whiteStyleNumberFormat
             }
             if (value === 'Meta de Venta') {
               cellElement.v = element.metaVentas
@@ -213,8 +213,8 @@ const ButtonDownloadIncentivePayout = ({ title, data, convertExcelDateToReadable
               const totalSales = dateSalesPerCustomer[key][item]
               total += totalSales
               sellerWsDataSale[seller].push([
-                { v: convertExcelDateToReadable(date), s: excelStyles.whiteStyle },
-                { v: customer, s: excelStyles.whiteStyle },
+                { v: convertExcelDateToReadable(date), s: excelStyles.whiteRowStyleNumberFormat },
+                { v: customer, s: excelStyles.whiteRowStyleTextFormat },
                 { v: totalSales, s: excelStyles.yellowStyleCurrencyFormat, t: 'n' }
               ])
             }
@@ -270,9 +270,9 @@ const ButtonDownloadIncentivePayout = ({ title, data, convertExcelDateToReadable
         res.forEach(element => {
           total += element.recaudo
           sellerWsDataCollection[seller].push([
-            { v: convertExcelDateToReadable(element.fecha), s: excelStyles.whiteStyle },
-            { v: element.factura, s: excelStyles.whiteStyle },
-            { v: element.cliente, s: excelStyles.whiteStyle },
+            { v: convertExcelDateToReadable(element.fecha), s: excelStyles.whiteRowStyleNumberFormat },
+            { v: element.factura, s: excelStyles.whiteRowStyleTextFormat },
+            { v: element.cliente, s: excelStyles.whiteRowStyleTextFormat },
             { v: element.recaudo, s: excelStyles.yellowStyleCurrencyFormat, t: 'n' }
           ])
         })
@@ -323,7 +323,7 @@ const ButtonDownloadIncentivePayout = ({ title, data, convertExcelDateToReadable
               cellElement.t = 'n'
               cellElement.s = excelStyles.whiteStyleCurrencyFormat
             }
-            row.push({ v: '>=100%', s: excelStyles.whiteStyle }, { v: '1% Venta', s: excelStyles.whiteStyle })
+            row.push({ v: '>=100%', s: excelStyles.whiteStyleTextFormat }, { v: '1% Venta', s: excelStyles.whiteStyleTextFormat })
             row.push(cellElement)
           })
           incentiveWsData[seller].push(row)
@@ -348,7 +348,7 @@ const ButtonDownloadIncentivePayout = ({ title, data, convertExcelDateToReadable
               cellElement.t = 'n'
               cellElement.s = excelStyles.whiteStyleCurrencyFormat
             }
-            row.push({ v: '>=100%', s: excelStyles.whiteStyle }, { v: '1% Recaudo', s: excelStyles.whiteStyle })
+            row.push({ v: '>=100%', s: excelStyles.whiteStyleTextFormat }, { v: '1% Recaudo', s: excelStyles.whiteStyleTextFormat })
             row.push(cellElement)
           })
           incentiveWsData[seller].push(row)
@@ -374,7 +374,7 @@ const ButtonDownloadIncentivePayout = ({ title, data, convertExcelDateToReadable
               cellElement.t = 'n'
               cellElement.s = excelStyles.whiteStyleCurrencyFormat
             }
-            row.push({ v: '', s: excelStyles.whiteStyle }, { v: '', s: excelStyles.whiteStyle })
+            row.push({ v: '', s: excelStyles.whiteStyleTextFormat }, { v: '', s: excelStyles.whiteStyleTextFormat })
             row.push(cellElement)
           })
           incentiveWsData[seller].push(row)
@@ -429,7 +429,7 @@ const ButtonDownloadIncentivePayout = ({ title, data, convertExcelDateToReadable
               cellElement.t = 'n'
               cellElement.s = excelStyles.whiteStyleCurrencyFormat
             }
-            row.push({ v: '', s: excelStyles.whiteStyle }, { v: '', s: excelStyles.whiteStyle })
+            row.push({ v: '', s: excelStyles.whiteStyleTextFormat }, { v: '', s: excelStyles.whiteStyleTextFormat })
             row.push(cellElement)
           })
           incentiveWsData[seller].push(row)
@@ -439,31 +439,31 @@ const ButtonDownloadIncentivePayout = ({ title, data, convertExcelDateToReadable
             ],
             [
               { v: 'Bono Resultados', s: excelStyles.headerYellowStyle },
-              { v: '2% Recaudo', s: excelStyles.whiteStyle },
-              { v: 'Sin condiciones', s: excelStyles.whiteStyle },
+              { v: '2% Recaudo', s: excelStyles.whiteStyleTextFormat },
+              { v: 'Sin condiciones', s: excelStyles.whiteStyleTextFormat },
               { v: `${firstBonus}`, s: excelStyles.whiteStyleCurrencyFormat, t: 'n' }
             ],
             [
               { v: '', s: {} },
-              { v: '1,2% Recaudo', s: excelStyles.whiteStyle },
-              { v: 'Recaudo > 100% + Venta >100%', s: excelStyles.whiteStyle },
+              { v: '1,2% Recaudo', s: excelStyles.whiteStyleTextFormat },
+              { v: 'Recaudo > 100% + Venta >100%', s: excelStyles.whiteStyleTextFormat },
               { v: `${secondBonus}`, s: excelStyles.whiteStyleCurrencyFormat, t: 'n' }
             ],
             [
               { v: '', s: {} },
-              { v: '0,6% Recaudo', s: excelStyles.whiteStyle },
-              { v: 'Util ml del mes >10% al 20% *para los que cumplen recaudo*', s: excelStyles.whiteStyle },
+              { v: '0,6% Recaudo', s: excelStyles.whiteStyleTextFormat },
+              { v: 'Util ml del mes >10% al 20% *para los que cumplen recaudo*', s: excelStyles.whiteStyleTextFormat },
               { v: `${thirdBonus}`, s: excelStyles.whiteStyleCurrencyFormat, t: 'n' }
             ],
             [
               { v: '', s: {} },
-              { v: '0,7% Recaudo', s: excelStyles.whiteStyle },
-              { v: 'Util ml del mes >20%', s: excelStyles.whiteStyle },
+              { v: '0,7% Recaudo', s: excelStyles.whiteStyleTextFormat },
+              { v: 'Util ml del mes >20%', s: excelStyles.whiteStyleTextFormat },
               { v: `${fourthBonus}`, s: excelStyles.whiteStyleCurrencyFormat, t: 'n' }
             ],
             [{ v: '', s: {} },
-              { v: '0,1% Recaudo', s: excelStyles.whiteStyle },
-              { v: 'Por cada cliente nuevo', s: excelStyles.whiteStyle },
+              { v: '0,1% Recaudo', s: excelStyles.whiteStyleTextFormat },
+              { v: 'Por cada cliente nuevo', s: excelStyles.whiteStyleTextFormat },
               { v: `${fifthBonus}`, s: excelStyles.whiteStyleCurrencyFormat, t: 'n' }
             ]
           )
@@ -479,7 +479,7 @@ const ButtonDownloadIncentivePayout = ({ title, data, convertExcelDateToReadable
 
     errorRc.forEach(element => {
       errorRCWs.push([
-        { v: element, s: excelStyles.whiteStyle }
+        { v: element, s: excelStyles.whiteStyleTextFormat }
       ])
     })
 

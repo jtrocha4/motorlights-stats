@@ -46,9 +46,9 @@ const ButtonDownloadSellerSalesByMunicipality = ({ title, sellerSalesData, split
 
     for (const municipality in salesByMunicipalities) {
       const row = {
-        municipio: { v: municipality, s: excelStyles.whiteStyleRow },
+        municipio: { v: municipality, s: excelStyles.whiteRowStyleTextFormat },
         ...sellersArray.reduce((acc, seller) => {
-          acc[seller] = { v: salesByMunicipalities[municipality][seller] || 0, s: excelStyles.whiteStyleRowCurrencyFormat, t: 'n' }
+          acc[seller] = { v: salesByMunicipalities[municipality][seller] || 0, s: excelStyles.whiteStyleCurrencyFormat, t: 'n' }
           return acc
         }, {}),
         sumaVentaNeta: { v: Object.values(salesByMunicipalities[municipality]).reduce((acc, val) => acc + val, 0) || 0, s: excelStyles.yellowStyleCurrencyFormat, t: 'n' }
@@ -57,7 +57,7 @@ const ButtonDownloadSellerSalesByMunicipality = ({ title, sellerSalesData, split
     }
 
     const totalGeneralRow = {
-      municipio: { v: 'Total General', s: excelStyles.yellowStyleRow },
+      municipio: { v: 'Total General', s: excelStyles.headerYellowStyle },
       ...sellersArray.reduce((acc, seller) => {
         acc[seller] = { v: totalSalesBySeller[seller] || 0, s: excelStyles.yellowStyleCurrencyFormat, t: 'n' }
         return acc

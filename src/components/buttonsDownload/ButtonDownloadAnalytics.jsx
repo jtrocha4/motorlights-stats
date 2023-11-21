@@ -36,23 +36,23 @@ const ButtonDownloadAnalytics = ({ title, background = 'primary', sellerSalesDat
     ])
 
     const wsData = sellerSalesData.map(row => ({
-      vendedor: { v: row.vendedor, s: excelStyles.whiteStyleRow },
-      doc: { v: row.doc, s: excelStyles.whiteStyleRow },
-      fecha: { v: row.fecha, s: excelStyles.whiteStyleRow },
-      idCliente: { v: row.idCliente, s: excelStyles.whiteStyleRow, t: 'n' },
-      cliente: { v: row.cliente, s: excelStyles.whiteStyleRow },
-      ciudadCliente: { v: row.ciudadCliente, s: excelStyles.whiteStyleRow },
-      departamentoCliente: { v: row.departamentoCliente, s: excelStyles.whiteStyleRow },
-      idProducto: { v: row.idProducto, s: excelStyles.whiteStyleRow, t: 'n' },
-      producto: { v: row.producto, s: excelStyles.whiteStyleRow },
-      categoriaProducto: { v: row.categoriaProducto, s: excelStyles.whiteStyleRow },
-      unidadesProducto: { v: row.unidadesProducto, s: excelStyles.whiteStyleRow, t: 'n' },
-      valorUnitario: { v: row.valorUnitario, s: excelStyles.whiteStyleRowCurrencyFormat, t: 'n' },
-      ventaBruta: { v: row.ventaBruta, s: excelStyles.whiteStyleRowCurrencyFormat, t: 'n' },
-      descuento: { v: row.descuento, s: excelStyles.whiteStyleRowCurrencyFormat, t: 'n' },
-      ventaNeta: { v: row.ventaNeta, s: excelStyles.whiteStyleRowCurrencyFormat, t: 'n' },
-      iva: { v: row.iva, s: excelStyles.whiteStyleRowCurrencyFormat, t: 'n' },
-      valorTotal: { v: row.valorTotal, s: excelStyles.whiteStyleRowCurrencyFormat, t: 'n' }
+      vendedor: { v: row.vendedor, s: excelStyles.whiteRowStyleTextFormat },
+      doc: { v: row.doc, s: excelStyles.whiteRowStyleTextFormat },
+      fecha: { v: row.fecha, s: excelStyles.whiteRowStyleNumberFormat },
+      idCliente: { v: row.idCliente, s: excelStyles.whiteRowStyleNumberFormat, t: 'n' },
+      cliente: { v: row.cliente, s: excelStyles.whiteRowStyleTextFormat },
+      ciudadCliente: { v: row.ciudadCliente, s: excelStyles.whiteRowStyleTextFormat },
+      departamentoCliente: { v: row.departamentoCliente, s: excelStyles.whiteRowStyleTextFormat },
+      idProducto: { v: row.idProducto, s: excelStyles.whiteRowStyleNumberFormat, t: 'n' },
+      producto: { v: row.producto, s: excelStyles.whiteRowStyleTextFormat },
+      categoriaProducto: { v: row.categoriaProducto, s: excelStyles.whiteRowStyleTextFormat },
+      unidadesProducto: { v: row.unidadesProducto, s: excelStyles.whiteRowStyleNumberFormat, t: 'n' },
+      valorUnitario: { v: row.valorUnitario, s: excelStyles.whiteRowStyleCurrencyFormat, t: 'n' },
+      ventaBruta: { v: row.ventaBruta, s: excelStyles.whiteRowStyleCurrencyFormat, t: 'n' },
+      descuento: { v: row.descuento, s: excelStyles.whiteRowStyleCurrencyFormat, t: 'n' },
+      ventaNeta: { v: row.ventaNeta, s: excelStyles.whiteRowStyleCurrencyFormat, t: 'n' },
+      iva: { v: row.iva, s: excelStyles.whiteRowStyleCurrencyFormat, t: 'n' },
+      valorTotal: { v: row.valorTotal, s: excelStyles.whiteRowStyleCurrencyFormat, t: 'n' }
     }))
 
     const worksheet = XLSX.utils.json_to_sheet(wsData, { origin: 'A5' })
