@@ -81,7 +81,7 @@ const ButtonDownloadSellerSalesByMunicipality = ({ title, sellerSalesData, split
     worksheet['!cols'][sellersArray.length + 1] = { wch: totalColumnSize + 5 }
 
     sellersColumnSizes.forEach((size, index) => {
-      worksheet['!cols'][index + 1] = { wch: size }
+      worksheet['!cols'][index + 1] = { wch: size + 5 }
     })
 
     const mergeOptions = {
