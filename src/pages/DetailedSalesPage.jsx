@@ -2,9 +2,8 @@ import React, { useContext } from 'react'
 import ButtonDownloadAnalytics from '../components/buttonsDownload/ButtonDownloadAnalytics'
 import { SaleItemContext } from '../context/saleItem'
 import { DataExcelContext } from '../context/dataExcel'
-import ButtonDownloadSaleByMunicipalities from '../components/buttonsDownload/ButtonDownloadSaleByMunicipalities'
+import ButtonDownloadSalesByMunicipality from '../components/buttonsDownload/ButtonDownloadSalesByMunicipality'
 import ButtonDownloadSellerSalesByMunicipality from '../components/buttonsDownload/ButtonDownloadSellerSalesByMunicipality'
-import ButtonDownloadSalesMonthSellerByMunicipality from '../components/buttonsDownload/ButtonDownloadSalesMonthSellerByMunicipality'
 
 const DetailedSalesPage = ({ splitName }) => {
   const { dateExcel } = useContext(DataExcelContext)
@@ -16,7 +15,7 @@ const DetailedSalesPage = ({ splitName }) => {
         <h2>Informe Detallado Ventas</h2>
         <span>{(dateExcel.dia !== undefined && dateExcel.mes !== undefined) ? (`Fecha de la última actualización: ${dateExcel.dia} de ${dateExcel.mes} de ${dateExcel.año}`) : ('Aun no hay informes cargados, por favor cargue los informes para tener una visualizacion de la data')}</span>
         <section className='button-group mt-4'>
-          <ButtonDownloadSaleByMunicipalities title='Descargar Ventas por Municipio' sellerSalesData={sellerSalesData} />
+          <ButtonDownloadSalesByMunicipality title='Descargar Ventas por Municipio' sellerSalesData={sellerSalesData} />
           <ButtonDownloadSellerSalesByMunicipality title='Descargar Ventas Vendedor por Municipio' sellerSalesData={sellerSalesData} splitName={splitName} />
           {/* <ButtonDownloadSalesMonthSellerByMunicipality title='Descargar Ventas Mes Vendedor por Municipio' sellerSalesData={sellerSalesData} splitName={splitName} /> */}
         </section>
