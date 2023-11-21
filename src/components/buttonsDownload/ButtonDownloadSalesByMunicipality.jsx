@@ -17,7 +17,7 @@ const ButtonDownloadSalesByMunicipality = ({ title, sellerSalesData }) => {
     ]
 
     tableHeaders.push([
-      { v: 'Departamento', s: excelStyles.headerYellowStyle },
+      { v: 'Municipio', s: excelStyles.headerYellowStyle },
       { v: 'Suma de Venta Neta', s: excelStyles.headerYellowStyle }
     ])
 
