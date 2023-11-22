@@ -1,8 +1,10 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import XLSX from 'xlsx-js-style'
 import excelStyles from '../../styles/excelStyles'
+import { DataExcelContext } from '../../context/dataExcel'
 
 const ButtonDownloadSalesMonthSellerByMunicipality = ({ title, sellerSalesData, splitName }) => {
+  const { dateExcel } = useContext(DataExcelContext)
   const handleDownload = () => {
     const tableHeaders = []
     const wsData = []
@@ -10,7 +12,7 @@ const ButtonDownloadSalesMonthSellerByMunicipality = ({ title, sellerSalesData, 
     const reportDetailed = [
       [{ v: 'MOTORLIGHTS S.A.S', s: excelStyles.reportDetailedStyle }],
       [{ v: 'Ventas Mes Vendedor Municipio', s: excelStyles.reportDetailedStyle }],
-      [{ v: 'Fecha', s: excelStyles.reportDetailedStyle }]
+      [{ v: `Entre ${dateExcel.fechaInicial} Y ${dateExcel.fechaFinal}`, s: excelStyles.reportDetailedStyle }]
     ]
 
     // const allMonth = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
@@ -22,8 +24,28 @@ const ButtonDownloadSalesMonthSellerByMunicipality = ({ title, sellerSalesData, 
     //   return allMonth.includes(getMonth)
     // })
 
+    const months = {
+      0: 'Enero',
+      1: 'Febrero',
+      2: 'Marzo',
+      3: 'Abril',
+      4: 'Mayo',
+      5: 'Junio',
+      6: 'Julio',
+      7: 'Agosto',
+      8: 'Septiembre',
+      9: 'Octubre',
+      10: 'Noviembre',
+      11: 'Diciembre'
+    }
+
     const sellersArray = [...new Set(sellerSalesData.map(el => el.vendedor))]
-    const allDate = [...new Set(sellerSalesData.map((el) => el.fecha))]
+    const allDate = [...new Set(sellerSalesData.map((el) => {
+      const date = new Date(el.fecha)
+      const getMonth = date.getMonth()
+      const getYear = date.getFullYear()
+      return `${months[getMonth]} - ${getYear}`
+    }))]
 
     tableHeaders.push([
       { v: 'Fecha', s: excelStyles.headerBlackStyle },
@@ -38,7 +60,11 @@ const ButtonDownloadSalesMonthSellerByMunicipality = ({ title, sellerSalesData, 
       const municipality = `${element.departamentoCliente} - ${element.ciudadCliente}`
       const netSale = element.ventaNeta
       const seller = element.vendedor
-      const date = element.fecha
+      const date = new Date(element.fecha)
+      const getYear = date.getFullYear()
+      const getMonth = date.getMonth()
+
+      const month = `${months[getMonth]} - ${getYear}`
 
       if (!salesByMunicipalities[municipality]) {
         salesByMunicipalities[municipality] = {}
@@ -51,23 +77,21 @@ const ButtonDownloadSalesMonthSellerByMunicipality = ({ title, sellerSalesData, 
       }
 
       totalSalesBySeller[seller] += netSale
-      salesByMunicipalities[municipality][seller][date] = (salesByMunicipalities[municipality][seller][date] || 0) + netSale
+      salesByMunicipalities[municipality][seller][month] = (salesByMunicipalities[municipality][seller][month] || 0) + netSale
     })
 
-    // console.log(salesByMunicipalities)
-
-    allDate.forEach((date) => {
+    allDate.forEach((month) => {
       for (const municipality in salesByMunicipalities) {
         const sellers = salesByMunicipalities[municipality]
         const row = {
-          mes: { v: date, s: excelStyles.whiteStyleRow },
-          municipio: { v: municipality, s: excelStyles.whiteStyleRow },
+          mes: { v: month, s: excelStyles.whiteRowStyleTextFormat },
+          municipio: { v: municipality, s: excelStyles.whiteRowStyleTextFormat },
           ...sellersArray.reduce((acc, seller) => {
-            acc[seller] = { v: (sellers[seller] && sellers[seller][date]) || 0, s: excelStyles.whiteStyleRowCurrencyFormat, t: 'n' }
+            acc[seller] = { v: (sellers[seller] && sellers[seller][month]) || 0, s: excelStyles.whiteRowStyleCurrencyFormat, t: 'n' }
             return acc
           }, {}),
           sumaVentaNeta: {
-            v: Object.values(sellersArray).reduce((acc, seller) => acc + (sellers[seller]?.[date] || 0), 0),
+            v: Object.values(sellersArray).reduce((acc, seller) => acc + (sellers[seller]?.[month] || 0), 0),
             s: excelStyles.yellowStyleCurrencyFormat,
             t: 'n'
           }
@@ -77,7 +101,7 @@ const ButtonDownloadSalesMonthSellerByMunicipality = ({ title, sellerSalesData, 
     })
 
     const totalGeneralRow = {
-      municipio: { v: 'Total General', s: excelStyles.yellowStyleRow },
+      municipio: { v: 'Total General', s: excelStyles.headerYellowStyle },
       ...sellersArray.reduce((acc, seller) => {
         acc[seller] = { v: totalSalesBySeller[seller] || 0, s: excelStyles.yellowStyleCurrencyFormat, t: 'n' }
         return acc
@@ -95,9 +119,9 @@ const ButtonDownloadSalesMonthSellerByMunicipality = ({ title, sellerSalesData, 
 
     const mergeOptions = {
       '!merge': [
-        { s: { r: 0, c: 0 }, e: { r: 0, c: 17 } },
-        { s: { r: 1, c: 0 }, e: { r: 1, c: 17 } },
-        { s: { r: 2, c: 0 }, e: { r: 2, c: 17 } }
+        { s: { r: 0, c: 0 }, e: { r: 0, c: 9 } },
+        { s: { r: 1, c: 0 }, e: { r: 1, c: 9 } },
+        { s: { r: 2, c: 0 }, e: { r: 2, c: 9 } }
       ]
     }
 
