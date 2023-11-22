@@ -1,10 +1,10 @@
 import React, { useContext } from 'react'
 import XLSX from 'xlsx-js-style'
 import excelStyles from '../../styles/excelStyles'
-import { DataExcelContext } from '../../context/dataExcel'
+import { ReportDetailsContext } from '../../context/reportDetails'
 
 const ButtonDownloadAnalytics = ({ title, background = 'primary', sellerSalesData }) => {
-  const { dateExcel } = useContext(DataExcelContext)
+  const { dateSaleItemFile } = useContext(ReportDetailsContext)
 
   const handleDownload = () => {
     const tableHeaders = []
@@ -12,7 +12,7 @@ const ButtonDownloadAnalytics = ({ title, background = 'primary', sellerSalesDat
     const reportDetailed = [
       [{ v: 'MOTORLIGHTS S.A.S', s: excelStyles.reportDetailedStyle }],
       [{ v: 'Ventas Por Forma de Pago Detallado por Item', s: excelStyles.reportDetailedStyle }],
-      [{ v: `Entre ${dateExcel.fechaInicial} Y ${dateExcel.fechaFinal}`, s: excelStyles.reportDetailedStyle }]
+      [{ v: `${dateSaleItemFile}`, s: excelStyles.reportDetailedStyle }]
     ]
 
     tableHeaders.push([
