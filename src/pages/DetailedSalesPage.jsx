@@ -4,6 +4,7 @@ import { SaleItemContext } from '../context/saleItem'
 import { DataExcelContext } from '../context/dataExcel'
 import ButtonDownloadSalesByMunicipality from '../components/buttonsDownload/ButtonDownloadSalesByMunicipality'
 import ButtonDownloadSellerSalesByMunicipality from '../components/buttonsDownload/ButtonDownloadSellerSalesByMunicipality'
+import ButtonDownloadSalesMonthSellerByMunicipality from '../components/buttonsDownload/ButtonDownloadSalesMonthSellerByMunicipality'
 
 const DetailedSalesPage = ({ splitName }) => {
   const { dateExcel } = useContext(DataExcelContext)
@@ -17,7 +18,7 @@ const DetailedSalesPage = ({ splitName }) => {
         <section className='button-group mt-4'>
           <ButtonDownloadSalesByMunicipality title='Descargar Ventas por Municipio' sellerSalesData={sellerSalesData} />
           <ButtonDownloadSellerSalesByMunicipality title='Descargar Ventas Vendedor por Municipio' sellerSalesData={sellerSalesData} splitName={splitName} />
-          {/* <ButtonDownloadSalesMonthSellerByMunicipality title='Descargar Ventas Mes Vendedor por Municipio' sellerSalesData={sellerSalesData} splitName={splitName} /> */}
+          <ButtonDownloadSalesMonthSellerByMunicipality title='Descargar Ventas Mes Vendedor por Municipio' sellerSalesData={sellerSalesData} splitName={splitName} />
         </section>
         <hr />
         <section className='button-group mt-4'>
