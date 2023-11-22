@@ -9,7 +9,7 @@ import { DataExcelContext } from '../../context/dataExcel'
 const InputSaleItemFile = ({ label, convertExcelDateToReadable, extractIdNumber, extractText, capitalizeWords, removeExtraSpaces }) => {
   const { setSellersCustomers, setDataSaleItem, dataSaleItem, setSellerSalesData } = useContext(SaleItemContext)
   const { excelDataSaleItem, setExcelDataSaleItem } = useContext(DataExcelContext)
-  const { setSalesItemsReportName } = useContext(ReportDetailsContext)
+  const { setSalesItemsReportName, setDateSaleItemFile } = useContext(ReportDetailsContext)
   const { customerData } = useContext(ThirdPartiesContext)
 
   const handleReadSaleItemFile = (event) => {
@@ -39,8 +39,8 @@ const InputSaleItemFile = ({ label, convertExcelDateToReadable, extractIdNumber,
     return saleItemFileToModel(saleItemFile)
   }
 
-  // const reportDate = excelDataSaleItem[1]
   const reportName = excelDataSaleItem[1]
+  const reportDate = excelDataSaleItem[2]
 
   const reportHeaders = excelDataSaleItem[3]
   const reportRows = excelDataSaleItem.slice(4)
@@ -187,6 +187,7 @@ const InputSaleItemFile = ({ label, convertExcelDateToReadable, extractIdNumber,
     extractCustomersFromSeller(formattedDataSaleItem)
     extractDataSaleItems(formattedDataSaleItem)
     setSalesItemsReportName(reportName)
+    setDateSaleItemFile(reportDate)
   }, [excelDataSaleItem])
 
   useEffect(() => {
