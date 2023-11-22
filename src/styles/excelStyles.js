@@ -462,7 +462,6 @@ const excelStyles = {
     }
   },
   whiteStyleTextFormat: {
-    numFmt: '0',
     fill: { fgColor: { rgb: 'FFFFFF' } },
     alignment: { horizontal: 'right' },
     font: {
@@ -489,7 +488,6 @@ const excelStyles = {
     }
   },
   whiteRowStyleTextFormat: {
-    numFmt: '0',
     fill: { fgColor: { rgb: 'FFFFFF' } },
     alignment: { horizontal: 'left' },
     font: {
