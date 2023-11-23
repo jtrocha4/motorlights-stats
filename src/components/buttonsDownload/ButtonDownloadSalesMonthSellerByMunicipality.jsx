@@ -102,12 +102,17 @@ const ButtonDownloadSalesMonthSellerByMunicipality = ({ title, sellerSalesData, 
     })
 
     const totalGeneralRow = {
+      mes: { v: '' },
       municipio: { v: 'Total General', s: excelStyles.headerYellowStyle },
       ...sellersArray.reduce((acc, seller) => {
         acc[seller] = { v: totalSalesBySeller[seller] || 0, s: excelStyles.yellowStyleCurrencyFormat, t: 'n' }
         return acc
       }, {}),
-      sumaVentaNeta: { v: Object.values(totalSalesBySeller).reduce((acc, val) => acc + val, 0) || 0, s: excelStyles.yellowStyleCurrencyFormat, t: 'n' }
+      sumaVentaNeta: {
+        v: Object.values(totalSalesBySeller).reduce((acc, val) => acc + val, 0) || 0,
+        s: excelStyles.yellowStyleCurrencyFormat,
+        t: 'n'
+      }
     }
     wsData.push(totalGeneralRow)
 
@@ -116,7 +121,7 @@ const ButtonDownloadSalesMonthSellerByMunicipality = ({ title, sellerSalesData, 
     const sheetName = 'Ventas Mes Vendedor por Munic'
 
     worksheet['!cols'] = []
-    worksheet['!autofilter'] = { ref: 'A5:B5' }
+    worksheet['!autofilter'] = { ref: 'A5:J5' }
 
     const mergeOptions = {
       '!merge': [
@@ -128,6 +133,7 @@ const ButtonDownloadSalesMonthSellerByMunicipality = ({ title, sellerSalesData, 
 
     worksheet['!merges'] = mergeOptions['!merge']
 
+    const monthColumnSize = wsData.reduce((w, r) => Math.max(w, r.mes.v.length), 10)
     const municipalityColumnSize = wsData.reduce((w, r) => Math.max(w, r.municipio.v.length), 10)
     const sellersColumnSizes = sellersArray.map((seller, index) =>
       wsData.reduce((w, r) => Math.max(w, r[seller].v.toString().length), tableHeaders[0][index].v.length)
@@ -138,6 +144,7 @@ const ButtonDownloadSalesMonthSellerByMunicipality = ({ title, sellerSalesData, 
       worksheet['!cols'][index + 2] = { wch: size + 4 }
     })
 
+    worksheet['!cols'][0] = { wch: monthColumnSize }
     worksheet['!cols'][1] = { wch: municipalityColumnSize }
     worksheet['!cols'][sellersArray.length + 2] = { wch: totalColumnSize + 5 }
 
