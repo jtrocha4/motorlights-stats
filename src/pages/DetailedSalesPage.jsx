@@ -5,6 +5,7 @@ import { DataExcelContext } from '../context/dataExcel'
 import ButtonDownloadSalesByMunicipality from '../components/buttonsDownload/ButtonDownloadSalesByMunicipality'
 import ButtonDownloadSellerSalesByMunicipality from '../components/buttonsDownload/ButtonDownloadSellerSalesByMunicipality'
 import ButtonDownloadSalesMonthSellerByMunicipality from '../components/buttonsDownload/ButtonDownloadSalesMonthSellerByMunicipality'
+import ButtonDownloadSalesCustomerSellerByMunicipality from '../components/buttonsDownload/ButtonDownloadSalesCustomerSellerByMunicipality'
 
 const DetailedSalesPage = ({ splitName }) => {
   const { dateExcel } = useContext(DataExcelContext)
@@ -19,6 +20,7 @@ const DetailedSalesPage = ({ splitName }) => {
           <ButtonDownloadSalesByMunicipality title='Descargar Ventas por Municipio' sellerSalesData={sellerSalesData} />
           <ButtonDownloadSellerSalesByMunicipality title='Descargar Ventas Vendedor por Municipio' sellerSalesData={sellerSalesData} splitName={splitName} />
           <ButtonDownloadSalesMonthSellerByMunicipality title='Descargar Ventas Mes Vendedor por Municipio' sellerSalesData={sellerSalesData} splitName={splitName} />
+          <ButtonDownloadSalesCustomerSellerByMunicipality title='Descargar Ventas Cliente Vendedor por Municipio' sellerSalesData={sellerSalesData} splitName={splitName} />
         </section>
         <hr />
         <section className='button-group mt-4'>
