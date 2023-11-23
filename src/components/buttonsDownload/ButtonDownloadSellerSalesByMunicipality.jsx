@@ -93,7 +93,7 @@ const ButtonDownloadSellerSalesByMunicipality = ({ title, sellerSalesData, split
     }
 
     worksheet['!merges'] = mergeOptions['!merge']
-    worksheet['!autofilter'] = { ref: 'A5' }
+    worksheet['!autofilter'] = { ref: 'A5:I5' }
 
     XLSX.utils.book_append_sheet(workbook, worksheet, sheetName)
     XLSX.utils.sheet_add_aoa(worksheet, reportDetailed, { origin: 'A1' })
