@@ -136,17 +136,17 @@ const ButtonDownloadSalesMonthSellerByMunicipality = ({ title, sellerSalesData, 
     const monthColumnSize = wsData.reduce((w, r) => Math.max(w, r.mes.v.length), 10)
     const municipalityColumnSize = wsData.reduce((w, r) => Math.max(w, r.municipio.v.length), 10)
     const sellersColumnSizes = sellersArray.map((seller, index) =>
-      wsData.reduce((w, r) => Math.max(w, r[seller].v.toString().length), tableHeaders[0][index].v.length)
+      wsData.reduce((w, r) => Math.max(w, r[seller].v.toString().length), tableHeaders[0][index + 2].v.length)
     )
     const totalColumnSize = wsData.reduce((w, r) => Math.max(w, r.sumaVentaNeta.v.toString().length), tableHeaders[0][sellersArray.length + 2].v.length)
 
     sellersColumnSizes.forEach((size, index) => {
-      worksheet['!cols'][index + 2] = { wch: size + 4 }
+      worksheet['!cols'][index + 2] = { wch: size + 7 }
     })
 
     worksheet['!cols'][0] = { wch: monthColumnSize }
     worksheet['!cols'][1] = { wch: municipalityColumnSize }
-    worksheet['!cols'][sellersArray.length + 2] = { wch: totalColumnSize + 5 }
+    worksheet['!cols'][tableHeaders[0].length - 1] = { wch: totalColumnSize + 7 }
 
     XLSX.utils.book_append_sheet(workbook, worksheet, sheetName)
     XLSX.utils.sheet_add_aoa(worksheet, reportDetailed, { origin: 'A1' })

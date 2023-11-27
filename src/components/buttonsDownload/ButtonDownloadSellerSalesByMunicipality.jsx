@@ -75,14 +75,15 @@ const ButtonDownloadSellerSalesByMunicipality = ({ title, sellerSalesData, split
     const sellersColumnSizes = sellersArray.map((seller, index) =>
       wsData.reduce((w, r) => Math.max(w, r[seller].v.toString().length), tableHeaders[0][index + 1].v.length)
     )
-    const totalColumnSize = wsData.reduce((w, r) => Math.max(w, r.sumaVentaNeta.v.toString().length), tableHeaders[0][sellersArray.length + 1].v.length)
+    const totalColumnSize = wsData.reduce((w, r) => Math.max(w, r.sumaVentaNeta.v.toString().length), tableHeaders[0][tableHeaders[0].length - 1].v.length)
 
     worksheet['!cols'][0] = { wch: municipalityColumnSize + 5 }
-    worksheet['!cols'][sellersArray.length + 1] = { wch: totalColumnSize + 5 }
 
     sellersColumnSizes.forEach((size, index) => {
-      worksheet['!cols'][index + 1] = { wch: size + 5 }
+      worksheet['!cols'][index + 1] = { wch: size + 7 }
     })
+
+    worksheet['!cols'][tableHeaders[0].length - 1] = { wch: totalColumnSize + 7 }
 
     const mergeOptions = {
       '!merge': [
