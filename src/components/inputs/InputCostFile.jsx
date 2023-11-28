@@ -5,7 +5,7 @@ import { ReportDetailsContext } from '../../context/reportDetails'
 import { DataContext } from '../../context/data'
 import { DataExcelContext } from '../../context/dataExcel'
 
-const InputCostFile = ({ label, toFixed, salesGoalBySeller, collectionGoalBySeller, extractIdNumber, extractText, removeExtraSpaces }) => {
+const InputCostFile = ({ label, toFixed, salesGoalBySeller, collectionGoalBySeller, extractIdNumber, extractText, extractDate, removeExtraSpaces }) => {
   const { setData, sellers } = useContext(DataContext)
   const { excelDataCost, setExcelDataCost } = useContext(DataExcelContext)
   const { setDateCostFile, setCostReportName } = useContext(ReportDetailsContext)
@@ -38,7 +38,7 @@ const InputCostFile = ({ label, toFixed, salesGoalBySeller, collectionGoalBySell
   }
 
   const reportName = excelDataCost[1]
-  const reportDate = excelDataCost[2]
+  const reportDate = extractDate(excelDataCost[2]) || []
 
   const reportHeader = excelDataCost[3]
   const reportRows = excelDataCost.slice(4)
