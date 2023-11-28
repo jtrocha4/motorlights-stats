@@ -6,7 +6,7 @@ import { ReportDetailsContext } from '../../context/reportDetails'
 import { ThirdPartiesContext } from '../../context/thirdParties'
 import { DataExcelContext } from '../../context/dataExcel'
 
-const InputSaleItemFile = ({ label, convertExcelDateToReadable, extractIdNumber, extractText, capitalizeWords, removeExtraSpaces }) => {
+const InputSaleItemFile = ({ label, convertExcelDateToReadable, extractIdNumber, extractText, extractDate, capitalizeWords, removeExtraSpaces }) => {
   const { setSellersCustomers, setDataSaleItem, dataSaleItem, setSellerSalesData } = useContext(SaleItemContext)
   const { excelDataSaleItem, setExcelDataSaleItem } = useContext(DataExcelContext)
   const { setSalesItemsReportName, setDateSaleItemFile } = useContext(ReportDetailsContext)
@@ -40,7 +40,7 @@ const InputSaleItemFile = ({ label, convertExcelDateToReadable, extractIdNumber,
   }
 
   const reportName = excelDataSaleItem[1]
-  const reportDate = excelDataSaleItem[2]
+  const reportDate = extractDate(excelDataSaleItem[2]) || []
 
   const reportHeaders = excelDataSaleItem[3]
   const reportRows = excelDataSaleItem.slice(4)
