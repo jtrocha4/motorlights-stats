@@ -183,6 +183,20 @@ function App () {
     return product[1]
   }
 
+  const extractDate = (fileDate) => {
+    if (fileDate !== undefined) {
+      const date = fileDate.join()
+      const regex = /\b(?:0?[1-9]|[12][0-9]|3[01])\/(?:0?[1-9]|1[0-2])\/\d{4}\b/g
+      const matches = date.match(regex)
+      if (matches) {
+        const datesWithoutLeadingZero = matches.map(match => match.replace(/^0/, ''))
+        return datesWithoutLeadingZero
+      } else {
+        return null
+      }
+    }
+  }
+
   const removeExtraSpaces = (string) => {
     return string.replace(/\s+/g, ' ')
   }
@@ -210,7 +224,7 @@ function App () {
       <Navbar />
       <Sidebar />
       <Routes>
-        <Route path='/' element={<UploadReports toFixed={toFixed} department={department} convertExcelDateToReadable={convertExcelDateToReadable} extractIdNumber={extractIdNumber} extractText={extractText} capitalizeWords={capitalizeWords} removeExtraSpaces={removeExtraSpaces} />} />
+        <Route path='/' element={<UploadReports toFixed={toFixed} department={department} convertExcelDateToReadable={convertExcelDateToReadable} extractIdNumber={extractIdNumber} extractText={extractText} extractDate={extractDate} capitalizeWords={capitalizeWords} removeExtraSpaces={removeExtraSpaces} />} />
         <Route path='/sales' element={<SalesPage postSellerPerformanceToApi={postSellerPerformanceToApi} toFixed={toFixed} convertExcelDateToReadable={convertExcelDateToReadable} sellerPerformance={sellerPerformance} extractDateFromData={extractDateFromData} splitName={splitName} />} />
         <Route path='/detailed-sales' element={<DetailedSalesPage splitName={splitName} />} />
         <Route path='/manage-sellers' element={<ManageSellers postSellerToApi={postSellerToApi} capitalizeWords={capitalizeWords} sellers={sellers} />} />
