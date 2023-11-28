@@ -12,12 +12,14 @@ import ModalGoals from '../components/modals/ModalGoals'
 import { DataContext } from '../context/data'
 import { DataExcelContext } from '../context/dataExcel'
 
-const UploadReports = ({ toFixed, department, convertExcelDateToReadable, extractIdNumber, extractText, capitalizeWords, removeExtraSpaces }) => {
+const UploadReports = ({ toFixed, department, convertExcelDateToReadable, extractIdNumber, extractText, extractDate, capitalizeWords, removeExtraSpaces }) => {
   const { data, dataCollection, salesGoalBySeller, setSalesGoalBySeller, collectionGoalBySeller, setCollectionGoalBySeller } = useContext(DataContext)
 
   const { dateExcel, setDateExcel, excelDataCost } = useContext(DataExcelContext)
 
-  const { dateCostFile, costReportName, collectionReportName, auxiliaryBookReportName, salesItemsReportName, thirdPartiesReportName } = useContext(ReportDetailsContext)
+  const { costReportName, collectionReportName, auxiliaryBookReportName, salesItemsReportName, thirdPartiesReportName } = useContext(ReportDetailsContext)
+
+  const { dateCostFile, dateCollectionFile, dateAuxiliaryBookFile, dateSaleItemFile } = useContext(ReportDetailsContext)
 
   const extractDateFromExcel = (dateCostFile = []) => {
     if (dateCostFile.length !== 0) {
@@ -157,6 +159,35 @@ const UploadReports = ({ toFixed, department, convertExcelDateToReadable, extrac
     }
   }
 
+  const reportDateValidator = (costReportDate, collectionReportDate, auxiliaryBookReportDate, saleItemReportDate) => {
+    const lastDateOfCostReport = costReportDate[costReportDate.length - 1]
+    const lastDateOfCollectionReport = collectionReportDate[collectionReportDate.length - 1]
+    const lastDateOfAuxiliaryBookReport = auxiliaryBookReportDate[auxiliaryBookReportDate.length - 1]
+    const lastDateOfSaleItemReport = saleItemReportDate[saleItemReportDate.length - 1]
+
+    if (lastDateOfCollectionReport !== undefined && lastDateOfCostReport !== lastDateOfCollectionReport) {
+      return Swal.fire({
+        icon: 'error',
+        title: 'Error de fechas en el Informe Recaudo',
+        text: 'La fecha del Informe de Recaudo no coincide con el Informe de Costo. Por favor, revise y vuelva a intentarlo.'
+      })
+    }
+    if (lastDateOfAuxiliaryBookReport !== undefined && lastDateOfCollectionReport !== lastDateOfAuxiliaryBookReport) {
+      return Swal.fire({
+        icon: 'error',
+        title: 'Error de fechas en el Informe Libro Auxiliar',
+        text: 'La fecha del Informe de Libro Auxiliar no coincide con el Informe de Recaudo. Por favor, revise y vuelva a intentarlo.'
+      })
+    }
+    if (lastDateOfSaleItemReport !== undefined && lastDateOfAuxiliaryBookReport !== lastDateOfSaleItemReport) {
+      return Swal.fire({
+        icon: 'error',
+        title: 'Error de fechas en el Informe Venta Items',
+        text: 'La fecha del Informe Venta Items no coincide con el Informe de Libro Auxiliar. Por favor, revise y vuelva a intentarlo.'
+      })
+    }
+  }
+
   const joinData = (dataCollection = [], dataCost = []) => {
     const collectionBySeller = []
     dataCollection.forEach(({ vendedor, totalRecaudo, metaRecaudoSinIva, porcentajeRecaudo, recaudoPendiente, comisionRecaudo, bonoResultado, clientesNuevos }) => {
@@ -205,6 +236,7 @@ const UploadReports = ({ toFixed, department, convertExcelDateToReadable, extrac
   useEffect(() => {
     extractDateFromExcel(dateCostFile)
     reportInputValidator(costReportName, collectionReportName, auxiliaryBookReportName, salesItemsReportName, thirdPartiesReportName)
+    reportDateValidator(dateCostFile, dateCollectionFile, dateAuxiliaryBookFile, dateSaleItemFile)
   }, [dateCostFile, collectionReportName, auxiliaryBookReportName, salesItemsReportName, thirdPartiesReportName])
 
   useEffect(() => {
@@ -217,12 +249,12 @@ const UploadReports = ({ toFixed, department, convertExcelDateToReadable, extrac
         <h2>Cargar Informes</h2>
         <p>Añada los siguientes archivos:</p>
         <div className='inputFile-group'>
-          <InputCostFile label='Informe de Costo' toFixed={toFixed} salesGoalBySeller={salesGoalBySeller} collectionGoalBySeller={collectionGoalBySeller} extractIdNumber={extractIdNumber} extractText={extractText} removeExtraSpaces={removeExtraSpaces} />
-          <InputCollectionFile label='Informe de Recaudo' toFixed={toFixed} salesGoalBySeller={salesGoalBySeller} collectionGoalBySeller={collectionGoalBySeller} />
-          <InputAuxiliaryBookFile label='Informe Libro auxiliar' salesGoalBySeller={salesGoalBySeller} collectionGoalBySeller={collectionGoalBySeller} />
+          <InputCostFile label='Informe de Costo' toFixed={toFixed} salesGoalBySeller={salesGoalBySeller} collectionGoalBySeller={collectionGoalBySeller} extractIdNumber={extractIdNumber} extractText={extractText} extractDate={extractDate} removeExtraSpaces={removeExtraSpaces} />
+          <InputCollectionFile label='Informe de Recaudo' toFixed={toFixed} salesGoalBySeller={salesGoalBySeller} collectionGoalBySeller={collectionGoalBySeller} extractDate={extractDate} />
+          <InputAuxiliaryBookFile label='Informe Libro auxiliar' salesGoalBySeller={salesGoalBySeller} collectionGoalBySeller={collectionGoalBySeller} extractDate={extractDate} />
           <InputNewCustomersFile label='Informe Clientes Nuevos' />
-          <InputSaleItemFile label='Informe Ventas Items' convertExcelDateToReadable={convertExcelDateToReadable} extractIdNumber={extractIdNumber} extractText={extractText} capitalizeWords={capitalizeWords} removeExtraSpaces={removeExtraSpaces} />
-          <InputThirdParties label='Informe de Terceros' department={department} />
+          <InputSaleItemFile label='Informe Ventas Items' convertExcelDateToReadable={convertExcelDateToReadable} extractIdNumber={extractIdNumber} extractText={extractText} extractDate={extractDate} capitalizeWords={capitalizeWords} removeExtraSpaces={removeExtraSpaces} />
+          <InputThirdParties label='Informe de Terceros' department={department} extractDate={extractDate} />
           <div className='button-group'>
             <ModalGoals title='Modificar metas' data={data} sendForm={sendForm} />
           </div>
