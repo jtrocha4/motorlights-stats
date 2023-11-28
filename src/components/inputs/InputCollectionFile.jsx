@@ -5,10 +5,10 @@ import { ReportDetailsContext } from '../../context/reportDetails'
 import { DataContext } from '../../context/data'
 import { DataExcelContext } from '../../context/dataExcel'
 
-const InputCollectionFile = ({ label, toFixed, salesGoalBySeller, collectionGoalBySeller }) => {
+const InputCollectionFile = ({ label, toFixed, salesGoalBySeller, collectionGoalBySeller, extractDate }) => {
   const { totalDebitByDocNum, setDataCollection, setErrorRc } = useContext(DataContext)
   const { setExcelDataCollection, excelDataCollection } = useContext(DataExcelContext)
-  const { setCollectionReportName } = useContext(ReportDetailsContext)
+  const { setCollectionReportName, setDateCollectionFile } = useContext(ReportDetailsContext)
 
   const handleReadCollectionFile = (event) => {
     const file = event.target.files[0]
@@ -39,8 +39,8 @@ const InputCollectionFile = ({ label, toFixed, salesGoalBySeller, collectionGoal
     return collectionFileToModel(collectionFile)
   }
 
-  // const reportDate = excelDataCollection[1]
   const reportName = excelDataCollection[1]
+  const reportDate = extractDate(excelDataCollection[1]) || []
 
   const reportHeaders = excelDataCollection[2]
   const reportRows = excelDataCollection.slice(3)
@@ -76,7 +76,7 @@ const InputCollectionFile = ({ label, toFixed, salesGoalBySeller, collectionGoal
         if (row.vendedor.startsWith('Total')) {
           if (currentSeller) {
             totalWithoutVAT = parseFloat(total / iva)
-            collectionTarget = collectionGoalBySeller[currentSeller]
+            collectionTarget = collectionGoalBySeller[currentSeller] || 0
 
             percentageCollected = (collectionTarget !== 0) ? (((totalWithoutVAT * 100) / collectionTarget)) : (0)
 
@@ -137,6 +137,7 @@ const InputCollectionFile = ({ label, toFixed, salesGoalBySeller, collectionGoal
   useEffect(() => {
     extractCollectionData(formattedDataCollectionFile, totalDebitByDocNum, collectionGoalBySeller)
     setCollectionReportName(reportName)
+    setDateCollectionFile(reportDate)
   }, [excelDataCollection, totalDebitByDocNum, salesGoalBySeller, collectionGoalBySeller])
 
   return (
