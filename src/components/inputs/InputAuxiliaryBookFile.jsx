@@ -5,11 +5,11 @@ import { DataContext } from '../../context/data'
 import { ReportDetailsContext } from '../../context/reportDetails'
 import { DataExcelContext } from '../../context/dataExcel'
 
-const InputAuxiliaryBookFile = ({ label, salesGoalBySeller, collectionGoalBySeller }) => {
+const InputAuxiliaryBookFile = ({ label, salesGoalBySeller, collectionGoalBySeller, extractDate }) => {
   const { setDataAuxiliaryBook, setTotalDebitByDocNum } = useContext(DataContext)
   const { excelDataAuxiliaryBook, setExcelDataAuxiliaryBook } = useContext(DataExcelContext)
 
-  const { setAuxiliaryBookReportName } = useContext(ReportDetailsContext)
+  const { setAuxiliaryBookReportName, setDateAuxiliaryBookFile } = useContext(ReportDetailsContext)
 
   const handleReadAuxiliaryBookFile = (event) => {
     const file = event.target.files[0]
@@ -40,8 +40,8 @@ const InputAuxiliaryBookFile = ({ label, salesGoalBySeller, collectionGoalBySell
     return auxiliaryBookFileToModel(auxiliaryBookFile)
   }
 
-  // const reportDate = excelDataAuxiliaryBook[1]
   const reportName = excelDataAuxiliaryBook[1]
+  const reportDate = extractDate(excelDataAuxiliaryBook[1]) || []
 
   const reportHeaders = excelDataAuxiliaryBook[3]
   const reportRows = excelDataAuxiliaryBook.slice(4)
@@ -95,6 +95,7 @@ const InputAuxiliaryBookFile = ({ label, salesGoalBySeller, collectionGoalBySell
   useEffect(() => {
     extractAuxiliaryBookData(formattedDataAuxiliaryBookFile)
     setAuxiliaryBookReportName(reportName)
+    setDateAuxiliaryBookFile(reportDate)
   }, [excelDataAuxiliaryBook, salesGoalBySeller, collectionGoalBySeller])
 
   return (
