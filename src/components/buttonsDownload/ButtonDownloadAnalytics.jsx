@@ -36,7 +36,6 @@ const ButtonDownloadAnalytics = ({ title, background = 'primary', sellerSalesDat
     ])
 
     const wsData = sellerSalesData
-      .filter(row => !row.producto.startsWith('Flete'))
       .map(row => ({
         vendedor: { v: row.vendedor, s: excelStyles.whiteRowStyleTextFormat },
         doc: { v: row.doc, s: excelStyles.whiteRowStyleTextFormat },
