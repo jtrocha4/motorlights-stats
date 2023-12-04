@@ -7,6 +7,7 @@ import ButtonDownloadSellerSalesByMunicipality from '../components/buttonsDownlo
 import ButtonDownloadSalesMonthSellerByMunicipality from '../components/buttonsDownload/ButtonDownloadSalesMonthSellerByMunicipality'
 import ButtonDownloadSalesCustomerSellerByMunicipality from '../components/buttonsDownload/ButtonDownloadSalesCustomerSellerByMunicipality'
 import ButtonDownloadSalesMonthSellerCustomerByMunicipality from '../components/buttonsDownload/ButtonDownloadSalesMonthSellerCustomerByMunicipality'
+import TableDynamicDetailedSales from '../components/tables/TableDynamicDetailedSales'
 
 const DetailedSalesPage = ({ splitName }) => {
   const { dateExcel } = useContext(DataExcelContext)
@@ -26,10 +27,11 @@ const DetailedSalesPage = ({ splitName }) => {
           <ButtonDownloadSalesMonthSellerByMunicipality title='Descargar Ventas Mes Vendedor por Municipio' sellerSalesData={sellerSalesProcessedData} splitName={splitName} />
           <ButtonDownloadSalesCustomerSellerByMunicipality title='Descargar Ventas Cliente Vendedor por Municipio' sellerSalesData={sellerSalesProcessedData} splitName={splitName} />
           <ButtonDownloadSalesMonthSellerCustomerByMunicipality title='Descargar Ventas Mes Vendedor Cliente por Municipio' sellerSalesData={sellerSalesProcessedData} splitName={splitName} />
+          <ButtonDownloadAnalytics title='Descargar Informe Macro' background='success' sellerSalesData={sellerSalesProcessedData} />
         </section>
         <hr />
-        <section className='button-group mt-4'>
-          <ButtonDownloadAnalytics title='Descargar Informe Macro' background='success' sellerSalesData={sellerSalesProcessedData} />
+        <section className='m-auto'>
+          <TableDynamicDetailedSales sellerSalesData={sellerSalesProcessedData} />
         </section>
       </div>
     </div>
