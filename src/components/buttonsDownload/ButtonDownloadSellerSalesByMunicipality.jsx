@@ -14,7 +14,7 @@ const ButtonDownloadSellerSalesByMunicipality = ({ title, sellerSalesData, getMo
 
     const reportDetailed = [
       [{ v: 'MOTORLIGHTS S.A.S', s: excelStyles.reportDetailedStyle }],
-      [{ v: 'Ventas por Municipio', s: excelStyles.reportDetailedStyle }],
+      [{ v: 'Ventas Vendedor por Municipio', s: excelStyles.reportDetailedStyle }],
       [{ v: `Entre ${dateSaleItemFile[0]} Y ${dateSaleItemFile[1]}`, s: excelStyles.reportDetailedStyle }]
     ]
 
@@ -107,7 +107,7 @@ const ButtonDownloadSellerSalesByMunicipality = ({ title, sellerSalesData, getMo
 
     const worksheet = XLSX.utils.json_to_sheet(wsData, { origin: 'A5' })
     const workbook = XLSX.utils.book_new()
-    const sheetName = 'Ventas por Municipio'
+    const sheetName = 'Ventas Vendedor por Municipio'
 
     worksheet['!cols'] = []
     const sellerColumnSize = wsData.reduce((w, r) => Math.max(w, r.vendedor.v.length), 10)
@@ -147,7 +147,7 @@ const ButtonDownloadSellerSalesByMunicipality = ({ title, sellerSalesData, getMo
     XLSX.utils.sheet_add_aoa(worksheet, reportDetailed, { origin: 'A1' })
     XLSX.utils.sheet_add_aoa(worksheet, tableHeaders, { origin: 'A5' })
 
-    const excelFileName = 'Informe Ventas por Municipio.xlsx'
+    const excelFileName = 'Informe Ventas Vendedor por Municipio.xlsx'
     XLSX.writeFile(workbook, excelFileName)
   }
   return (
