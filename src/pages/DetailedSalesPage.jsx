@@ -49,12 +49,9 @@ const DetailedSalesPage = ({ splitName }) => {
         <section className='button-group mt-4'>
           <ButtonDownloadSalesByMunicipality title='Descargar Ventas por Municipio' sellerSalesData={sellerSalesProcessedData} getMonth={getMonth} getYear={getYear} />
           <ButtonDownloadSellerSalesByMunicipality title='Descargar Ventas Vendedor por Municipio' sellerSalesData={sellerSalesProcessedData} splitName={splitName} getMonth={getMonth} getYear={getYear} />
+          <ButtonDownloadSalesCustomerSellerByMunicipality title='Descargar Ventas Cliente Vendedor por Municipio' sellerSalesData={sellerSalesProcessedData} splitName={splitName} getMonth={getMonth} getYear={getYear} />
 
-          {/* <ButtonDownloadSalesMonthSellerByMunicipality title='Descargar Ventas Mes Vendedor por Municipio' sellerSalesData={sellerSalesProcessedData} splitName={splitName} />
-
-          <ButtonDownloadSalesCustomerSellerByMunicipality title='Descargar Ventas Cliente Vendedor por Municipio' sellerSalesData={sellerSalesProcessedData} splitName={splitName} />
-
-          <ButtonDownloadSalesMonthSellerCustomerByMunicipality title='Descargar Ventas Mes Vendedor Cliente por Municipio' sellerSalesData={sellerSalesProcessedData} splitName={splitName} />
+          {/* <ButtonDownloadSalesMonthSellerCustomerByMunicipality title='Descargar Ventas Mes Vendedor Cliente por Municipio' sellerSalesData={sellerSalesProcessedData} splitName={splitName} />
 
           <ButtonDownloadAnalytics title='Descargar Informe Macro' background='success' sellerSalesData={sellerSalesProcessedData} /> */}
         </section>
