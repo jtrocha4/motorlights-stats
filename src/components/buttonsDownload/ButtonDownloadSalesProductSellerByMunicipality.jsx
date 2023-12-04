@@ -128,7 +128,7 @@ const ButtonDownloadSalesProductSellerByMunicipality = ({ title, sellerSalesData
 
     const worksheet = XLSX.utils.json_to_sheet(wsData, { origin: 'A5' })
     const workbook = XLSX.utils.book_new()
-    const sheetName = 'Ventas Cliente Vend por Munic'
+    const sheetName = 'Ventas Producto Vend por Munic'
 
     worksheet['!cols'] = []
     const sellerColumnSize = wsData.reduce((w, r) => Math.max(w, r.vendedor.v.length), 10)
@@ -156,7 +156,7 @@ const ButtonDownloadSalesProductSellerByMunicipality = ({ title, sellerSalesData
     worksheet['!cols'][16] = { wch: 20 }
     worksheet['!cols'][17] = { wch: 25 }
 
-    worksheet['!autofilter'] = { ref: 'A5:E5' }
+    worksheet['!autofilter'] = { ref: 'A5:F5' }
 
     const mergeOptions = {
       '!merge': [
@@ -172,7 +172,7 @@ const ButtonDownloadSalesProductSellerByMunicipality = ({ title, sellerSalesData
     XLSX.utils.sheet_add_aoa(worksheet, reportDetailed, { origin: 'A1' })
     XLSX.utils.sheet_add_aoa(worksheet, tableHeaders, { origin: 'A5' })
 
-    const excelFileName = 'Informe Ventas Cliente Vendedor por Municipio.xlsx'
+    const excelFileName = 'Informe Ventas Producto Vendedor por Municipio.xlsx'
     XLSX.writeFile(workbook, excelFileName)
   }
   return (
