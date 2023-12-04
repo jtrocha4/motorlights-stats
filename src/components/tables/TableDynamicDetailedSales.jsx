@@ -14,7 +14,8 @@ const TableDynamicDetailedSales = ({ sellerSalesData, getMonth, getYear }) => {
     'Venta Neta': row.ventaNeta,
     Cliente: `${row.idCliente} ${row.cliente}`,
     Producto: `${row.idProducto} ${row.producto}`,
-    'Categoria Producto': row.categoriaProducto
+    'Categoria Producto': row.categoriaProducto,
+    'Unidades Producto': row.unidadesProducto
   }))
 
   const handlePivotState = (event) => {
