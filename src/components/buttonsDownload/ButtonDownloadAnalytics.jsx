@@ -12,7 +12,7 @@ const ButtonDownloadAnalytics = ({ title, background = 'primary', sellerSalesDat
     const reportDetailed = [
       [{ v: 'MOTORLIGHTS S.A.S', s: excelStyles.reportDetailedStyle }],
       [{ v: 'Ventas Por Forma de Pago Detallado por Item', s: excelStyles.reportDetailedStyle }],
-      [{ v: `${dateSaleItemFile}`, s: excelStyles.reportDetailedStyle }]
+      [{ v: `Entre ${dateSaleItemFile[0]} Y ${dateSaleItemFile[1]}`, s: excelStyles.reportDetailedStyle }]
     ]
 
     tableHeaders.push([
@@ -65,29 +65,30 @@ const ButtonDownloadAnalytics = ({ title, background = 'primary', sellerSalesDat
     worksheet['!cols'] = []
 
     const sellerColumnSize = wsData.reduce((w, r) => Math.max(w, r.vendedor.v.length), 10)
-    const customerColumnSize = wsData.reduce((w, r) => Math.max(w, r.cliente.v.length), 10)
     const docColumnSize = wsData.reduce((w, r) => Math.max(w, r.doc.v.length), 10)
-    const deptColumnSize = wsData.reduce((w, r) => Math.max(w, r.departamentoCliente.v.length), 10)
-    const idProductColumnSize = wsData.reduce((w, r) => Math.max(w, r.idProducto.v.length), 10)
+    const customerColumnSize = wsData.reduce((w, r) => Math.max(w, r.cliente.v.length), 10)
+    const municipalityColumnSize = wsData.reduce((w, r) => Math.max(w, r.ciudadCliente.v.length), 10)
+    const departmentColumnSize = wsData.reduce((w, r) => Math.max(w, r.departamentoCliente.v.length), 10)
     const productColumnSize = wsData.reduce((w, r) => Math.max(w, r.producto.v.length), 10)
     const productCategoryColumnSize = wsData.reduce((w, r) => Math.max(w, r.categoriaProducto.v.length), 10)
 
-    const currencyFormatColumnSize = 15
-
     worksheet['!cols'][0] = { wch: sellerColumnSize }
-
-    worksheet['!cols'][1] = { wch: docColumnSize }
+    worksheet['!cols'][1] = { wch: docColumnSize + 5 }
+    worksheet['!cols'][2] = { wch: 15 }
+    worksheet['!cols'][3] = { wch: 15 }
     worksheet['!cols'][4] = { wch: customerColumnSize }
-    worksheet['!cols'][6] = { wch: deptColumnSize + 2 }
-    worksheet['!cols'][7] = { wch: idProductColumnSize }
+    worksheet['!cols'][5] = { wch: municipalityColumnSize }
+    worksheet['!cols'][6] = { wch: departmentColumnSize + 5 }
+    worksheet['!cols'][7] = { wch: 15 }
     worksheet['!cols'][8] = { wch: productColumnSize }
     worksheet['!cols'][9] = { wch: productCategoryColumnSize }
-    worksheet['!cols'][11] = { wch: currencyFormatColumnSize }
-    worksheet['!cols'][12] = { wch: currencyFormatColumnSize }
-    worksheet['!cols'][13] = { wch: currencyFormatColumnSize }
-    worksheet['!cols'][14] = { wch: currencyFormatColumnSize }
-    worksheet['!cols'][15] = { wch: currencyFormatColumnSize }
-    worksheet['!cols'][16] = { wch: currencyFormatColumnSize }
+    worksheet['!cols'][10] = { wch: 20 }
+    worksheet['!cols'][11] = { wch: 20 }
+    worksheet['!cols'][12] = { wch: 20 }
+    worksheet['!cols'][13] = { wch: 20 }
+    worksheet['!cols'][14] = { wch: 20 }
+    worksheet['!cols'][15] = { wch: 20 }
+    worksheet['!cols'][16] = { wch: 20 }
 
     worksheet['!autofilter'] = { ref: 'A5:Q5' }
 
