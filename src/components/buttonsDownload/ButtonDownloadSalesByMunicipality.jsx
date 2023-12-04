@@ -19,7 +19,6 @@ const ButtonDownloadSalesByMunicipality = ({ title, sellerSalesData, getMonth, g
     ]
 
     tableHeaders.push([
-      { v: 'Vendedor', s: excelStyles.headerBlueStyle },
       { v: 'Departamento', s: excelStyles.headerBlueStyle },
       { v: 'Municipio', s: excelStyles.headerBlueStyle },
       { v: 'Año', s: excelStyles.headerBlueStyle },
@@ -30,7 +29,6 @@ const ButtonDownloadSalesByMunicipality = ({ title, sellerSalesData, getMonth, g
     const salesByMunicipalities = {}
     const totalSalesBySeller = {}
     sellerSalesData.forEach(element => {
-      const seller = element.vendedor
       const department = element.departamentoCliente
       const municipality = element.ciudadCliente
       const netSale = element.ventaNeta
@@ -43,55 +41,47 @@ const ButtonDownloadSalesByMunicipality = ({ title, sellerSalesData, getMonth, g
       if (!salesByMunicipalities[year][month]) {
         salesByMunicipalities[year][month] = {}
       }
-      if (!salesByMunicipalities[year][month][seller]) {
-        salesByMunicipalities[year][month][seller] = {}
+      if (!salesByMunicipalities[year][month][department]) {
+        salesByMunicipalities[year][month][department] = {}
       }
-      if (!salesByMunicipalities[year][month][seller][department]) {
-        salesByMunicipalities[year][month][seller][department] = {}
-      }
-      if (!salesByMunicipalities[year][month][seller][department][municipality]) {
-        salesByMunicipalities[year][month][seller][department][municipality] = 0
+      if (!salesByMunicipalities[year][month][department][municipality]) {
+        salesByMunicipalities[year][month][department][municipality] = 0
       }
       if (!totalSalesBySeller[month]) {
         totalSalesBySeller[month] = 0
       }
       totalSalesBySeller[month] += netSale
-      salesByMunicipalities[year][month][seller][department][municipality] = (salesByMunicipalities[year][month][seller][department][municipality] || 0) + netSale
+      salesByMunicipalities[year][month][department][municipality] = (salesByMunicipalities[year][month][department][municipality] || 0) + netSale
     })
 
     for (const year in salesByMunicipalities) {
       const months = salesByMunicipalities[year]
       for (const month in months) {
-        const sellers = months[month]
-        for (const seller in sellers) {
-          const departments = sellers[seller]
-          for (const department in departments) {
-            const municipalities = departments[department]
-            for (const municipality in municipalities) {
-              wsData.push({
-                vendedor: { v: seller, s: excelStyles.whiteRowStyleTextFormat, t: 's' },
-                departamento: { v: department, s: excelStyles.whiteRowStyleTextFormat, t: 's' },
-                municipio: { v: municipality, s: excelStyles.whiteRowStyleTextFormat, t: 's' },
-                año: { v: year, s: excelStyles.whiteRowStyleTextFormat, t: 's' },
-                ...monthsArray.reduce((acc, element) => {
-                  acc[element] = { v: (months[element] && months[month][seller][department][municipality]) || 0, s: excelStyles.whiteRowStyleCurrencyFormat, t: 'n' }
-                  return acc
-                }, {}),
-                sumaVentaNeta: {
-                  v: Object.values(monthsArray).reduce((acc, element) => acc + (months[element]?.[seller][department][municipality] || 0), 0),
-                  s: excelStyles.yellowStyleCurrencyFormat,
-                  t: 'n'
-                }
-              })
-            }
+        const departments = months[month]
+        for (const department in departments) {
+          const municipalities = departments[department]
+          for (const municipality in municipalities) {
+            wsData.push({
+              departamento: { v: department, s: excelStyles.whiteRowStyleTextFormat, t: 's' },
+              municipio: { v: municipality, s: excelStyles.whiteRowStyleTextFormat, t: 's' },
+              año: { v: year, s: excelStyles.whiteRowStyleTextFormat, t: 's' },
+              ...monthsArray.reduce((acc, element) => {
+                acc[element] = { v: (months[element] && months[month][department][municipality]) || 0, s: excelStyles.whiteRowStyleCurrencyFormat, t: 'n' }
+                return acc
+              }, {}),
+              sumaVentaNeta: {
+                v: Object.values(monthsArray).reduce((acc, element) => acc + (months[element]?.[department][municipality] || 0), 0),
+                s: excelStyles.yellowStyleCurrencyFormat,
+                t: 'n'
+              }
+            })
           }
         }
       }
     }
 
     wsData.push({
-      vendedor: { v: 'Total general', s: excelStyles.headerYellowStyle, t: 's' },
-      departamento: { v: '', s: excelStyles.headerYellowStyle, t: 's' },
+      departamento: { v: 'Total general', s: excelStyles.headerYellowStyle, t: 's' },
       municipio: { v: '', s: excelStyles.headerYellowStyle, t: 's' },
       año: { v: '', s: excelStyles.headerYellowStyle, t: 's' },
       ...monthsArray.reduce((acc, month) => {
@@ -110,14 +100,14 @@ const ButtonDownloadSalesByMunicipality = ({ title, sellerSalesData, getMonth, g
     const sheetName = 'Ventas por Municipio'
 
     worksheet['!cols'] = []
-    const sellerColumnSize = wsData.reduce((w, r) => Math.max(w, r.vendedor.v.length), 10)
+
     const departmentColumnSize = wsData.reduce((w, r) => Math.max(w, r.departamento.v.length), 10)
     const municipalityColumnSize = wsData.reduce((w, r) => Math.max(w, r.municipio.v.length), 10)
 
-    worksheet['!cols'][0] = { wch: sellerColumnSize }
-    worksheet['!cols'][1] = { wch: departmentColumnSize + 5 }
-    worksheet['!cols'][2] = { wch: municipalityColumnSize }
-    worksheet['!cols'][3] = { wch: 7 }
+    worksheet['!cols'][0] = { wch: departmentColumnSize + 5 }
+    worksheet['!cols'][1] = { wch: municipalityColumnSize }
+    worksheet['!cols'][2] = { wch: 7 }
+    worksheet['!cols'][3] = { wch: 20 }
     worksheet['!cols'][4] = { wch: 20 }
     worksheet['!cols'][5] = { wch: 20 }
     worksheet['!cols'][6] = { wch: 20 }
@@ -128,10 +118,9 @@ const ButtonDownloadSalesByMunicipality = ({ title, sellerSalesData, getMonth, g
     worksheet['!cols'][11] = { wch: 20 }
     worksheet['!cols'][12] = { wch: 20 }
     worksheet['!cols'][13] = { wch: 20 }
-    worksheet['!cols'][14] = { wch: 20 }
-    worksheet['!cols'][15] = { wch: 25 }
+    worksheet['!cols'][14] = { wch: 25 }
 
-    worksheet['!autofilter'] = { ref: 'A5:D5' }
+    worksheet['!autofilter'] = { ref: 'A5:C5' }
 
     const mergeOptions = {
       '!merge': [
