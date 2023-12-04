@@ -64,6 +64,34 @@ const excelStyles = {
     }
   },
 
+  // Blue
+  headerBlueStyle: {
+    fill: { fgColor: { rgb: 'B8CCE4' } },
+    alignment: { horizontal: 'left' },
+    font: {
+      name: 'MS Sans Serif',
+      bold: true
+    },
+    border: {
+      right: {
+        style: 'thin',
+        color: '000000'
+      },
+      left: {
+        style: 'thin',
+        color: '000000'
+      },
+      top: {
+        style: 'thin',
+        color: '000000'
+      },
+      bottom: {
+        style: 'thin',
+        color: '000000'
+      }
+    }
+  },
+
   // Gray
   headerGrayStyle: {
     fill: { fgColor: { rgb: 'BFBFBF' } },
