@@ -59,4 +59,28 @@ const getSeller = async () => {
   }
 }
 
-export { getSellerPerformance, createSellerPerformance, getDepartment, createNewSeller, getSeller }
+const deleteSeller = async (id) => {
+  try {
+    const response = await axios.delete(`${baseUrl}/api/sellers/${id}`)
+    return response.data
+  } catch (error) {
+    console.log(error)
+    throw error
+  }
+}
+
+const editSeller = async (id, sellerData) => {
+  try {
+    const response = await axios.put(`${baseUrl}/api/sellers/${id}`, sellerData)
+    if (response.status === 201) {
+      return response.data
+    } else {
+      throw new Error('Error al editar el vendedor. Verifica los datos y vuelve a intentarlo.')
+    }
+  } catch (error) {
+    console.error(error)
+    throw error
+  }
+}
+
+export { getSellerPerformance, createSellerPerformance, getDepartment, createNewSeller, getSeller, deleteSeller, editSeller }
