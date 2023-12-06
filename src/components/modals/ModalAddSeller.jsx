@@ -74,6 +74,9 @@ const ModalAddSeller = ({ title, postSellerToApi, capitalizeWords }) => {
                   <label className='form-label'>Identificacion</label>
                   <input name='identificacion' className='form-control' type='text' onChange={handleChange} value={form.identificacion} />
                 </div>
+                <div className='mb-3'>
+                  <span><b>Importante:</b> La identificación del vendedor debe coincidir con la identificación utilizada en los informes.</span>
+                </div>
                 <div className='modal-footer'>
                   <button type='button' className='btn btn-secondary' data-bs-dismiss='modal' onClick={handleCancel}>Cancelar</button>
                   <button className='btn btn-primary' type='submit' data-bs-dismiss='modal'>Crear</button>
