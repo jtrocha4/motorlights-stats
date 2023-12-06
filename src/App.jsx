@@ -4,7 +4,7 @@ import './App.css'
 import Navbar from './components/Navbar'
 import Sidebar from './components/Sidebar'
 import UploadReports from './pages/UploadReports'
-import { getSellerPerformance, createSellerPerformance, getDepartment, createNewSeller, getSeller } from './services/dataService'
+import { getSellerPerformance, createSellerPerformance, getDepartment, createNewSeller, getSeller, deleteSeller, editSeller } from './services/dataService'
 import { useContext, useEffect, useState } from 'react'
 import ManageSellers from './pages/ManageSellers'
 import SellerProfile from './pages/SellerProfile'
@@ -59,6 +59,27 @@ function App () {
       return request
     } catch (error) {
       console.error(error)
+      throw error
+    }
+  }
+
+  const deleteSellerToApi = async (idSeller) => {
+    try {
+      const request = await deleteSeller(idSeller)
+      // TODO: Hacer un seteo a la lista de vendedores
+      return request
+    } catch (error) {
+      console.error(error)
+      throw error
+    }
+  }
+
+  const putSellerToApi = async (id, sellerData) => {
+    try {
+      const request = await editSeller(id, sellerData)
+      return request
+    } catch (error) {
+      console.log(error)
       throw error
     }
   }
@@ -136,13 +157,13 @@ function App () {
     }
   }
 
-  const currencyFormat = (number) => {
-    if (number) {
-      return number.toLocaleString('es-CO', { style: 'currency', currency: 'COP' })
-    } else {
-      return number
-    }
-  }
+  // const currencyFormat = (number) => {
+  //   if (number) {
+  //     return number.toLocaleString('es-CO', { style: 'currency', currency: 'COP' })
+  //   } else {
+  //     return number
+  //   }
+  // }
 
   const toFixed = (number, digitAfterPoint = 2) => {
     return parseFloat(number.toFixed(digitAfterPoint))
@@ -227,7 +248,7 @@ function App () {
         <Route path='/' element={<UploadReports toFixed={toFixed} department={department} convertExcelDateToReadable={convertExcelDateToReadable} extractIdNumber={extractIdNumber} extractText={extractText} extractDate={extractDate} capitalizeWords={capitalizeWords} removeExtraSpaces={removeExtraSpaces} />} />
         <Route path='/sales' element={<SalesPage postSellerPerformanceToApi={postSellerPerformanceToApi} toFixed={toFixed} convertExcelDateToReadable={convertExcelDateToReadable} sellerPerformance={sellerPerformance} extractDateFromData={extractDateFromData} splitName={splitName} />} />
         <Route path='/detailed-sales' element={<DetailedSalesPage splitName={splitName} />} />
-        <Route path='/manage-sellers' element={<ManageSellers postSellerToApi={postSellerToApi} capitalizeWords={capitalizeWords} sellers={sellers} />} />
+        <Route path='/manage-sellers' element={<ManageSellers postSellerToApi={postSellerToApi} deleteSellerToApi={deleteSellerToApi} putSellerToApi={putSellerToApi} capitalizeWords={capitalizeWords} sellers={sellers} />} />
         <Route path='/manage-sellers/:id' element={<SellerProfile />} />
       </Routes>
     </div>
