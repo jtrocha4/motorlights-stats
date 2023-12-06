@@ -78,6 +78,19 @@ button i {
   padding-right: 0.2rem;
 }
 
+.card-title{
+  display: inline-block;
+}
+
+.button-group-card{
+  display: inline-block;
+  float: inline-end;
+}
+
+.button-group-card button{
+  margin-inline-end: 5px;
+}
+
 .button-group{
   display: flex;
   justify-content: flex-start;
