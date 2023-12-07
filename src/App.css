@@ -83,8 +83,10 @@ button i {
 }
 
 .button-group-card{
-  display: inline-block;
-  float: inline-end;
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: 10px;
 }
 
 .button-group-card button{
