@@ -1,25 +1,17 @@
 import React, { useState } from 'react'
 import Swal from 'sweetalert2'
 
-const ModalAddSeller = ({ title, postSellerToApi, capitalizeWords }) => {
+const ModalAddSeller = ({ title, icon, background = 'btn btn-outline-primary', postSellerToApi, capitalizeWords }) => {
   const [form, setForm] = useState({
     nombre: '',
     identificacion: ''
   })
-  const [buttonDisable, setButtonDisable] = useState(true)
 
   const handleChange = (event) => {
     setForm({
       ...form,
       [event.target.name]: event.target.value
     })
-    if (form.nombre !== undefined && form.identificacion !== undefined) {
-      if (form.nombre.trim() && form.identificacion.trim()) {
-        setButtonDisable(false)
-      } else {
-        setButtonDisable(true)
-      }
-    }
   }
 
   const handleSubmit = async (event) => {
@@ -55,9 +47,8 @@ const ModalAddSeller = ({ title, postSellerToApi, capitalizeWords }) => {
 
   return (
     <>
-      <button type='button' className='btn btn-outline-primary' data-bs-toggle='modal' data-bs-target='#exampleModal'>{title}</button>
-
-      <div className='modal fade' id='exampleModal'>
+      <button type='button' className={`${background}`} data-bs-toggle='modal' data-bs-target='#modalAddSeller'>{(icon) || (title)}</button>
+      <div className='modal fade' id='modalAddSeller'>
         <div className='modal-dialog'>
           <div className='modal-content'>
             <div className='modal-header'>
