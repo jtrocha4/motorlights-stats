@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
+import Swal from 'sweetalert2'
 
-const ModalEditSeller = ({ title, icon, background = 'btn btn-outline-primary', dataSeller, idSeller }) => {
+const ModalEditSeller = ({ title, icon, background = 'btn btn-outline-primary', dataSeller, idSeller, putSellerToApi, capitalizeWords }) => {
   const [form, setForm] = useState({
     nombre: '',
     identificacion: ''
@@ -8,11 +9,12 @@ const ModalEditSeller = ({ title, icon, background = 'btn btn-outline-primary', 
 
   const handleOnClick = () => {
     if (dataSeller) {
-      const { nombre, identificacion } = dataSeller
+      const { nombre, identificacion, ...restOfData } = dataSeller
       setForm({
         ...form,
         nombre,
-        identificacion
+        identificacion,
+        ...restOfData
       })
     }
   }
@@ -27,6 +29,22 @@ const ModalEditSeller = ({ title, icon, background = 'btn btn-outline-primary', 
 
   const handleSubmit = async (event) => {
     event.preventDefault()
+    const { nombre, id, ...restOfData } = form
+    try {
+      await putSellerToApi(id, {
+        ...restOfData,
+        nombre: capitalizeWords(nombre)
+      })
+      Swal.fire({
+        title: 'El vendedor ha sido editado con éxito.',
+        icon: 'success'
+      })
+    } catch (error) {
+      Swal.fire({
+        title: 'Lo sentimos, ha ocurrido un error al editar el vendedor. Por favor vuelva a intentarlo',
+        icon: 'error'
+      })
+    }
   }
 
   const handleCancel = () => {
@@ -58,7 +76,7 @@ const ModalEditSeller = ({ title, icon, background = 'btn btn-outline-primary', 
                 </div>
                 <div className='modal-footer'>
                   <button type='button' className='btn btn-secondary' data-bs-dismiss='modal' onClick={handleCancel}>Cancelar</button>
-                  <button className='btn btn-primary' type='submit' data-bs-dismiss='modal'>Crear</button>
+                  <button className='btn btn-primary' type='submit' data-bs-dismiss='modal'>Editar</button>
                 </div>
               </form>
             </div>
