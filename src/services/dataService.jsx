@@ -72,7 +72,7 @@ const deleteSeller = async (id) => {
 const editSeller = async (id, sellerData) => {
   try {
     const response = await axios.put(`${baseUrl}/api/sellers/${id}`, sellerData)
-    if (response.status === 201) {
+    if (response.status === 200) {
       return response.data
     } else {
       throw new Error('Error al editar el vendedor. Verifica los datos y vuelve a intentarlo.')
