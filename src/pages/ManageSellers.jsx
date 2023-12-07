@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 import Swal from 'sweetalert2'
 import ModalEditSeller from '../components/modals/ModalEditSeller'
 
-const ManageSellers = ({ postSellerToApi, deleteSellerToApi, capitalizeWords, sellers }) => {
+const ManageSellers = ({ postSellerToApi, deleteSellerToApi, putSellerToApi, capitalizeWords, sellers }) => {
   const handleDelete = (event, id) => {
     event.preventDefault()
     Swal.fire({
@@ -43,7 +43,7 @@ const ManageSellers = ({ postSellerToApi, deleteSellerToApi, capitalizeWords, se
                 <div className='card mt-3' key={el.id}>
                   <div className='button-group-card'>
                     <button type='button' title='Eliminar' className='btn btn-outline-danger' onClick={(event) => handleDelete(event, el.id)}><i className='fa-solid fa-trash' /></button>
-                    <ModalEditSeller title='Editar Vendedor' icon={<i className='fa-solid fa-pen-to-square' />} dataSeller={el} idSeller={el.id} />
+                    <ModalEditSeller title='Editar Vendedor' icon={<i className='fa-solid fa-pen-to-square' />} dataSeller={el} idSeller={el.id} putSellerToApi={putSellerToApi} capitalizeWords={capitalizeWords} />
                   </div>
                   <Link to={`/manage-sellers/${el.id}`}>
                     <div className='card-body'>
