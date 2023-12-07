@@ -2,11 +2,11 @@ import React from 'react'
 import ModalAddSeller from '../components/modals/ModalAddSeller'
 import { Link } from 'react-router-dom'
 import Swal from 'sweetalert2'
+import ModalEditSeller from '../components/modals/ModalEditSeller'
 
 const ManageSellers = ({ postSellerToApi, deleteSellerToApi, capitalizeWords, sellers }) => {
-  const handleDelete = (event) => {
+  const handleDelete = (event, id) => {
     event.preventDefault()
-    const id = event.currentTarget.getAttribute('data-id')
     Swal.fire({
       title: '¿Seguro que deseas eliminar este vendedor?',
       text: 'Esta acción no se puede deshacer. Si eliminas al vendedor, se perderán todos los datos asociados.',
@@ -41,12 +41,13 @@ const ManageSellers = ({ postSellerToApi, deleteSellerToApi, capitalizeWords, se
               .filter(el => el.estado !== false)
               .map(el => (
                 <div className='card mt-3' key={el.id}>
+                  <div className='button-group-card'>
+                    <button type='button' title='Eliminar' className='btn btn-outline-danger' onClick={(event) => handleDelete(event, el.id)}><i className='fa-solid fa-trash' /></button>
+                    <ModalEditSeller title='Editar Vendedor' icon={<i className='fa-solid fa-pen-to-square' />} dataSeller={el} idSeller={el.id} />
+                  </div>
                   <Link to={`/manage-sellers/${el.id}`}>
                     <div className='card-body'>
                       <h5 className='card-title'>{el.nombre}</h5>
-                      <div className='button-group-card'>
-                        <button type='button' title='Eliminar' data-id={el.id} className='btn btn-danger' onClick={handleDelete}><i className='fa-solid fa-trash' /></button>
-                      </div>
                       <h6 className='card-subtitle mb-2 text-body-secondary'>{el.id}</h6>
                     </div>
                   </Link>
