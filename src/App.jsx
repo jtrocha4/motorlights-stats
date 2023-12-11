@@ -66,7 +66,7 @@ function App () {
   const deleteSellerToApi = async (idSeller) => {
     try {
       const request = await deleteSeller(idSeller)
-      // TODO: Hacer un seteo a la lista de vendedores
+      setNewSeller(request)
       return request
     } catch (error) {
       console.error(error)
@@ -77,6 +77,7 @@ function App () {
   const putSellerToApi = async (id, sellerData) => {
     try {
       const request = await editSeller(id, sellerData)
+      setNewSeller(request)
       return request
     } catch (error) {
       console.log(error)
