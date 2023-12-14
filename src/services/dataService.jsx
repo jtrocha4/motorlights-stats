@@ -25,7 +25,7 @@ const createSellerPerformance = async (newData) => {
   }
 }
 
-const getDepartment = async () => {
+const getDepartments = async () => {
   try {
     const response = await axios.get(`${baseUrl}/api/departments`)
     return response.data
@@ -49,7 +49,7 @@ const createNewSeller = async (newSeller) => {
   }
 }
 
-const getSeller = async () => {
+const getSellers = async () => {
   try {
     const response = await axios.get(`${baseUrl}/api/sellers`)
     return response.data
@@ -83,4 +83,28 @@ const editSeller = async (id, sellerData) => {
   }
 }
 
-export { getSellerPerformance, createSellerPerformance, getDepartment, createNewSeller, getSeller, deleteSeller, editSeller }
+const getCustomers = async () => {
+  try {
+    const response = await axios.get(`${baseUrl}/api/customers`)
+    return response.data
+  } catch (error) {
+    console.log(error)
+    throw error
+  }
+}
+
+const createNewCustomer = async (newCustomer) => {
+  try {
+    const response = await axios.post(`${baseUrl}/api/customers`, newCustomer)
+    if (response.status === 201) {
+      return response.data
+    } else {
+      throw new Error('Error al crear el cliente. Verifica los datos y vuelve a intentarlo.')
+    }
+  } catch (error) {
+    console.log(error)
+    throw error
+  }
+}
+
+export { getSellerPerformance, createSellerPerformance, getDepartments, createNewSeller, getSellers, deleteSeller, editSeller, getCustomers, createNewCustomer }
