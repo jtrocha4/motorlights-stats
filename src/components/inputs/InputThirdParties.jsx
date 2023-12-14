@@ -5,9 +5,9 @@ import { ThirdPartiesContext } from '../../context/thirdParties'
 import { ReportDetailsContext } from '../../context/reportDetails'
 import { DataExcelContext } from '../../context/dataExcel'
 
-const InputThirdParties = ({ label, department }) => {
+const InputThirdParties = ({ label, department, capitalizeWords, removeExtraSpaces, extractIdNumber }) => {
   const { excelDataThirdParties, setExcelDataThirdParties } = useContext(DataExcelContext)
-  const { setThirdPartiesData, thirdPartiesData, setCustomerData } = useContext(ThirdPartiesContext)
+  const { setThirdPartiesData, thirdPartiesData, setCustomer } = useContext(ThirdPartiesContext)
   const { setThirdPartiesReportName } = useContext(ReportDetailsContext)
 
   const handleReadThirdParties = (event) => {
@@ -65,17 +65,18 @@ const InputThirdParties = ({ label, department }) => {
         depart.municipios.some(munic => munic.nombre === cliente.ciudad)
       ))
       const department = municipality ? municipality.nombre : 'n/a'
-      const { ciudad, direccion, telefonos, ...restOfData } = cliente
+      const { ciudad, direccion, telefonos, nombre, id } = cliente
       return {
-        ...restOfData,
-        departamento: department,
-        ciudad: ciudad || 'n/a',
-        direccion: direccion || 'n/a',
-        telefonos: telefonos || 'n/a'
+        id: parseInt(extractIdNumber(id)),
+        departamento: removeExtraSpaces(capitalizeWords(department)),
+        ciudad: (ciudad !== undefined) ? removeExtraSpaces(capitalizeWords(ciudad)) : 'n/a',
+        direccion: (direccion !== undefined) ? removeExtraSpaces(capitalizeWords(direccion)) : 'n/a',
+        telefonos: parseInt(telefonos) || 0,
+        nombre: removeExtraSpaces(capitalizeWords(nombre))
       }
     })
 
-    setCustomerData(uniqueCustomersWithDepartment)
+    setCustomer(uniqueCustomersWithDepartment)
   }
 
   useEffect(() => {
