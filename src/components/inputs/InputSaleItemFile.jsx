@@ -10,7 +10,7 @@ const InputSaleItemFile = ({ label, convertExcelDateToReadable, extractIdNumber,
   const { setSellersCustomers, setDataSaleItem, dataSaleItem, setSellerSalesData } = useContext(SaleItemContext)
   const { excelDataSaleItem, setExcelDataSaleItem } = useContext(DataExcelContext)
   const { setSalesItemsReportName, setDateSaleItemFile } = useContext(ReportDetailsContext)
-  const { customerData } = useContext(ThirdPartiesContext)
+  const { customer } = useContext(ThirdPartiesContext)
 
   const handleReadSaleItemFile = (event) => {
     const file = event.target.files[0]
@@ -161,9 +161,9 @@ const InputSaleItemFile = ({ label, convertExcelDateToReadable, extractIdNumber,
       dataArray.filter(element => element.itemsVendidos !== undefined)
         .map(element =>
           element.itemsVendidos.filter(el => {
-            const idCustomer = extractIdNumber(el.cliente)
+            const idCustomer = parseInt(extractIdNumber(el.cliente))
             // return idCustomer === extractIdNumber(customer.id)
-            return (customer.id !== undefined) ? (idCustomer === extractIdNumber(customer.id)) : ('Customer id is undefined')
+            return (customer.id !== undefined) ? (idCustomer === customer.id) : ('Customer id is undefined')
           })
             .map(({ fecha, cliente, descripcion, cantidad, ...restOfData }) => ({
               ...restOfData,
@@ -191,8 +191,8 @@ const InputSaleItemFile = ({ label, convertExcelDateToReadable, extractIdNumber,
   }, [excelDataSaleItem])
 
   useEffect(() => {
-    extractSalesFromData(dataSaleItem, customerData)
-  }, [customerData])
+    extractSalesFromData(dataSaleItem, customer)
+  }, [customer])
 
   return (
     <>
