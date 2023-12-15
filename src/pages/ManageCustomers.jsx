@@ -2,6 +2,7 @@ import React, { useContext, useState } from 'react'
 import InputThirdParties from '../components/inputs/InputThirdParties'
 import { ThirdPartiesContext } from '../context/thirdParties'
 import Swal from 'sweetalert2'
+import ButtonUploadDb from '../components/buttonsUpload/ButtonUploadDb'
 
 const ManageCustomers = ({ department, extractDate, capitalizeWords, removeExtraSpaces, extractIdNumber, postCustomerToApi }) => {
   const { customer, setCustomer } = useContext(ThirdPartiesContext)
@@ -67,7 +68,7 @@ const ManageCustomers = ({ department, extractDate, capitalizeWords, removeExtra
         <h2>Gestionar clientes</h2>
         <InputThirdParties label='Informe de Terceros' department={department} extractDate={extractDate} capitalizeWords={capitalizeWords} removeExtraSpaces={removeExtraSpaces} extractIdNumber={extractIdNumber} />
 
-        <section className='mt-4 d-grid gap-2 d-md-flex justify-content-md-end'>
+        {/* <section className='mt-4 d-grid gap-2 d-md-flex justify-content-md-end'>
           <button className='btn btn-primary' onClick={handleUploadDb} disabled={isLoading}>
             {
             (isLoading === false)
@@ -80,25 +81,12 @@ const ManageCustomers = ({ department, extractDate, capitalizeWords, removeExtra
                 )
           }
           </button>
+        </section> */}
+
+        <section className='mt-4 d-grid gap-2 d-md-flex justify-content-md-end'>
+          <ButtonUploadDb title='Subir informacion a la base de datos' data={customer} postFunction={postCustomerToApi} />
         </section>
 
-        {/* <button className='btn btn-primary' type='button' hidden={!isLoading} disabled>
-          <span className='spinner-border spinner-border-sm' aria-hidden='true' />
-          <span role='status'> Subiendo informacion...</span>
-        </button> */}
-
-        {/* <section className='mt-4'>
-          <div className='card mt-3'>
-            <div className='button-group-card'>
-              <button>Eliminar</button>
-              <button>Editar</button>
-            </div>
-            <div className='card-body'>
-              <h5 className='card-title'>Nombre cliente</h5>
-              <h6 className='card-subtitle mb-2 text-body-secondary'>ID cliente</h6>
-            </div>
-          </div>
-        </section> */}
       </div>
     </div>
   )
