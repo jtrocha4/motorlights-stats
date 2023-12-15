@@ -1,34 +1,47 @@
-import React, { useContext } from 'react'
+import React, { useContext, useState } from 'react'
 import Swal from 'sweetalert2'
 import { DataExcelContext } from '../../context/dataExcel'
 
-const ButtonUploadDb = ({ title, background = 'primary', data, postSellerPerformanceToApi, sellers }) => {
+const ButtonUploadDb = ({ title, background = 'primary', data = [], sellers = [], postFunction }) => {
   const { dateExcel } = useContext(DataExcelContext)
   const { fechaFinal } = dateExcel
 
-  const dateOfData = (fechaFinal) => {
-    if (fechaFinal !== undefined) {
-      const splitDate = fechaFinal.split('/')
-      const day = splitDate[0]
-      const month = splitDate[1]
-      const year = splitDate[2]
-
-      return new Date(year, month - 1, day)
-    }
-  }
+  const [isLoading, setIsLoading] = useState(false)
 
   const leakedData = []
 
-  data.forEach(el => {
-    sellers.forEach(sell => {
-      if (el.vendedor === sell.identificacion && sell.estado === true) {
-        const { venta, vendedor, ...restOfData } = el
-        leakedData.push({
-          ...restOfData,
-          idVendedor: sell.id,
-          fecha: dateOfData(fechaFinal)
-        })
-      }
+  // * Funcion para cargar las ventas
+  // const dateOfData = (fechaFinal) => {
+  //   if (fechaFinal !== undefined) {
+  //     const splitDate = fechaFinal.split('/')
+  //     const day = splitDate[0]
+  //     const month = splitDate[1]
+  //     const year = splitDate[2]
+
+  //     return new Date(year, month - 1, day)
+  //   }
+  // }
+
+  // data.forEach(el => {
+  //   sellers.forEach(sell => {
+  //     if (el.vendedor === sell.identificacion && sell.estado === true) {
+  //       const { venta, vendedor, ...restOfData } = el
+  //       leakedData.push({
+  //         ...restOfData,
+  //         idVendedor: sell.id,
+  //         fecha: dateOfData(fechaFinal)
+  //       })
+  //     }
+  //   })
+  // })
+
+  data.forEach(element => {
+    const { ciudad, id, telefonos, ...restOfData } = element
+    leakedData.push({
+      ...restOfData,
+      identificacion: id,
+      telefono: telefonos,
+      municipio: ciudad
     })
   })
 
@@ -46,13 +59,17 @@ const ButtonUploadDb = ({ title, background = 'primary', data, postSellerPerform
       if (result.isConfirmed) {
         if (data.length > 0) {
           try {
+            setIsLoading(true)
+            console.time('Post')
             for (const key in leakedData) {
-              await postSellerPerformanceToApi(leakedData[key])
+              await postFunction(leakedData[key])
             }
             Swal.fire({
               title: 'Los datos se han guardado con éxito.',
               icon: 'success'
             })
+            setIsLoading(false)
+            console.timeEnd('Post')
           } catch (error) {
             Swal.fire({
               title: 'Lo sentimos, ha ocurrido un error al guardar los datos.',
@@ -73,7 +90,23 @@ const ButtonUploadDb = ({ title, background = 'primary', data, postSellerPerform
 
   return (
     <div>
-      <button type='button' className={`btn btn-outline-${background}`} onClick={handleUploadDb}><i className='fa-solid fa-cloud-arrow-up' /> {title}</button>
+      <button type='button' className={`btn btn-outline-${background}`} onClick={handleUploadDb}>
+        {
+          (isLoading === false)
+            ? (
+              <div>
+                <i className='fa-solid fa-cloud-arrow-up me-1' />
+                {title}
+              </div>
+              )
+            : (
+              <div>
+                <span className='spinner-border spinner-border-sm me-1' aria-hidden='true' />
+                <span role='status'> Subiendo informacion...</span>
+              </div>
+              )
+        }
+      </button>
     </div>
   )
 }
