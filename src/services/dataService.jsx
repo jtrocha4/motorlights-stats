@@ -1,5 +1,5 @@
 import axios from 'axios'
-const baseUrl = 'https://motorlights-api.vercel.app'
+const baseUrl = import.meta.env.VITE_URL_MONGODB
 
 const getSellerPerformance = async () => {
   try {
