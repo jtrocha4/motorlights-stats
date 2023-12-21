@@ -1,10 +1,16 @@
-import React from 'react'
+import React, { useState } from 'react'
 import ModalAddSeller from '../components/modals/ModalAddSeller'
 import { Link } from 'react-router-dom'
 import Swal from 'sweetalert2'
 import ModalEditSeller from '../components/modals/ModalEditSeller'
+import Pagination from '../components/Pagination'
 
 const ManageSellers = ({ postSellerToApi, deleteSellerToApi, putSellerToApi, capitalizeWords, sellers }) => {
+  const [page, setPage] = useState(1)
+  const [elementsPerPage, setElementsPerPage] = useState(25)
+
+  const maximum = Math.ceil(sellers.length / elementsPerPage)
+
   const handleDelete = (event, id) => {
     event.preventDefault()
     Swal.fire({
@@ -36,9 +42,11 @@ const ManageSellers = ({ postSellerToApi, deleteSellerToApi, putSellerToApi, cap
           <ModalAddSeller title='Crear nuevo vendedor' postSellerToApi={postSellerToApi} capitalizeWords={capitalizeWords} />
         </div>
         <section className='mt-4'>
+          <Pagination page={page} setPage={setPage} maximum={maximum} />
           {
             sellers
               .filter(el => el.estado !== false)
+              .slice((page - 1) * elementsPerPage, (page - 1) * elementsPerPage + elementsPerPage)
               .map(el => (
                 <div className='card mt-3' key={el.id}>
                   <div className='button-group-card'>
