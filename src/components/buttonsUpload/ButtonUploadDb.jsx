@@ -60,7 +60,6 @@ const ButtonUploadDb = ({ title, background = 'primary', data = [], sellers = []
         if (data.length > 0) {
           try {
             setIsLoading(true)
-            console.time('Post')
             for (const key in leakedData) {
               await postFunction(leakedData[key])
             }
@@ -69,7 +68,6 @@ const ButtonUploadDb = ({ title, background = 'primary', data = [], sellers = []
               icon: 'success'
             })
             setIsLoading(false)
-            console.timeEnd('Post')
           } catch (error) {
             Swal.fire({
               title: 'Lo sentimos, ha ocurrido un error al guardar los datos.',
