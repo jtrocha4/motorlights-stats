@@ -10,7 +10,7 @@ const InputSaleItemFile = ({ label, convertExcelDateToReadable, extractIdNumber,
   const { setSellersCustomers, setDataSaleItem, dataSaleItem, setSellerSalesData } = useContext(SaleItemContext)
   const { excelDataSaleItem, setExcelDataSaleItem } = useContext(DataExcelContext)
   const { setSalesItemsReportName, setDateSaleItemFile } = useContext(ReportDetailsContext)
-  const { customer } = useContext(ThirdPartiesContext)
+  const { customers } = useContext(ThirdPartiesContext)
 
   const handleReadSaleItemFile = (event) => {
     const file = event.target.files[0]
@@ -191,8 +191,8 @@ const InputSaleItemFile = ({ label, convertExcelDateToReadable, extractIdNumber,
   }, [excelDataSaleItem])
 
   useEffect(() => {
-    extractSalesFromData(dataSaleItem, customer)
-  }, [customer])
+    extractSalesFromData(dataSaleItem, customers)
+  }, [customers])
 
   return (
     <>
