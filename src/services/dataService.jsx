@@ -35,6 +35,16 @@ const getDepartments = async () => {
   }
 }
 
+const createMunicipality = async (newData) => {
+  try {
+    const response = await axios.post(`${baseUrl}/api/municipalities`, newData)
+    return response.data
+  } catch (error) {
+    console.log(error)
+    throw error
+  }
+}
+
 const createNewSeller = async (newSeller) => {
   try {
     const response = await axios.post(`${baseUrl}/api/sellers`, newSeller)
@@ -107,4 +117,4 @@ const createNewCustomer = async (newCustomer) => {
   }
 }
 
-export { getSellerPerformance, createSellerPerformance, getDepartments, createNewSeller, getSellers, deleteSeller, editSeller, getCustomers, createNewCustomer }
+export { getSellerPerformance, createSellerPerformance, getDepartments, createMunicipality, createNewSeller, getSellers, deleteSeller, editSeller, getCustomers, createNewCustomer }
