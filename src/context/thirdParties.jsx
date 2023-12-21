@@ -4,14 +4,14 @@ export const ThirdPartiesContext = createContext()
 
 export const ThirdPartiesProvider = ({ children }) => {
   const [thirdPartiesData, setThirdPartiesData] = useState([])
-  const [customer, setCustomer] = useState([])
+  const [customers, setCustomers] = useState([])
 
   return (
     <ThirdPartiesContext.Provider value={{
       thirdPartiesData,
       setThirdPartiesData,
-      customer,
-      setCustomer
+      customers,
+      setCustomers
     }}
     >
       {children}
