@@ -163,14 +163,14 @@ const InputSaleItemFile = ({ label, convertExcelDateToReadable, extractIdNumber,
           element.itemsVendidos.filter(el => {
             const idCustomer = parseInt(extractIdNumber(el.cliente))
             // return idCustomer === extractIdNumber(customer.id)
-            return (customer.id !== undefined) ? (idCustomer === customer.id) : ('Customer id is undefined')
+            return (customer.identificacion !== undefined) ? (idCustomer === customer.identificacion) : ('Customer id is undefined')
           })
             .map(({ fecha, cliente, descripcion, cantidad, ...restOfData }) => ({
               ...restOfData,
               fecha: convertExcelDateToReadable(fecha),
               cliente: extractText(cliente),
               idCliente: extractIdNumber(cliente),
-              ciudadCliente: customer.ciudad,
+              ciudadCliente: customer.municipio,
               departamentoCliente: customer.departamento,
               idProducto: extractIdNumber(descripcion),
               producto: capitalizeWords(extractText(descripcion)),
@@ -192,7 +192,7 @@ const InputSaleItemFile = ({ label, convertExcelDateToReadable, extractIdNumber,
 
   useEffect(() => {
     extractSalesFromData(dataSaleItem, customers)
-  }, [customers])
+  }, [dataSaleItem])
 
   return (
     <>
