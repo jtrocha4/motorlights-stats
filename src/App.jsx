@@ -17,9 +17,7 @@ import CustomerProfile from './pages/CustomerProfile'
 
 function App () {
   const { sellers, setSellers } = useContext(DataContext)
-  const { customers, setCustomers } = useContext(ThirdPartiesContext)
-
-  // console.log(customers)
+  const { setCustomers } = useContext(ThirdPartiesContext)
 
   const [sellerPerformance, setSellerPerformance] = useState([])
   const [newSellerPerformance, setNewSellerPerformance] = useState([])
