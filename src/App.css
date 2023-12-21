@@ -125,13 +125,12 @@ button i {
   overflow-y: hidden;
 }
 
-.pagination-buttons{
-  display: flex;
-  justify-content: center;
+a.page-link{
+  user-select: none
 }
 
-.pagination-buttons a{
-  user-select: none;
+ input.page-link{
+  width: 50px;
 }
 
 .form-check{

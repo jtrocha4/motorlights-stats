@@ -4,7 +4,7 @@ import './App.css'
 import Navbar from './components/Navbar'
 import Sidebar from './components/Sidebar'
 import UploadReports from './pages/UploadReports'
-import { getSellerPerformance, createSellerPerformance, getDepartments, createNewSeller, getSellers, deleteSeller, editSeller, getCustomers, createNewCustomer } from './services/dataService'
+import { getSellerPerformance, createSellerPerformance, getDepartments, createMunicipality, createNewSeller, getSellers, deleteSeller, editSeller, getCustomers, createNewCustomer } from './services/dataService'
 import { useContext, useEffect, useState } from 'react'
 import ManageSellers from './pages/ManageSellers'
 import SellerProfile from './pages/SellerProfile'
@@ -13,19 +13,20 @@ import DetailedSalesPage from './pages/DetailedSalesPage'
 import { DataContext } from './context/data'
 import ManageCustomers from './pages/ManageCustomers'
 import { ThirdPartiesContext } from './context/thirdParties'
-import { SaleItemContext } from './context/saleItem'
+import CustomerProfile from './pages/CustomerProfile'
 
 function App () {
   const { sellers, setSellers } = useContext(DataContext)
-  const { customer, setCustomer } = useContext(ThirdPartiesContext)
-  const { sellerSalesData } = useContext(SaleItemContext)
+  const { customers, setCustomers } = useContext(ThirdPartiesContext)
 
-  // console.log(customer)
+  // console.log(customers)
 
   const [sellerPerformance, setSellerPerformance] = useState([])
   const [newSellerPerformance, setNewSellerPerformance] = useState([])
 
   const [newSeller, setNewSeller] = useState([])
+
+  const [newCustomer, setNewCustomer] = useState([])
 
   const [department, setDepartment] = useState([])
   // const [loading, setLoading] = useState(false)
@@ -45,6 +46,15 @@ function App () {
       setDepartment(response)
     } catch (error) {
       console.error(error)
+    }
+  }
+
+  const postMunicipalityToApi = async (newData) => {
+    try {
+      const response = await createMunicipality(newData)
+      return response
+    } catch (error) {
+      console.log(error)
     }
   }
 
@@ -104,7 +114,7 @@ function App () {
   const fetchCustomerFromApi = async () => {
     try {
       const response = await getCustomers()
-      // console.log(response)
+      setCustomers(response)
     } catch (error) {
       console.log(error)
     }
@@ -113,7 +123,7 @@ function App () {
   const postCustomerToApi = async (newCustomer) => {
     try {
       const request = await createNewCustomer(newCustomer)
-      return request
+      setNewCustomer(request)
     } catch (error) {
       console.log(error)
     }
@@ -265,7 +275,7 @@ function App () {
   useEffect(() => {
     fetchSellerFromApi()
     fetchCustomerFromApi()
-  }, [newSeller])
+  }, [newSeller, newCustomer])
 
   return (
     <div className='App'>
@@ -277,7 +287,8 @@ function App () {
         <Route path='/detailed-sales' element={<DetailedSalesPage splitName={splitName} />} />
         <Route path='/manage-sellers' element={<ManageSellers postSellerToApi={postSellerToApi} deleteSellerToApi={deleteSellerToApi} putSellerToApi={putSellerToApi} capitalizeWords={capitalizeWords} sellers={sellers} />} />
         <Route path='/manage-sellers/:id' element={<SellerProfile />} />
-        <Route path='/manage-customers' element={<ManageCustomers department={department} extractDate={extractDate} extractIdNumber={extractIdNumber} capitalizeWords={capitalizeWords} removeExtraSpaces={removeExtraSpaces} customers={customer} postCustomerToApi={postCustomerToApi} />} />
+        <Route path='/manage-customers' element={<ManageCustomers department={department} extractDate={extractDate} extractIdNumber={extractIdNumber} capitalizeWords={capitalizeWords} removeExtraSpaces={removeExtraSpaces} postCustomerToApi={postCustomerToApi} />} />
+        <Route path='/manage-customers/:id' element={<CustomerProfile />} />
       </Routes>
     </div>
   )
