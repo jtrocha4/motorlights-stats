@@ -56,7 +56,6 @@ const InputDepartmentAndMunicipalities = ({ label, capitalizeWords, removeExtraS
       for (const key in leakedData) {
         await postMunicipalityToApi(leakedData[key])
       }
-      console.log('Papi todo good good')
     } catch (error) {
       console.log(error)
     }
