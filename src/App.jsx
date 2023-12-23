@@ -4,7 +4,7 @@ import './App.css'
 import Navbar from './components/Navbar'
 import Sidebar from './components/Sidebar'
 import UploadReports from './pages/UploadReports'
-import { getSellerPerformance, createSellerPerformance, getDepartments, createMunicipality, createNewSeller, getSellers, deleteSeller, editSeller, getCustomers, createNewCustomer } from './services/dataService'
+import { getSellerPerformance, createSellerPerformance, getDepartments, createMunicipality, createNewSeller, getSellers, deleteSeller, editSeller, getCustomers, createNewCustomer, getProducts, createNewProduct } from './services/dataService'
 import { useContext, useEffect, useState } from 'react'
 import ManageSellers from './pages/ManageSellers'
 import SellerProfile from './pages/SellerProfile'
@@ -14,10 +14,13 @@ import { DataContext } from './context/data'
 import ManageCustomers from './pages/ManageCustomers'
 import { ThirdPartiesContext } from './context/thirdParties'
 import CustomerProfile from './pages/CustomerProfile'
+import ManageProducts from './pages/ManageProducts'
+import { ProductContext } from './context/product'
 
 function App () {
   const { sellers, setSellers } = useContext(DataContext)
   const { setCustomers } = useContext(ThirdPartiesContext)
+  const { setProducts } = useContext(ProductContext)
 
   const [sellerPerformance, setSellerPerformance] = useState([])
   const [newSellerPerformance, setNewSellerPerformance] = useState([])
@@ -25,6 +28,8 @@ function App () {
   const [newSeller, setNewSeller] = useState([])
 
   const [newCustomer, setNewCustomer] = useState([])
+
+  const [newProduct, setNewProduct] = useState([])
 
   const [department, setDepartment] = useState([])
   // const [loading, setLoading] = useState(false)
@@ -122,6 +127,24 @@ function App () {
     try {
       const request = await createNewCustomer(newCustomer)
       setNewCustomer(request)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  const fetchProductsFromApi = async () => {
+    try {
+      const response = await getProducts()
+      setProducts(response)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  const postProductToApi = async (newProduct) => {
+    try {
+      const request = await createNewProduct(newProduct)
+      setNewProduct(request)
     } catch (error) {
       console.log(error)
     }
@@ -273,7 +296,8 @@ function App () {
   useEffect(() => {
     fetchSellerFromApi()
     fetchCustomerFromApi()
-  }, [newSeller, newCustomer])
+    fetchProductsFromApi()
+  }, [newSeller, newCustomer, newProduct])
 
   return (
     <div className='App'>
@@ -287,6 +311,7 @@ function App () {
         <Route path='/manage-sellers/:id' element={<SellerProfile />} />
         <Route path='/manage-customers' element={<ManageCustomers department={department} extractDate={extractDate} extractIdNumber={extractIdNumber} capitalizeWords={capitalizeWords} removeExtraSpaces={removeExtraSpaces} postCustomerToApi={postCustomerToApi} />} />
         <Route path='/manage-customers/:id' element={<CustomerProfile />} />
+        <Route path='/manage-products' element={<ManageProducts postProductToApi={postProductToApi} removeExtraSpaces={removeExtraSpaces} />} />
       </Routes>
     </div>
   )
