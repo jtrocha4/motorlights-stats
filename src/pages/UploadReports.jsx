@@ -7,12 +7,11 @@ import InputCollectionFile from '../components/inputs/InputCollectionFile'
 import InputAuxiliaryBookFile from '../components/inputs/InputAuxiliaryBookFile'
 import InputNewCustomersFile from '../components/inputs/InputNewCustomersFile'
 import InputSaleItemFile from '../components/inputs/InputSaleItemFile'
-import InputThirdParties from '../components/inputs/InputThirdParties'
 import ModalGoals from '../components/modals/ModalGoals'
 import { DataContext } from '../context/data'
 import { DataExcelContext } from '../context/dataExcel'
 
-const UploadReports = ({ toFixed, department, convertExcelDateToReadable, extractIdNumber, extractText, extractDate, capitalizeWords, removeExtraSpaces }) => {
+const UploadReports = ({ toFixed, convertExcelDateToReadable, extractIdNumber, extractText, extractDate, capitalizeWords, removeExtraSpaces }) => {
   const { data, dataCollection, salesGoalBySeller, setSalesGoalBySeller, collectionGoalBySeller, setCollectionGoalBySeller } = useContext(DataContext)
 
   const { dateExcel, setDateExcel, excelDataCost } = useContext(DataExcelContext)
@@ -254,7 +253,7 @@ const UploadReports = ({ toFixed, department, convertExcelDateToReadable, extrac
           <InputAuxiliaryBookFile label='Informe Libro auxiliar' salesGoalBySeller={salesGoalBySeller} collectionGoalBySeller={collectionGoalBySeller} extractDate={extractDate} />
           <InputNewCustomersFile label='Informe Clientes Nuevos' />
           <InputSaleItemFile label='Informe Ventas Items' convertExcelDateToReadable={convertExcelDateToReadable} extractIdNumber={extractIdNumber} extractText={extractText} extractDate={extractDate} capitalizeWords={capitalizeWords} removeExtraSpaces={removeExtraSpaces} />
-          <InputThirdParties label='Informe de Terceros' department={department} extractDate={extractDate} capitalizeWords={capitalizeWords} removeExtraSpaces={removeExtraSpaces} extractIdNumber={extractIdNumber} />
+          {/* <InputThirdParties label='Informe de Terceros' department={department} extractDate={extractDate} capitalizeWords={capitalizeWords} removeExtraSpaces={removeExtraSpaces} extractIdNumber={extractIdNumber} /> */}
           <div className='button-group'>
             <ModalGoals title='Modificar metas' data={data} sendForm={sendForm} />
           </div>
