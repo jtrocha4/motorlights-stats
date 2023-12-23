@@ -117,4 +117,28 @@ const createNewCustomer = async (newCustomer) => {
   }
 }
 
-export { getSellerPerformance, createSellerPerformance, getDepartments, createMunicipality, createNewSeller, getSellers, deleteSeller, editSeller, getCustomers, createNewCustomer }
+const getProducts = async () => {
+  try {
+    const response = await axios.get(`${baseUrl}/api/products`)
+    return response.data
+  } catch (error) {
+    console.log(error)
+    throw error
+  }
+}
+
+const createNewProduct = async (newProduct) => {
+  try {
+    const response = await axios.post(`${baseUrl}/api/products`, newProduct)
+    if (response.status === 201) {
+      return response.data
+    } else {
+      throw new Error('Error al crear el producto. Verifica los datos y vuelve a intentarlo.')
+    }
+  } catch (error) {
+    console.log(error)
+    throw error
+  }
+}
+
+export { getSellerPerformance, createSellerPerformance, getDepartments, createMunicipality, createNewSeller, getSellers, deleteSeller, editSeller, getCustomers, createNewCustomer, getProducts, createNewProduct }
