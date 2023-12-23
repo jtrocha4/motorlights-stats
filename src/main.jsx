@@ -9,6 +9,7 @@ import { SaleItemProvider } from './context/saleItem.jsx'
 import { ReportDetailsProvider } from './context/reportDetails.jsx'
 import { ThirdPartiesProvider } from './context/thirdParties.jsx'
 import { DataExcelProvider } from './context/dataExcel.jsx'
+import { ProductProvider } from './context/product.jsx'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
@@ -18,9 +19,11 @@ ReactDOM.createRoot(document.getElementById('root')).render(
           <NewCustomerProvider>
             <SaleItemProvider>
               <ThirdPartiesProvider>
-                <BrowserRouter>
-                  <App />
-                </BrowserRouter>
+                <ProductProvider>
+                  <BrowserRouter>
+                    <App />
+                  </BrowserRouter>
+                </ProductProvider>
               </ThirdPartiesProvider>
             </SaleItemProvider>
           </NewCustomerProvider>
