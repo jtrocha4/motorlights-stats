@@ -37,7 +37,7 @@ const ManageSellers = ({ postSellerToApi, deleteSellerToApi, putSellerToApi, cap
   return (
     <div className='flex'>
       <div className='container-fluid'>
-        <h2>Gestionar vendedores</h2>
+        <h2>Gestionar Vendedores</h2>
         <div className='mt-4'>
           <ModalAddSeller title='Crear nuevo vendedor' postSellerToApi={postSellerToApi} capitalizeWords={capitalizeWords} />
         </div>

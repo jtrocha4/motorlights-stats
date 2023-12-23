@@ -1,7 +1,5 @@
 import React, { useContext, useState } from 'react'
-import InputThirdParties from '../components/inputs/InputThirdParties'
 import { ThirdPartiesContext } from '../context/thirdParties'
-import ButtonUploadDb from '../components/buttonsUpload/ButtonUploadDb'
 import { Link } from 'react-router-dom'
 import Pagination from '../components/Pagination'
 
@@ -27,7 +25,7 @@ const ManageCustomers = ({ department, extractDate, capitalizeWords, removeExtra
   return (
     <div className='flex'>
       <div className='container-fluid'>
-        <h2>Gestionar clientes</h2>
+        <h2>Gestionar Clientes</h2>
         {/* <InputThirdParties label='Informe de Terceros' department={department} extractDate={extractDate} capitalizeWords={capitalizeWords} removeExtraSpaces={removeExtraSpaces} extractIdNumber={extractIdNumber} />
         <section className='mt-4 d-grid gap-2 d-md-flex justify-content-md-end'>
           <ButtonUploadDb title='Subir informacion a la base de datos' data={customers} postFunction={postCustomerToApi} />
