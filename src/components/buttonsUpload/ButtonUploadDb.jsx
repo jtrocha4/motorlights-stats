@@ -1,49 +1,51 @@
-import React, { useContext, useState } from 'react'
+import React, { useState } from 'react'
 import Swal from 'sweetalert2'
-import { DataExcelContext } from '../../context/dataExcel'
 
-const ButtonUploadDb = ({ title, background = 'primary', data = [], sellers = [], postFunction }) => {
-  const { dateExcel } = useContext(DataExcelContext)
-  const { fechaFinal } = dateExcel
-
+const ButtonUploadDb = ({ title, background = 'primary', data = [], sales = [], customers = [], sellers = [], products = [], postFunction }) => {
   const [isLoading, setIsLoading] = useState(false)
 
   const leakedData = []
 
-  // * Funcion para cargar las ventas
-  // const dateOfData = (fechaFinal) => {
-  //   if (fechaFinal !== undefined) {
-  //     const splitDate = fechaFinal.split('/')
-  //     const day = splitDate[0]
-  //     const month = splitDate[1]
-  //     const year = splitDate[2]
-
-  //     return new Date(year, month - 1, day)
-  //   }
-  // }
-
-  // data.forEach(el => {
-  //   sellers.forEach(sell => {
-  //     if (el.vendedor === sell.identificacion && sell.estado === true) {
-  //       const { venta, vendedor, ...restOfData } = el
-  //       leakedData.push({
-  //         ...restOfData,
-  //         idVendedor: sell.id,
-  //         fecha: dateOfData(fechaFinal)
-  //       })
-  //     }
-  //   })
-  // })
-
-  data.forEach(element => {
-    const { ciudad, id, telefonos, ...restOfData } = element
-    leakedData.push({
-      ...restOfData,
-      identificacion: id,
-      telefono: telefonos,
-      municipio: ciudad
+  if (data.length > 0) {
+    data.forEach(element => {
+      const { ciudad, id, telefonos, ...restOfData } = element
+      leakedData.push({
+        ...restOfData,
+        identificacion: id,
+        telefono: telefonos,
+        municipio: ciudad
+      })
     })
-  })
+  }
+
+  if (sales.length > 0 && customers.length > 0 && sellers.length > 0 && products.length > 0) {
+    sales.forEach(element => {
+      const matchingSeller = sellers.find(seller => seller.identificacion === element.vendedor)
+      const matchingCustomer = customers.find(customer => customer.identificacion === element.idCliente)
+      const matchingProduct = products.find(product => product.codigo === element.idProducto)
+
+      if (matchingSeller && matchingCustomer && matchingProduct) {
+        const saleDate = new Date(element.fecha)
+        leakedData.push({
+          codigoDeFactura: element.doc,
+          fecha: saleDate,
+          mes: saleDate.getMonth(),
+          anio: saleDate.getFullYear(),
+          idVendedor: matchingSeller.id,
+          idCliente: matchingCustomer.id,
+          idProducto: matchingProduct.id,
+          metodoDePago: element.formaDePago,
+          cantidad: element.unidadesProducto,
+          valorUnitario: element.valorUnitario,
+          ventaBruta: element.ventaBruta,
+          descuento: element.descuento,
+          ventaNeta: element.ventaNeta,
+          iva: element.iva,
+          valorTotal: element.valorTotal
+        })
+      }
+    })
+  }
 
   const handleUploadDb = async () => {
     Swal.fire({
@@ -57,7 +59,7 @@ const ButtonUploadDb = ({ title, background = 'primary', data = [], sellers = []
       confirmButtonText: 'Guardar'
     }).then(async (result) => {
       if (result.isConfirmed) {
-        if (data.length > 0) {
+        if (leakedData.length > 0) {
           try {
             setIsLoading(true)
             for (const key in leakedData) {
