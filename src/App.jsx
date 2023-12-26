@@ -4,7 +4,7 @@ import './App.css'
 import Navbar from './components/Navbar'
 import Sidebar from './components/Sidebar'
 import UploadReports from './pages/UploadReports'
-import { getSellerPerformance, createSellerPerformance, getDepartments, createMunicipality, createNewSeller, getSellers, deleteSeller, editSeller, getCustomers, createNewCustomer, getProducts, createNewProduct } from './services/dataService'
+import { getSellerPerformance, createSellerPerformance, getDepartments, createMunicipality, createNewSeller, getSellers, deleteSeller, editSeller, getCustomers, createNewCustomer, getProducts, createNewProduct, createNewSale } from './services/dataService'
 import { useContext, useEffect, useState } from 'react'
 import ManageSellers from './pages/ManageSellers'
 import SellerProfile from './pages/SellerProfile'
@@ -145,6 +145,15 @@ function App () {
     try {
       const request = await createNewProduct(newProduct)
       setNewProduct(request)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  const postSaleToApi = async (newSale) => {
+    try {
+      const request = await createNewSale(newSale)
+      return request
     } catch (error) {
       console.log(error)
     }
@@ -306,7 +315,9 @@ function App () {
       <Routes>
         <Route path='/' element={<UploadReports toFixed={toFixed} department={department} convertExcelDateToReadable={convertExcelDateToReadable} extractIdNumber={extractIdNumber} extractText={extractText} extractDate={extractDate} capitalizeWords={capitalizeWords} removeExtraSpaces={removeExtraSpaces} />} />
         <Route path='/sales' element={<SalesPage postSellerPerformanceToApi={postSellerPerformanceToApi} toFixed={toFixed} convertExcelDateToReadable={convertExcelDateToReadable} sellerPerformance={sellerPerformance} extractDateFromData={extractDateFromData} splitName={splitName} />} />
-        <Route path='/detailed-sales' element={<DetailedSalesPage splitName={splitName} />} />
+
+        <Route path='/detailed-sales' element={<DetailedSalesPage splitName={splitName} postSaleToApi={postSaleToApi} />} />
+
         <Route path='/manage-sellers' element={<ManageSellers postSellerToApi={postSellerToApi} deleteSellerToApi={deleteSellerToApi} putSellerToApi={putSellerToApi} capitalizeWords={capitalizeWords} sellers={sellers} />} />
         <Route path='/manage-sellers/:id' element={<SellerProfile />} />
         <Route path='/manage-customers' element={<ManageCustomers department={department} extractDate={extractDate} extractIdNumber={extractIdNumber} capitalizeWords={capitalizeWords} removeExtraSpaces={removeExtraSpaces} postCustomerToApi={postCustomerToApi} />} />
