@@ -7,10 +7,19 @@ import ButtonDownloadSellerSalesByMunicipality from '../components/buttonsDownlo
 import ButtonDownloadSalesCustomerSellerByMunicipality from '../components/buttonsDownload/ButtonDownloadSalesCustomerSellerByMunicipality'
 import TableDynamicDetailedSales from '../components/tables/TableDynamicDetailedSales'
 import ButtonDownloadSalesProductSellerByMunicipality from '../components/buttonsDownload/ButtonDownloadSalesProductSellerByMunicipality'
+import { DataContext } from '../context/data'
+import { ThirdPartiesContext } from '../context/thirdParties'
+import { ProductContext } from '../context/product'
+import ButtonUploadDb from '../components/buttonsUpload/ButtonUploadDb'
 
-const DetailedSalesPage = ({ splitName }) => {
+const DetailedSalesPage = ({ splitName, postSaleToApi }) => {
   const { dateExcel } = useContext(DataExcelContext)
+
   const { sellerSalesData } = useContext(SaleItemContext)
+
+  const { customers } = useContext(ThirdPartiesContext)
+  const { sellers } = useContext(DataContext)
+  const { products } = useContext(ProductContext)
 
   const sellerSalesProcessedData = sellerSalesData
     .filter(row => !row.producto.startsWith('Flete'))
@@ -51,6 +60,7 @@ const DetailedSalesPage = ({ splitName }) => {
           <ButtonDownloadSalesCustomerSellerByMunicipality title='Descargar Ventas Cliente Vendedor por Municipio' sellerSalesData={sellerSalesProcessedData} getMonth={getMonth} getYear={getYear} />
           <ButtonDownloadSalesProductSellerByMunicipality title='Descargar Ventas Producto Vendedor por Municipio' sellerSalesData={sellerSalesProcessedData} getMonth={getMonth} getYear={getYear} />
           <ButtonDownloadAnalytics title='Descargar Informe Macro' background='success' sellerSalesData={sellerSalesProcessedData} />
+          <ButtonUploadDb title='Subir Ventas' sales={sellerSalesData} customers={customers} sellers={sellers} products={products} postFunction={postSaleToApi} />
         </section>
         <hr />
         <section className='m-auto'>
