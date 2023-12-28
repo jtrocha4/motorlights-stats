@@ -1,10 +1,12 @@
 import React, { useState } from 'react'
 import Swal from 'sweetalert2'
 
-const ModalEditSeller = ({ title, icon, background = 'btn btn-outline-primary', dataSeller, idSeller, putSellerToApi, capitalizeWords }) => {
+const ModalEditSeller = ({ title, icon, background = 'btn btn-outline-primary', dataSeller, idSeller, putSellerToApi, capitalizeWords, removeExtraSpaces }) => {
   const [form, setForm] = useState({
     nombre: '',
-    identificacion: ''
+    identificacion: '',
+    metaVentas: 0,
+    metaRecaudo: 0
   })
 
   const handleOnClick = () => {
@@ -33,7 +35,7 @@ const ModalEditSeller = ({ title, icon, background = 'btn btn-outline-primary', 
     try {
       await putSellerToApi(id, {
         ...restOfData,
-        nombre: capitalizeWords(nombre)
+        nombre: removeExtraSpaces(capitalizeWords(nombre))
       })
       Swal.fire({
         title: 'El vendedor ha sido editado con éxito.',
@@ -70,6 +72,14 @@ const ModalEditSeller = ({ title, icon, background = 'btn btn-outline-primary', 
                 <div className='mb-3'>
                   <label className='form-label'>Identificacion</label>
                   <input name='identificacion' className='form-control' type='text' onChange={handleChange} value={form.identificacion} />
+                </div>
+                <div className='mb-3'>
+                  <label className='form-label'>Meta de ventas</label>
+                  <input name='metaVentas' className='form-control' type='text' onChange={handleChange} value={form.metaVentas || 0} />
+                </div>
+                <div className='mb-3'>
+                  <label className='form-label'>Meta de recaudo</label>
+                  <input name='metaRecaudo' className='form-control' type='text' onChange={handleChange} value={form.metaRecaudo || 0} />
                 </div>
                 <div className='mb-3'>
                   <span><b>Importante:</b> La identificación del vendedor debe coincidir con la identificación utilizada en los informes.</span>
