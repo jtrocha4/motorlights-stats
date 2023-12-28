@@ -223,14 +223,6 @@ function App () {
     }
   }
 
-  // const currencyFormat = (number) => {
-  //   if (number) {
-  //     return number.toLocaleString('es-CO', { style: 'currency', currency: 'COP' })
-  //   } else {
-  //     return number
-  //   }
-  // }
-
   const toFixed = (number, digitAfterPoint = 2) => {
     return parseFloat(number.toFixed(digitAfterPoint))
   }
@@ -251,7 +243,7 @@ function App () {
 
   const capitalizeWords = (string) => {
     const stringLowerCase = string.toLowerCase()
-    return stringLowerCase.replace(/\b\w/g, match => match.toUpperCase())
+    return stringLowerCase.replace(/(?:^|\s|[-¡¿!"#$%&'()*+,./:;<=>?@[\\\]^_`{|}~])\S/g, match => match.toUpperCase())
   }
 
   const extractIdNumber = (string) => {
@@ -315,10 +307,8 @@ function App () {
       <Routes>
         <Route path='/' element={<UploadReports toFixed={toFixed} department={department} convertExcelDateToReadable={convertExcelDateToReadable} extractIdNumber={extractIdNumber} extractText={extractText} extractDate={extractDate} capitalizeWords={capitalizeWords} removeExtraSpaces={removeExtraSpaces} />} />
         <Route path='/sales' element={<SalesPage postSellerPerformanceToApi={postSellerPerformanceToApi} toFixed={toFixed} convertExcelDateToReadable={convertExcelDateToReadable} sellerPerformance={sellerPerformance} extractDateFromData={extractDateFromData} splitName={splitName} />} />
-
         <Route path='/detailed-sales' element={<DetailedSalesPage splitName={splitName} postSaleToApi={postSaleToApi} />} />
-
-        <Route path='/manage-sellers' element={<ManageSellers postSellerToApi={postSellerToApi} deleteSellerToApi={deleteSellerToApi} putSellerToApi={putSellerToApi} capitalizeWords={capitalizeWords} sellers={sellers} />} />
+        <Route path='/manage-sellers' element={<ManageSellers postSellerToApi={postSellerToApi} deleteSellerToApi={deleteSellerToApi} putSellerToApi={putSellerToApi} capitalizeWords={capitalizeWords} removeExtraSpaces={removeExtraSpaces} sellers={sellers} />} />
         <Route path='/manage-sellers/:id' element={<SellerProfile />} />
         <Route path='/manage-customers' element={<ManageCustomers department={department} extractDate={extractDate} extractIdNumber={extractIdNumber} capitalizeWords={capitalizeWords} removeExtraSpaces={removeExtraSpaces} postCustomerToApi={postCustomerToApi} />} />
         <Route path='/manage-customers/:id' element={<CustomerProfile />} />
