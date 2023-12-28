@@ -11,7 +11,7 @@ import ModalGoals from '../components/modals/ModalGoals'
 import { DataContext } from '../context/data'
 import { DataExcelContext } from '../context/dataExcel'
 
-const UploadReports = ({ toFixed, convertExcelDateToReadable, extractIdNumber, extractText, extractDate, capitalizeWords, removeExtraSpaces }) => {
+const UploadReports = ({ toFixed, convertExcelDateToReadable, extractIdNumber, extractText, extractDate, capitalizeWords, removeExtraSpaces, putSellerToApi }) => {
   const { data, dataCollection, salesGoalBySeller, setSalesGoalBySeller, collectionGoalBySeller, setCollectionGoalBySeller } = useContext(DataContext)
 
   const { dateExcel, setDateExcel, excelDataCost } = useContext(DataExcelContext)
@@ -255,7 +255,7 @@ const UploadReports = ({ toFixed, convertExcelDateToReadable, extractIdNumber, e
           <InputSaleItemFile label='Informe Ventas Items' convertExcelDateToReadable={convertExcelDateToReadable} extractIdNumber={extractIdNumber} extractText={extractText} extractDate={extractDate} capitalizeWords={capitalizeWords} removeExtraSpaces={removeExtraSpaces} />
           {/* <InputThirdParties label='Informe de Terceros' department={department} extractDate={extractDate} capitalizeWords={capitalizeWords} removeExtraSpaces={removeExtraSpaces} extractIdNumber={extractIdNumber} /> */}
           <div className='button-group'>
-            <ModalGoals title='Modificar metas' data={data} sendForm={sendForm} />
+            <ModalGoals title='Modificar metas' sendForm={sendForm} />
           </div>
         </div>
       </div>
