@@ -107,7 +107,7 @@ const SimpleBarCharts = ({ sellerPerformance, extractDateFromData }) => {
     <>
       <h4 className='text-center mb-4'>{(dia !== undefined && mes !== undefined) ? (`Como Vamos ${dia} ${mes}`) : 'Como Vamos'}</h4>
       <section className='charts-button-group'>
-        <div className='chart-button'><Calendar /></div>
+        {/* <div className='chart-button'><Calendar /></div> */}
         <div className='chart-button'><Filters splitName={splitName} /></div>
       </section>
       <section className='charts-button-download'>
