@@ -1,10 +1,12 @@
 import React, { useState } from 'react'
 import Swal from 'sweetalert2'
 
-const ModalAddSeller = ({ title, icon, background = 'btn btn-outline-primary', postSellerToApi, capitalizeWords }) => {
+const ModalAddSeller = ({ title, icon, background = 'btn btn-outline-primary', postSellerToApi, capitalizeWords, removeExtraSpaces }) => {
   const [form, setForm] = useState({
     nombre: '',
-    identificacion: ''
+    identificacion: '',
+    metaVentas: 0,
+    metaRecaudo: 0
   })
 
   const handleChange = (event) => {
@@ -20,7 +22,7 @@ const ModalAddSeller = ({ title, icon, background = 'btn btn-outline-primary', p
     try {
       await postSellerToApi({
         ...restOfData,
-        nombre: capitalizeWords(nombre)
+        nombre: removeExtraSpaces(capitalizeWords(nombre))
       })
       Swal.fire({
         title: 'El vendedor se ha creado con éxito.',
@@ -41,7 +43,9 @@ const ModalAddSeller = ({ title, icon, background = 'btn btn-outline-primary', p
   const handleCancel = () => {
     setForm({
       nombre: '',
-      identificacion: ''
+      identificacion: '',
+      metaVentas: 0,
+      metaRecaudo: 0
     })
   }
 
@@ -64,6 +68,14 @@ const ModalAddSeller = ({ title, icon, background = 'btn btn-outline-primary', p
                 <div className='mb-3'>
                   <label className='form-label'>Identificacion</label>
                   <input name='identificacion' className='form-control' type='text' onChange={handleChange} value={form.identificacion} />
+                </div>
+                <div className='mb-3'>
+                  <label className='form-label'>Meta de ventas</label>
+                  <input name='metaVentas' className='form-control' type='text' onChange={handleChange} value={form.metaVentas || 0} />
+                </div>
+                <div className='mb-3'>
+                  <label className='form-label'>Meta de recaudo</label>
+                  <input name='metaRecaudo' className='form-control' type='text' onChange={handleChange} value={form.metaRecaudo || 0} />
                 </div>
                 <div className='mb-3'>
                   <span><b>Importante:</b> La identificación del vendedor debe coincidir con la identificación utilizada en los informes.</span>
