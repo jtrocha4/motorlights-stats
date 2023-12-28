@@ -2,7 +2,7 @@
 import React, { useContext, useState } from 'react'
 import { DataContext } from '../../context/data'
 
-const ModalGoals = ({ title, buttonBackground = 'dark', data = [], sendForm }) => {
+const ModalGoals = ({ title, buttonBackground = 'dark', sendForm }) => {
   const { sellers } = useContext(DataContext)
 
   const salesGoals = JSON.parse(localStorage.getItem('metaVentas')) || {}
@@ -52,8 +52,14 @@ const ModalGoals = ({ title, buttonBackground = 'dark', data = [], sendForm }) =
                           sellers.map(({ identificacion, id }) => (
                             <div className='mb-3' key={id}>
                               <label htmlFor={identificacion} className='form-label'><b>{identificacion}</b></label>
-                              <input name={`${identificacion}`} type='number' className='form-control mb-2' placeholder='Meta de venta' onChange={handleChange} value={saleGoalsForm[`${identificacion}`] || 0} id={identificacion} />
-                              <input name={`${identificacion}`} type='number' className='form-control' placeholder='Meta de recaudo' onChange={handleChangeCollectionGoal} value={collectionGoalForm[`${identificacion}`] || 0} />
+                              <div>
+                                <label className='form-label'>Meta de ventas:</label>
+                                <input name={`${identificacion}`} type='number' className='form-control mb-2' onChange={handleChange} value={saleGoalsForm[`${identificacion}`] || 0} id={identificacion} title='Meta de ventas' />
+                              </div>
+                              <div>
+                                <label className='form-label'>Meta de recaudo:</label>
+                                <input name={`${identificacion}`} type='number' className='form-control' placeholder='Meta de recaudo' onChange={handleChangeCollectionGoal} value={collectionGoalForm[`${identificacion}`] || 0} title='Meta de recaudo' />
+                              </div>
                             </div>
                           ))
                         )
