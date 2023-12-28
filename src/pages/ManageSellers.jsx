@@ -5,7 +5,7 @@ import Swal from 'sweetalert2'
 import ModalEditSeller from '../components/modals/ModalEditSeller'
 import Pagination from '../components/Pagination'
 
-const ManageSellers = ({ postSellerToApi, deleteSellerToApi, putSellerToApi, capitalizeWords, sellers }) => {
+const ManageSellers = ({ postSellerToApi, deleteSellerToApi, putSellerToApi, capitalizeWords, removeExtraSpaces, sellers }) => {
   const [page, setPage] = useState(1)
   const [elementsPerPage, setElementsPerPage] = useState(25)
 
@@ -39,7 +39,7 @@ const ManageSellers = ({ postSellerToApi, deleteSellerToApi, putSellerToApi, cap
       <div className='container-fluid'>
         <h2>Gestionar Vendedores</h2>
         <div className='mt-4'>
-          <ModalAddSeller title='Crear nuevo vendedor' postSellerToApi={postSellerToApi} capitalizeWords={capitalizeWords} />
+          <ModalAddSeller title='Crear nuevo vendedor' postSellerToApi={postSellerToApi} capitalizeWords={capitalizeWords} removeExtraSpaces={removeExtraSpaces} />
         </div>
         <section className='mt-4'>
           <Pagination page={page} setPage={setPage} maximum={maximum} />
@@ -51,7 +51,7 @@ const ManageSellers = ({ postSellerToApi, deleteSellerToApi, putSellerToApi, cap
                 <div className='card mt-3' key={el.id}>
                   <div className='button-group-card'>
                     <button type='button' title='Eliminar' className='btn btn-outline-danger' onClick={(event) => handleDelete(event, el.id)}><i className='fa-solid fa-trash' /></button>
-                    <ModalEditSeller title='Editar Vendedor' icon={<i className='fa-solid fa-pen-to-square' />} dataSeller={el} idSeller={el.id} putSellerToApi={putSellerToApi} capitalizeWords={capitalizeWords} />
+                    <ModalEditSeller title='Editar Vendedor' icon={<i className='fa-solid fa-pen-to-square' />} dataSeller={el} idSeller={el.id} putSellerToApi={putSellerToApi} capitalizeWords={capitalizeWords} removeExtraSpaces={removeExtraSpaces} />
                   </div>
                   <Link to={`/manage-sellers/${el.id}`}>
                     <div className='card-body'>
