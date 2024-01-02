@@ -12,7 +12,7 @@ import { DataContext } from '../context/data'
 import { DataExcelContext } from '../context/dataExcel'
 
 const UploadReports = ({ toFixed, convertExcelDateToReadable, extractIdNumber, extractText, extractDate, capitalizeWords, removeExtraSpaces, putSellerToApi }) => {
-  const { data, dataCollection, salesGoalBySeller, setSalesGoalBySeller, collectionGoalBySeller, setCollectionGoalBySeller } = useContext(DataContext)
+  const { data, dataCollection, salesGoalBySeller, setSalesGoalBySeller, collectionGoalBySeller, setCollectionGoalBySeller, sellers } = useContext(DataContext)
 
   const { dateExcel, setDateExcel, excelDataCost } = useContext(DataExcelContext)
 
@@ -222,12 +222,25 @@ const UploadReports = ({ toFixed, convertExcelDateToReadable, extractIdNumber, e
   localStorage.setItem('dateData', JSON.stringify(dateExcel))
 
   const sendForm = () => {
-    const salesGoals = JSON.parse(localStorage.getItem('metaVentas'))
-    const collectionGoals = JSON.parse(localStorage.getItem('metaRecaudo'))
+    // const salesGoals = JSON.parse(localStorage.getItem('metaVentas'))
+    // const collectionGoals = JSON.parse(localStorage.getItem('metaRecaudo'))
+    // if (salesGoals !== null) {
+    //   setSalesGoalBySeller(salesGoals)
+    // }
+    // if (salesGoals !== null) {
+    //   setCollectionGoalBySeller(collectionGoals)
+    // }
+    const salesGoals = []
+    const collectionGoals = []
+    sellers.forEach(seller => {
+      const { identificacion, metaVentas, metaRecaudo } = seller
+      salesGoals[identificacion] = metaVentas
+      collectionGoals[identificacion] = metaRecaudo
+    })
     if (salesGoals !== null) {
       setSalesGoalBySeller(salesGoals)
     }
-    if (salesGoals !== null) {
+    if (collectionGoals !== null) {
       setCollectionGoalBySeller(collectionGoals)
     }
   }
@@ -255,7 +268,7 @@ const UploadReports = ({ toFixed, convertExcelDateToReadable, extractIdNumber, e
           <InputSaleItemFile label='Informe Ventas Items' convertExcelDateToReadable={convertExcelDateToReadable} extractIdNumber={extractIdNumber} extractText={extractText} extractDate={extractDate} capitalizeWords={capitalizeWords} removeExtraSpaces={removeExtraSpaces} />
           {/* <InputThirdParties label='Informe de Terceros' department={department} extractDate={extractDate} capitalizeWords={capitalizeWords} removeExtraSpaces={removeExtraSpaces} extractIdNumber={extractIdNumber} /> */}
           <div className='button-group'>
-            <ModalGoals title='Modificar metas' sendForm={sendForm} />
+            <ModalGoals title='Modificar metas' sendForm={sendForm} putSellerToApi={putSellerToApi} />
           </div>
         </div>
       </div>
