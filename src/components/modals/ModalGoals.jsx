@@ -1,15 +1,28 @@
 /* eslint-disable no-undef */
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { DataContext } from '../../context/data'
+import Swal from 'sweetalert2'
 
-const ModalGoals = ({ title, buttonBackground = 'dark', sendForm }) => {
+const ModalGoals = ({ title, buttonBackground = 'dark', sendForm, putSellerToApi }) => {
   const { sellers } = useContext(DataContext)
+  const [isLoading, setIsLoading] = useState(false)
 
-  const salesGoals = JSON.parse(localStorage.getItem('metaVentas')) || {}
-  const collectionGoals = JSON.parse(localStorage.getItem('metaRecaudo')) || {}
+  const salesGoals = []
+  const collectionGoals = []
 
-  const [saleGoalsForm, setSaleGoalsForm] = useState(salesGoals)
-  const [collectionGoalForm, setCollectionGoalForm] = useState(collectionGoals)
+  sellers.forEach(seller => {
+    const { id, metaVentas, metaRecaudo } = seller
+    salesGoals[id] = metaVentas
+    collectionGoals[id] = metaRecaudo
+  })
+
+  const [saleGoalsForm, setSaleGoalsForm] = useState([])
+  const [collectionGoalForm, setCollectionGoalForm] = useState([])
+
+  const setGoals = () => {
+    setSaleGoalsForm(salesGoals)
+    setCollectionGoalForm(collectionGoals)
+  }
 
   const handleChange = (event) => {
     setSaleGoalsForm({
@@ -25,17 +38,56 @@ const ModalGoals = ({ title, buttonBackground = 'dark', sendForm }) => {
     })
   }
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault()
-    localStorage.setItem('metaVentas', JSON.stringify(saleGoalsForm))
-    localStorage.setItem('metaRecaudo', JSON.stringify(collectionGoalForm))
-    sendForm(saleGoalsForm, collectionGoalForm)
+    try {
+      setIsLoading(true)
+      for (const key in saleGoalsForm) {
+        const saleGoal = saleGoalsForm[key]
+        await putSellerToApi(key, {
+          metaVentas: saleGoal
+        })
+      }
+      for (const key in collectionGoalForm) {
+        const collectionGoal = collectionGoalForm[key]
+        await putSellerToApi(key, {
+          metaRecaudo: collectionGoal
+        })
+      }
+      setIsLoading(false)
+      Swal.fire({
+        title: 'Las metas de los vendedores se han actualizado con éxito.',
+        icon: 'success'
+      })
+    } catch (error) {
+      console.log(error)
+      Swal.fire({
+        title: 'Lo sentimos, ha ocurrido un error al actualizar las metas de los vendedores. Por favor vuelva a intentarlo',
+        icon: 'error'
+      })
+    }
   }
+
+  useEffect(() => {
+    setGoals()
+  }, [sellers])
 
   return (
     <>
-      <button type='button' className={`btn btn-outline-${buttonBackground}`} data-bs-toggle='modal' data-bs-target='#exampleModal'>{title}</button>
-
+      {
+        (isLoading === false)
+          ? (
+            <button type='button' className={`btn btn-outline-${buttonBackground}`} data-bs-toggle='modal' data-bs-target='#exampleModal'>{title}</button>
+            )
+          : (
+            <button type='button' className={`btn btn-outline-${buttonBackground}`}>
+              <div>
+                <span className='spinner-border spinner-border-sm me-1' aria-hidden='true' />
+                <span role='status'> Modificando metas...</span>
+              </div>
+            </button>
+            )
+      }
       <div className='modal fade' id='exampleModal'>
         <div className='modal-dialog'>
           <div className='modal-content'>
@@ -51,14 +103,14 @@ const ModalGoals = ({ title, buttonBackground = 'dark', sendForm }) => {
                       : (
                           sellers.map(({ identificacion, id }) => (
                             <div className='mb-3' key={id}>
-                              <label htmlFor={identificacion} className='form-label'><b>{identificacion}</b></label>
+                              <label htmlFor={id} className='form-label'><b>{identificacion}</b></label>
                               <div>
                                 <label className='form-label'>Meta de ventas:</label>
-                                <input name={`${identificacion}`} type='number' className='form-control mb-2' onChange={handleChange} value={saleGoalsForm[`${identificacion}`] || 0} id={identificacion} title='Meta de ventas' />
+                                <input name={`${id}`} type='number' className='form-control mb-2' onChange={handleChange} value={saleGoalsForm[`${id}`] || 0} id={id} title='Meta de ventas' />
                               </div>
                               <div>
                                 <label className='form-label'>Meta de recaudo:</label>
-                                <input name={`${identificacion}`} type='number' className='form-control' placeholder='Meta de recaudo' onChange={handleChangeCollectionGoal} value={collectionGoalForm[`${identificacion}`] || 0} title='Meta de recaudo' />
+                                <input name={`${id}`} type='number' className='form-control' placeholder='Meta de recaudo' onChange={handleChangeCollectionGoal} value={collectionGoalForm[`${id}`] || 0} title='Meta de recaudo' />
                               </div>
                             </div>
                           ))
