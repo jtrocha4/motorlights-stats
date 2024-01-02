@@ -80,8 +80,6 @@ const SimpleBarCharts = ({ sellerPerformance, extractDateFromData }) => {
     addDataToPercentageData(localData, percentageData)
   }
 
-  // const leakedData = percentageData.filter(({ vendedor }) => vendedor !== 'MOTORLIGHTS S.A.S')
-
   const leakedData = percentageData.filter(({ idVendedor }) => filters.seller.includes(idVendedor))
 
   const customLegendFormatter = (value, entry) => {
@@ -115,10 +113,10 @@ const SimpleBarCharts = ({ sellerPerformance, extractDateFromData }) => {
       </section>
       <section>
         <div ref={containerRef} className='simple-bar-charts' id='simple-bar-charts'>
-          <ResponsiveContainer width={screenSize} aspect={3}>
-            <ComposedChart data={leakedData} width={500} height={300} margin={{ top: 20, right: 0, left: 0, bottom: 0 }}>
+          <ResponsiveContainer width={screenSize} aspect={2}>
+            <ComposedChart data={leakedData} margin={{ top: 50, bottom: 95 }}>
               <CartesianGrid strokeDasharray='3 3' />
-              <XAxis dataKey='vendedor' tick={{ fill: '#7d7a79' }} />
+              <XAxis dataKey='vendedor' tick={{ fill: '#7d7a79' }} angle={-40} dy={50} />
               <YAxis tick={{ fill: '#7d7a79' }} tickFormatter={customTooltipFormatter} />
               <Tooltip formatter={customTooltipFormatter} />
               <Legend verticalAlign='top' height={36} formatter={customLegendFormatter} wrapperStyle={{ color: '#7d7a79' }} />
