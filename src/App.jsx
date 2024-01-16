@@ -16,6 +16,7 @@ import { ThirdPartiesContext } from './context/thirdParties'
 import CustomerProfile from './pages/CustomerProfile'
 import ManageProducts from './pages/ManageProducts'
 import { ProductContext } from './context/product'
+import Login from './pages/Login'
 
 function App () {
   const { sellers, setSellers } = useContext(DataContext)
@@ -286,6 +287,8 @@ function App () {
     return firstAndMiddleName
   }
 
+  const currentPath = window.location.pathname
+
   useEffect(() => {
     fetchSellerPerformanceFromApi()
   }, [newSellerPerformance])
@@ -302,18 +305,30 @@ function App () {
 
   return (
     <div className='App'>
-      <Navbar />
-      <Sidebar />
-      <Routes>
-        <Route path='/' element={<UploadReports toFixed={toFixed} department={department} convertExcelDateToReadable={convertExcelDateToReadable} extractIdNumber={extractIdNumber} extractText={extractText} extractDate={extractDate} capitalizeWords={capitalizeWords} removeExtraSpaces={removeExtraSpaces} putSellerToApi={putSellerToApi} />} />
-        <Route path='/sales' element={<SalesPage postSellerPerformanceToApi={postSellerPerformanceToApi} toFixed={toFixed} convertExcelDateToReadable={convertExcelDateToReadable} sellerPerformance={sellerPerformance} extractDateFromData={extractDateFromData} splitName={splitName} />} />
-        <Route path='/detailed-sales' element={<DetailedSalesPage splitName={splitName} postSaleToApi={postSaleToApi} />} />
-        <Route path='/manage-sellers' element={<ManageSellers postSellerToApi={postSellerToApi} deleteSellerToApi={deleteSellerToApi} putSellerToApi={putSellerToApi} capitalizeWords={capitalizeWords} removeExtraSpaces={removeExtraSpaces} sellers={sellers} />} />
-        <Route path='/manage-sellers/:id' element={<SellerProfile />} />
-        <Route path='/manage-customers' element={<ManageCustomers department={department} extractDate={extractDate} extractIdNumber={extractIdNumber} capitalizeWords={capitalizeWords} removeExtraSpaces={removeExtraSpaces} postCustomerToApi={postCustomerToApi} />} />
-        <Route path='/manage-customers/:id' element={<CustomerProfile />} />
-        <Route path='/manage-products' element={<ManageProducts postProductToApi={postProductToApi} removeExtraSpaces={removeExtraSpaces} />} />
-      </Routes>
+      {
+        (currentPath !== '/login')
+          ? (
+            <div>
+              <Navbar />
+              <Sidebar />
+              <Routes>
+                <Route path='/' element={<UploadReports toFixed={toFixed} department={department} convertExcelDateToReadable={convertExcelDateToReadable} extractIdNumber={extractIdNumber} extractText={extractText} extractDate={extractDate} capitalizeWords={capitalizeWords} removeExtraSpaces={removeExtraSpaces} putSellerToApi={putSellerToApi} />} />
+                <Route path='/sales' element={<SalesPage postSellerPerformanceToApi={postSellerPerformanceToApi} toFixed={toFixed} convertExcelDateToReadable={convertExcelDateToReadable} sellerPerformance={sellerPerformance} extractDateFromData={extractDateFromData} splitName={splitName} />} />
+                <Route path='/detailed-sales' element={<DetailedSalesPage splitName={splitName} postSaleToApi={postSaleToApi} />} />
+                <Route path='/manage-sellers' element={<ManageSellers postSellerToApi={postSellerToApi} deleteSellerToApi={deleteSellerToApi} putSellerToApi={putSellerToApi} capitalizeWords={capitalizeWords} removeExtraSpaces={removeExtraSpaces} sellers={sellers} />} />
+                <Route path='/manage-sellers/:id' element={<SellerProfile />} />
+                <Route path='/manage-customers' element={<ManageCustomers department={department} extractDate={extractDate} extractIdNumber={extractIdNumber} capitalizeWords={capitalizeWords} removeExtraSpaces={removeExtraSpaces} postCustomerToApi={postCustomerToApi} />} />
+                <Route path='/manage-customers/:id' element={<CustomerProfile />} />
+                <Route path='/manage-products' element={<ManageProducts postProductToApi={postProductToApi} removeExtraSpaces={removeExtraSpaces} />} />
+              </Routes>
+            </div>
+            )
+          : (
+            <Routes>
+              <Route path='/login' element={<Login />} />
+            </Routes>
+            )
+      }
     </div>
   )
 }
