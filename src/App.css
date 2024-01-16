@@ -70,6 +70,37 @@ body {
   padding: 20px;
 }
 
+.div-login {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+  height: 100vh;
+}
+
+.section-login {
+  display: flex;
+  justify-content: center;
+  align-items: center; 
+}
+
+.section-login .container-logo{
+  display: grid;
+  place-items: center;
+}
+
+.section-login .logo{
+  width: 50%;
+}
+
+.section-login form {
+  width: 50vw;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
+
+
 .inputFile-group, .button-group {
   margin: 25px 0;
 }
