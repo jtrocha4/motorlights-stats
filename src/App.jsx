@@ -1,27 +1,30 @@
 /* eslint-disable no-undef */
-import { Route, Routes } from 'react-router-dom'
+import { Route, Router, Routes } from 'react-router-dom'
 import './App.css'
+import { getSellerPerformance, createSellerPerformance, getDepartments, createMunicipality, createNewSeller, getSellers, deleteSeller, editSeller, getCustomers, createNewCustomer, getProducts, createNewProduct, createNewSale } from './services/dataService'
+import { useContext, useEffect, useState } from 'react'
+import { DataContext } from './context/data'
+import { ThirdPartiesContext } from './context/thirdParties'
+import { ProductContext } from './context/product'
+import { UserContext } from './context/user'
 import Navbar from './components/Navbar'
 import Sidebar from './components/Sidebar'
 import UploadReports from './pages/UploadReports'
-import { getSellerPerformance, createSellerPerformance, getDepartments, createMunicipality, createNewSeller, getSellers, deleteSeller, editSeller, getCustomers, createNewCustomer, getProducts, createNewProduct, createNewSale } from './services/dataService'
-import { useContext, useEffect, useState } from 'react'
-import ManageSellers from './pages/ManageSellers'
-import SellerProfile from './pages/SellerProfile'
 import SalesPage from './pages/SalesPage'
 import DetailedSalesPage from './pages/DetailedSalesPage'
-import { DataContext } from './context/data'
+import ManageSellers from './pages/ManageSellers'
+import SellerProfile from './pages/SellerProfile'
 import ManageCustomers from './pages/ManageCustomers'
-import { ThirdPartiesContext } from './context/thirdParties'
 import CustomerProfile from './pages/CustomerProfile'
 import ManageProducts from './pages/ManageProducts'
-import { ProductContext } from './context/product'
+import ProtectedRoute from './components/ProtectedRoute'
 import Login from './pages/Login'
 
 function App () {
   const { sellers, setSellers } = useContext(DataContext)
   const { setCustomers } = useContext(ThirdPartiesContext)
   const { setProducts } = useContext(ProductContext)
+  const { user } = useContext(UserContext)
 
   const [sellerPerformance, setSellerPerformance] = useState([])
   const [newSellerPerformance, setNewSellerPerformance] = useState([])
@@ -312,14 +315,17 @@ function App () {
               <Navbar />
               <Sidebar />
               <Routes>
-                <Route path='/' element={<UploadReports toFixed={toFixed} department={department} convertExcelDateToReadable={convertExcelDateToReadable} extractIdNumber={extractIdNumber} extractText={extractText} extractDate={extractDate} capitalizeWords={capitalizeWords} removeExtraSpaces={removeExtraSpaces} putSellerToApi={putSellerToApi} />} />
-                <Route path='/sales' element={<SalesPage postSellerPerformanceToApi={postSellerPerformanceToApi} toFixed={toFixed} convertExcelDateToReadable={convertExcelDateToReadable} sellerPerformance={sellerPerformance} extractDateFromData={extractDateFromData} splitName={splitName} />} />
-                <Route path='/detailed-sales' element={<DetailedSalesPage splitName={splitName} postSaleToApi={postSaleToApi} />} />
-                <Route path='/manage-sellers' element={<ManageSellers postSellerToApi={postSellerToApi} deleteSellerToApi={deleteSellerToApi} putSellerToApi={putSellerToApi} capitalizeWords={capitalizeWords} removeExtraSpaces={removeExtraSpaces} sellers={sellers} />} />
-                <Route path='/manage-sellers/:id' element={<SellerProfile />} />
-                <Route path='/manage-customers' element={<ManageCustomers department={department} extractDate={extractDate} extractIdNumber={extractIdNumber} capitalizeWords={capitalizeWords} removeExtraSpaces={removeExtraSpaces} postCustomerToApi={postCustomerToApi} />} />
-                <Route path='/manage-customers/:id' element={<CustomerProfile />} />
-                <Route path='/manage-products' element={<ManageProducts postProductToApi={postProductToApi} removeExtraSpaces={removeExtraSpaces} />} />
+                <Route element={<ProtectedRoute user={user} />}>
+                  <Route path='/' element={<UploadReports toFixed={toFixed} department={department} convertExcelDateToReadable={convertExcelDateToReadable} extractIdNumber={extractIdNumber} extractText={extractText} extractDate={extractDate} capitalizeWords={capitalizeWords} removeExtraSpaces={removeExtraSpaces} putSellerToApi={putSellerToApi} />} />
+                  <Route path='/sales' element={<SalesPage postSellerPerformanceToApi={postSellerPerformanceToApi} toFixed={toFixed} convertExcelDateToReadable={convertExcelDateToReadable} sellerPerformance={sellerPerformance} extractDateFromData={extractDateFromData} splitName={splitName} />} />
+                  <Route path='/detailed-sales' element={<DetailedSalesPage splitName={splitName} postSaleToApi={postSaleToApi} />} />
+                  <Route path='/manage-sellers' element={<ManageSellers postSellerToApi={postSellerToApi} deleteSellerToApi={deleteSellerToApi} putSellerToApi={putSellerToApi} capitalizeWords={capitalizeWords} removeExtraSpaces={removeExtraSpaces} sellers={sellers} />} />
+                  <Route path='/manage-sellers/:id' element={<SellerProfile />} />
+                  <Route path='/manage-customers' element={<ManageCustomers department={department} extractDate={extractDate} extractIdNumber={extractIdNumber} capitalizeWords={capitalizeWords} removeExtraSpaces={removeExtraSpaces} postCustomerToApi={postCustomerToApi} />} />
+                  <Route path='/manage-customers/:id' element={<CustomerProfile />} />
+                  <Route path='/manage-products' element={<ManageProducts postProductToApi={postProductToApi} removeExtraSpaces={removeExtraSpaces} />} />
+                </Route>
+                <Route path='/login' element={<Login />} />
               </Routes>
             </div>
             )
