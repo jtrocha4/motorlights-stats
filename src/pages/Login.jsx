@@ -1,5 +1,7 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { login } from '../services/login'
+import { UserContext } from '../context/user'
 
 const Login = () => {
   const [form, setForm] = useState({
@@ -9,6 +11,10 @@ const Login = () => {
 
   const [errorMessage, setErrorMessage] = useState(null)
   const [isHidePassword, setIsHidePassword] = useState(true)
+
+  const navigate = useNavigate()
+
+  const { setUser } = useContext(UserContext)
 
   const handleChange = (event) => {
     setForm({
@@ -24,7 +30,8 @@ const Login = () => {
         nombreUsuario: form.userName,
         contrasena: form.password
       })
-      console.log(data)
+      setUser(data)
+      navigate('/')
     } catch (error) {
       setErrorMessage('Usuario o contraseña no válidos')
       setTimeout(() => {
