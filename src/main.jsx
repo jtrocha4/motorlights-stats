@@ -10,25 +10,28 @@ import { ReportDetailsProvider } from './context/reportDetails.jsx'
 import { ThirdPartiesProvider } from './context/thirdParties.jsx'
 import { DataExcelProvider } from './context/dataExcel.jsx'
 import { ProductProvider } from './context/product.jsx'
+import { UserProvider } from './context/user.jsx'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <DataExcelProvider>
-      <DataProvider>
-        <ReportDetailsProvider>
-          <NewCustomerProvider>
-            <SaleItemProvider>
-              <ThirdPartiesProvider>
-                <ProductProvider>
-                  <BrowserRouter>
-                    <App />
-                  </BrowserRouter>
-                </ProductProvider>
-              </ThirdPartiesProvider>
-            </SaleItemProvider>
-          </NewCustomerProvider>
-        </ReportDetailsProvider>
-      </DataProvider>
-    </DataExcelProvider>
+    <UserProvider>
+      <DataExcelProvider>
+        <DataProvider>
+          <ReportDetailsProvider>
+            <NewCustomerProvider>
+              <SaleItemProvider>
+                <ThirdPartiesProvider>
+                  <ProductProvider>
+                    <BrowserRouter>
+                      <App />
+                    </BrowserRouter>
+                  </ProductProvider>
+                </ThirdPartiesProvider>
+              </SaleItemProvider>
+            </NewCustomerProvider>
+          </ReportDetailsProvider>
+        </DataProvider>
+      </DataExcelProvider>
+    </UserProvider>
   </React.StrictMode>
 )
