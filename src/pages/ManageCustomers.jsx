@@ -2,6 +2,8 @@ import React, { useContext, useState } from 'react'
 import { ThirdPartiesContext } from '../context/thirdParties'
 import { Link } from 'react-router-dom'
 import Pagination from '../components/Pagination'
+import InputThirdParties from '../components/inputs/InputThirdParties'
+import ButtonUploadDb from '../components/buttonsUpload/ButtonUploadDb'
 
 const ManageCustomers = ({ department, extractDate, capitalizeWords, removeExtraSpaces, extractIdNumber, postCustomerToApi }) => {
   const { customers } = useContext(ThirdPartiesContext)
@@ -28,7 +30,7 @@ const ManageCustomers = ({ department, extractDate, capitalizeWords, removeExtra
         <h2>Gestionar Clientes</h2>
         {/* <InputThirdParties label='Informe de Terceros' department={department} extractDate={extractDate} capitalizeWords={capitalizeWords} removeExtraSpaces={removeExtraSpaces} extractIdNumber={extractIdNumber} />
         <section className='mt-4 d-grid gap-2 d-md-flex justify-content-md-end'>
-          <ButtonUploadDb title='Subir informacion a la base de datos' data={customers} postFunction={postCustomerToApi} />
+          <ButtonUploadDb title='Subir informacion a la base de datos' customers={customers} postFunction={postCustomerToApi} />
         </section> */}
         <section className='mt-4'>
           <Pagination page={page} setPage={setPage} maximum={maximum} />
@@ -41,7 +43,8 @@ const ManageCustomers = ({ department, extractDate, capitalizeWords, removeExtra
                   <Link to={`/manage-customers/${el.id}`}>
                     <div className='card-body'>
                       <h5 className='card-title'>{el.nombre}</h5>
-                      <h6 className='card-subtitle mb-2 text-body-secondary'>{el.id}</h6>
+                      <h6 className='card-subtitle mb-2 text-body-secondary'><b>Identificación:</b> {el.identificacion}</h6>
+                      <h6 className='card-subtitle mb-2 text-body-secondary'><b>Telefono:</b> {el.telefono}</h6>
                     </div>
                   </Link>
                 </div>

@@ -1,18 +1,25 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import ModalAddSeller from '../components/modals/ModalAddSeller'
 import { Link } from 'react-router-dom'
 import Swal from 'sweetalert2'
 import ModalEditSeller from '../components/modals/ModalEditSeller'
 import Pagination from '../components/Pagination'
+import { UserContext } from '../context/user'
+import { DataContext } from '../context/data'
 
-const ManageSellers = ({ postSellerToApi, deleteSellerToApi, putSellerToApi, capitalizeWords, removeExtraSpaces, sellers }) => {
+const ManageSellers = ({ postSellerToApi, deleteSellerToApi, putSellerToApi, capitalizeWords, removeExtraSpaces }) => {
+  const { sellers } = useContext(DataContext)
+
   const [page, setPage] = useState(1)
   const [elementsPerPage, setElementsPerPage] = useState(25)
 
   const maximum = Math.ceil(sellers.length / elementsPerPage)
 
+  const { user } = useContext(UserContext)
+
   const handleDelete = (event, id) => {
     event.preventDefault()
+    const { token } = user
     Swal.fire({
       title: '¿Seguro que deseas eliminar este vendedor?',
       text: 'Esta acción no se puede deshacer. Si eliminas al vendedor, se perderán todos los datos asociados.',
@@ -22,11 +29,11 @@ const ManageSellers = ({ postSellerToApi, deleteSellerToApi, putSellerToApi, cap
       denyButtonColor: '#6e7881',
       denyButtonText: 'Cancelar',
       confirmButtonText: 'Guardar'
-    }).then((result) => {
+    }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          deleteSellerToApi(id)
-          Swal.fire(`El vendedor ${id} ha sido eliminado con éxito.`, '', 'success')
+          await deleteSellerToApi(id, token)
+          Swal.fire('El vendedor  ha sido eliminado con éxito.', '', 'success')
         } catch (error) {
           Swal.fire('Ha ocurrido un error al momento de eliminar al vendedor. Por favor intentelo de nuevo', '', 'error')
         }

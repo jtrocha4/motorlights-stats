@@ -31,6 +31,7 @@ const Login = () => {
         contrasena: form.password
       })
       setUser(data)
+      window.localStorage.setItem('loggedApp', JSON.stringify(data))
       navigate('/')
     } catch (error) {
       setErrorMessage('Usuario o contraseña no válidos')
@@ -40,15 +41,8 @@ const Login = () => {
     }
   }
 
-  const handleHidePassword = (event) => {
-    const inputType = document.getElementById('password')
-    if (inputType.type === 'password') {
-      inputType.type = 'text'
-      setIsHidePassword(false)
-    } else {
-      inputType.type = 'password'
-      setIsHidePassword(true)
-    }
+  const handleHidePassword = () => {
+    setIsHidePassword(!isHidePassword)
   }
 
   return (
@@ -56,7 +50,7 @@ const Login = () => {
       <section className='section-login'>
         <form action='' onSubmit={handleSubmit}>
           <div className='container-logo mb-4'>
-            <img className='logo' src='src\assets\banner-motorlights.png' alt='' />
+            <img className='logo' src='\banner-motorlights.png' alt='logo' />
           </div>
 
           {
@@ -76,7 +70,7 @@ const Login = () => {
           <div className='mb-3'>
             <label className='form-label' htmlFor='password'>Contraseña</label>
             <div className='input-group mb-3'>
-              <input className='form-control' name='password' id='password' type='password' onChange={handleChange} />
+              <input className='form-control' name='password' id='password' type={(isHidePassword) ? ('password') : ('text')} onChange={handleChange} />
               <button className='btn btn-outline-dark' type='button' onClick={handleHidePassword}>
                 {
                 (isHidePassword) ? (<i className='fa-regular fa-eye' />) : (<i className='fa-regular fa-eye-slash' />)

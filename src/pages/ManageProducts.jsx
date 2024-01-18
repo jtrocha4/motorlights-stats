@@ -32,7 +32,6 @@ const ManageProducts = ({ postProductToApi, removeExtraSpaces }) => {
                     <h6 className='card-subtitle mb-2 text-body-secondary'>Categoría: {el.categoria}</h6>
                     <h6 className='card-subtitle mb-2 text-body-secondary'>Código Inventario: {el.codigo}</h6>
                   </div>
-
                 </div>
               ))
           }
