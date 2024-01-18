@@ -1,13 +1,16 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import Swal from 'sweetalert2'
+import { UserContext } from '../../context/user'
 
 const ButtonUploadDb = ({ title, background = 'primary', data = [], sales = [], customers = [], sellers = [], products = [], postFunction }) => {
   const [isLoading, setIsLoading] = useState(false)
+  const { user } = useContext(UserContext)
+  const { token } = user
 
   const leakedData = []
 
-  if (data.length > 0) {
-    data.forEach(element => {
+  if (customers.length > 0 && sales.length === 0 && sellers.length === 0 && products.length === 0) {
+    customers.forEach(element => {
       const { ciudad, id, telefonos, ...restOfData } = element
       leakedData.push({
         ...restOfData,
@@ -47,6 +50,12 @@ const ButtonUploadDb = ({ title, background = 'primary', data = [], sales = [], 
     })
   }
 
+  if (products.length > 0 && sales.length === 0 && customers.length === 0 && sellers.length === 0) {
+    products.forEach(element => {
+      leakedData.push(element)
+    })
+  }
+
   const handleUploadDb = async () => {
     Swal.fire({
       title: '¿Seguro que deseas guardar esta información?',
@@ -63,7 +72,7 @@ const ButtonUploadDb = ({ title, background = 'primary', data = [], sales = [], 
           try {
             setIsLoading(true)
             for (const key in leakedData) {
-              await postFunction(leakedData[key])
+              await postFunction(leakedData[key], token)
             }
             Swal.fire({
               title: 'Los datos se han guardado con éxito.',
@@ -76,6 +85,7 @@ const ButtonUploadDb = ({ title, background = 'primary', data = [], sales = [], 
               text: 'Por favor, asegúrese de haber cargado todos los informes necesarios.',
               icon: 'error'
             })
+            setIsLoading(false)
           }
         } else {
           Swal.fire({
@@ -83,6 +93,7 @@ const ButtonUploadDb = ({ title, background = 'primary', data = [], sales = [], 
             text: 'Por favor, asegúrese de haber cargado todos los informes necesarios.',
             icon: 'error'
           })
+          setIsLoading(false)
         }
       }
     })
