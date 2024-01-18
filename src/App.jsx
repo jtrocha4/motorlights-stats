@@ -1,7 +1,8 @@
 /* eslint-disable no-undef */
-import { Route, Router, Routes } from 'react-router-dom'
+import { Route, Routes, useLocation, useNavigate } from 'react-router-dom'
 import './App.css'
-import { getSellerPerformance, createSellerPerformance, getDepartments, createMunicipality, createNewSeller, getSellers, deleteSeller, editSeller, getCustomers, createNewCustomer, getProducts, createNewProduct, createNewSale } from './services/dataService'
+import { getSellerPerformance, createSellerPerformance, getDepartments, createMunicipality } from './services/dataService'
+import { createNewSeller, getSellers, deleteSeller, editSeller, getCustomers, createNewCustomer, getProducts, createNewProduct, getSales, createNewSale } from './services/index'
 import { useContext, useEffect, useState } from 'react'
 import { DataContext } from './context/data'
 import { ThirdPartiesContext } from './context/thirdParties'
@@ -21,10 +22,10 @@ import ProtectedRoute from './components/ProtectedRoute'
 import Login from './pages/Login'
 
 function App () {
-  const { sellers, setSellers } = useContext(DataContext)
+  const { setSellers } = useContext(DataContext)
   const { setCustomers } = useContext(ThirdPartiesContext)
   const { setProducts } = useContext(ProductContext)
-  const { user } = useContext(UserContext)
+  const { user, setUser } = useContext(UserContext)
 
   const [sellerPerformance, setSellerPerformance] = useState([])
   const [newSellerPerformance, setNewSellerPerformance] = useState([])
@@ -36,7 +37,6 @@ function App () {
   const [newProduct, setNewProduct] = useState([])
 
   const [department, setDepartment] = useState([])
-  // const [loading, setLoading] = useState(false)
 
   const fetchSellerPerformanceFromApi = async () => {
     try {
@@ -44,6 +44,7 @@ function App () {
       setSellerPerformance(response)
     } catch (error) {
       console.error(error)
+      throw error
     }
   }
 
@@ -53,6 +54,7 @@ function App () {
       setDepartment(response)
     } catch (error) {
       console.error(error)
+      throw error
     }
   }
 
@@ -62,6 +64,7 @@ function App () {
       return response
     } catch (error) {
       console.log(error)
+      throw error
     }
   }
 
@@ -76,9 +79,9 @@ function App () {
     }
   }
 
-  const postSellerToApi = async (newSeller) => {
+  const postSellerToApi = async (newSeller, token) => {
     try {
-      const request = await createNewSeller(newSeller)
+      const request = await createNewSeller(newSeller, token)
       setNewSeller(request)
       return request
     } catch (error) {
@@ -87,9 +90,9 @@ function App () {
     }
   }
 
-  const deleteSellerToApi = async (idSeller) => {
+  const deleteSellerToApi = async (idSeller, token) => {
     try {
-      const request = await deleteSeller(idSeller)
+      const request = await deleteSeller(idSeller, token)
       setNewSeller(request)
       return request
     } catch (error) {
@@ -98,9 +101,9 @@ function App () {
     }
   }
 
-  const putSellerToApi = async (id, sellerData) => {
+  const putSellerToApi = async (id, sellerData, token) => {
     try {
-      const request = await editSeller(id, sellerData)
+      const request = await editSeller(id, sellerData, token)
       setNewSeller(request)
       return request
     } catch (error) {
@@ -110,56 +113,81 @@ function App () {
   }
 
   const fetchSellerFromApi = async () => {
+    let token
+    if (user !== null) token = user.token
     try {
-      const response = await getSellers()
+      const response = await getSellers(token)
       setSellers(response)
     } catch (error) {
       console.error(error)
+      throw error
     }
   }
 
   const fetchCustomerFromApi = async () => {
+    let token
+    if (user !== null) token = user.token
     try {
-      const response = await getCustomers()
+      const response = await getCustomers(token)
       setCustomers(response)
     } catch (error) {
       console.log(error)
+      throw error
     }
   }
 
-  const postCustomerToApi = async (newCustomer) => {
+  const postCustomerToApi = async (newCustomer, token) => {
     try {
-      const request = await createNewCustomer(newCustomer)
+      const request = await createNewCustomer(newCustomer, token)
       setNewCustomer(request)
     } catch (error) {
       console.log(error)
+      throw error
     }
   }
 
   const fetchProductsFromApi = async () => {
+    let token
+    if (user !== null) token = user.token
     try {
-      const response = await getProducts()
+      const response = await getProducts(token)
       setProducts(response)
     } catch (error) {
       console.log(error)
+      throw error
     }
   }
 
-  const postProductToApi = async (newProduct) => {
+  const postProductToApi = async (newProduct, token) => {
     try {
-      const request = await createNewProduct(newProduct)
+      const request = await createNewProduct(newProduct, token)
       setNewProduct(request)
     } catch (error) {
       console.log(error)
+      throw error
     }
   }
 
-  const postSaleToApi = async (newSale) => {
+  const postSaleToApi = async (newSale, token) => {
     try {
-      const request = await createNewSale(newSale)
+      const request = await createNewSale(newSale, token)
       return request
     } catch (error) {
       console.log(error)
+      throw error
+    }
+  }
+
+  const fetchSalesFromApi = async () => {
+    let token
+    if (user !== null) token = user.token
+    try {
+      const request = await getSales(token)
+      console.log(request)
+      return request
+    } catch (error) {
+      console.log(error)
+      throw error
     }
   }
 
@@ -290,8 +318,6 @@ function App () {
     return firstAndMiddleName
   }
 
-  const currentPath = window.location.pathname
-
   useEffect(() => {
     fetchSellerPerformanceFromApi()
   }, [newSellerPerformance])
@@ -301,40 +327,44 @@ function App () {
   }, [])
 
   useEffect(() => {
-    fetchSellerFromApi()
-    fetchCustomerFromApi()
-    fetchProductsFromApi()
-  }, [newSeller, newCustomer, newProduct])
+    if (user !== null) {
+      fetchSellerFromApi()
+      fetchCustomerFromApi()
+      fetchProductsFromApi()
+      fetchSalesFromApi()
+    }
+  }, [user, newSeller, newCustomer, newProduct])
+
+  const navigate = useNavigate()
+  const location = useLocation()
+  const isLoginPage = location.pathname === '/login'
+
+  useEffect(() => {
+    const loggedUser = window.localStorage.getItem('loggedApp')
+    if (loggedUser) {
+      const userData = JSON.parse(loggedUser)
+      setUser(userData)
+      navigate('/')
+    }
+  }, [])
 
   return (
     <div className='App'>
-      {
-        (currentPath !== '/login')
-          ? (
-            <div>
-              <Navbar />
-              <Sidebar />
-              <Routes>
-                <Route element={<ProtectedRoute user={user} />}>
-                  <Route path='/' element={<UploadReports toFixed={toFixed} department={department} convertExcelDateToReadable={convertExcelDateToReadable} extractIdNumber={extractIdNumber} extractText={extractText} extractDate={extractDate} capitalizeWords={capitalizeWords} removeExtraSpaces={removeExtraSpaces} putSellerToApi={putSellerToApi} />} />
-                  <Route path='/sales' element={<SalesPage postSellerPerformanceToApi={postSellerPerformanceToApi} toFixed={toFixed} convertExcelDateToReadable={convertExcelDateToReadable} sellerPerformance={sellerPerformance} extractDateFromData={extractDateFromData} splitName={splitName} />} />
-                  <Route path='/detailed-sales' element={<DetailedSalesPage splitName={splitName} postSaleToApi={postSaleToApi} />} />
-                  <Route path='/manage-sellers' element={<ManageSellers postSellerToApi={postSellerToApi} deleteSellerToApi={deleteSellerToApi} putSellerToApi={putSellerToApi} capitalizeWords={capitalizeWords} removeExtraSpaces={removeExtraSpaces} sellers={sellers} />} />
-                  <Route path='/manage-sellers/:id' element={<SellerProfile />} />
-                  <Route path='/manage-customers' element={<ManageCustomers department={department} extractDate={extractDate} extractIdNumber={extractIdNumber} capitalizeWords={capitalizeWords} removeExtraSpaces={removeExtraSpaces} postCustomerToApi={postCustomerToApi} />} />
-                  <Route path='/manage-customers/:id' element={<CustomerProfile />} />
-                  <Route path='/manage-products' element={<ManageProducts postProductToApi={postProductToApi} removeExtraSpaces={removeExtraSpaces} />} />
-                </Route>
-                <Route path='/login' element={<Login />} />
-              </Routes>
-            </div>
-            )
-          : (
-            <Routes>
-              <Route path='/login' element={<Login />} />
-            </Routes>
-            )
-      }
+      {!isLoginPage && <Navbar />}
+      {!isLoginPage && <Sidebar />}
+      <Routes>
+        <Route element={<ProtectedRoute user={user} />}>
+          <Route path='/' element={<UploadReports toFixed={toFixed} department={department} convertExcelDateToReadable={convertExcelDateToReadable} extractIdNumber={extractIdNumber} extractText={extractText} extractDate={extractDate} capitalizeWords={capitalizeWords} removeExtraSpaces={removeExtraSpaces} putSellerToApi={putSellerToApi} />} />
+          <Route path='/sales' element={<SalesPage postSellerPerformanceToApi={postSellerPerformanceToApi} toFixed={toFixed} convertExcelDateToReadable={convertExcelDateToReadable} sellerPerformance={sellerPerformance} extractDateFromData={extractDateFromData} splitName={splitName} />} />
+          <Route path='/detailed-sales' element={<DetailedSalesPage splitName={splitName} postSaleToApi={postSaleToApi} />} />
+          <Route path='/manage-sellers' element={<ManageSellers postSellerToApi={postSellerToApi} deleteSellerToApi={deleteSellerToApi} putSellerToApi={putSellerToApi} capitalizeWords={capitalizeWords} removeExtraSpaces={removeExtraSpaces} />} />
+          <Route path='/manage-sellers/:id' element={<SellerProfile />} />
+          <Route path='/manage-customers' element={<ManageCustomers department={department} extractDate={extractDate} extractIdNumber={extractIdNumber} capitalizeWords={capitalizeWords} removeExtraSpaces={removeExtraSpaces} postCustomerToApi={postCustomerToApi} />} />
+          <Route path='/manage-customers/:id' element={<CustomerProfile />} />
+          <Route path='/manage-products' element={<ManageProducts postProductToApi={postProductToApi} removeExtraSpaces={removeExtraSpaces} />} />
+        </Route>
+        <Route path='/login' element={<Login />} />
+      </Routes>
     </div>
   )
 }
