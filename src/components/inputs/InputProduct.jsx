@@ -1,12 +1,14 @@
 import React, { useState } from 'react'
 import * as XLSX from 'xlsx'
 import { productFileToModel } from '../../mappers/product.mapper'
+import ButtonUploadDb from '../buttonsUpload/ButtonUploadDb'
 
 const InputProduct = ({ label, postProductToApi, removeExtraSpaces }) => {
   const [inventory, setInventory] = useState([])
 
   const handleReadProducts = (event) => {
     const file = event.target.files[0]
+    // eslint-disable-next-line no-undef
     const reader = new FileReader()
 
     reader.onload = (e) => {
@@ -79,22 +81,13 @@ const InputProduct = ({ label, postProductToApi, removeExtraSpaces }) => {
     })
   })
 
-  const handleUpload = async () => {
-    try {
-      for (const key in leakedData) {
-        await postProductToApi(leakedData[key])
-      }
-      console.log('Productos cargados con exito')
-    } catch (error) {
-      console.log(error)
-    }
-  }
-
   return (
     <>
       <label className='form-label'>{label}</label>
       <input className='form-control' type='file' accept='.xls , .xlsx' onChange={handleReadProducts} />
-      <button className='btn btn-primary mt-2' onClick={handleUpload}>Subir</button>
+      <section className='mt-3 d-grid gap-2 justify-content-md-end'>
+        <ButtonUploadDb title='Subir Productos' products={leakedData} postFunction={postProductToApi} />
+      </section>
     </>
   )
 }

@@ -67,7 +67,6 @@ const InputThirdParties = ({ label, department, capitalizeWords, removeExtraSpac
       const { ciudad, direccion, telefonos, nombre, id } = cliente
       return {
         id: parseInt(extractIdNumber(id)),
-        // departamento: removeExtraSpaces(capitalizeWords(department)),
         departamento: municipality ? removeExtraSpaces(capitalizeWords(municipality.nombre)) : 'n/a',
         ciudad: (ciudad !== undefined) ? removeExtraSpaces(capitalizeWords(ciudad)) : 'n/a',
         direccion: (direccion !== undefined) ? removeExtraSpaces(capitalizeWords(direccion)) : 'n/a',
@@ -75,7 +74,6 @@ const InputThirdParties = ({ label, department, capitalizeWords, removeExtraSpac
         nombre: removeExtraSpaces(capitalizeWords(nombre))
       }
     })
-
     setCustomers(uniqueCustomersWithDepartment)
   }
 
