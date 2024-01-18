@@ -1,5 +1,6 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import Swal from 'sweetalert2'
+import { UserContext } from '../../context/user'
 
 const ModalEditSeller = ({ title, icon, background = 'btn btn-outline-primary', dataSeller, idSeller, putSellerToApi, capitalizeWords, removeExtraSpaces }) => {
   const [form, setForm] = useState({
@@ -8,6 +9,8 @@ const ModalEditSeller = ({ title, icon, background = 'btn btn-outline-primary', 
     metaVentas: 0,
     metaRecaudo: 0
   })
+
+  const { user } = useContext(UserContext)
 
   const handleOnClick = () => {
     if (dataSeller) {
@@ -31,12 +34,13 @@ const ModalEditSeller = ({ title, icon, background = 'btn btn-outline-primary', 
 
   const handleSubmit = async (event) => {
     event.preventDefault()
+    const { token } = user
     const { nombre, id, ...restOfData } = form
     try {
       await putSellerToApi(id, {
         ...restOfData,
         nombre: removeExtraSpaces(capitalizeWords(nombre))
-      })
+      }, token)
       Swal.fire({
         title: 'El vendedor ha sido editado con éxito.',
         icon: 'success'

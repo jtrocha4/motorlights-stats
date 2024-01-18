@@ -1,5 +1,6 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import Swal from 'sweetalert2'
+import { UserContext } from '../../context/user'
 
 const ModalAddSeller = ({ title, icon, background = 'btn btn-outline-primary', postSellerToApi, capitalizeWords, removeExtraSpaces }) => {
   const [form, setForm] = useState({
@@ -8,6 +9,8 @@ const ModalAddSeller = ({ title, icon, background = 'btn btn-outline-primary', p
     metaVentas: 0,
     metaRecaudo: 0
   })
+
+  const { user } = useContext(UserContext)
 
   const handleChange = (event) => {
     setForm({
@@ -18,12 +21,15 @@ const ModalAddSeller = ({ title, icon, background = 'btn btn-outline-primary', p
 
   const handleSubmit = async (event) => {
     event.preventDefault()
-    const { nombre, ...restOfData } = form
+    const { nombre, metaVentas, metaRecaudo, ...restOfData } = form
+    const { token } = user
     try {
       await postSellerToApi({
         ...restOfData,
-        nombre: removeExtraSpaces(capitalizeWords(nombre))
-      })
+        nombre: removeExtraSpaces(capitalizeWords(nombre)),
+        metaRecaudo: metaRecaudo || 0,
+        metaVentas: metaVentas || 0
+      }, token)
       Swal.fire({
         title: 'El vendedor se ha creado con éxito.',
         icon: 'success'
@@ -35,6 +41,7 @@ const ModalAddSeller = ({ title, icon, background = 'btn btn-outline-primary', p
     } catch (error) {
       Swal.fire({
         title: 'Lo sentimos, ha ocurrido un error al crear el vendedor.',
+        text: 'Por favor, asegúrese de completar todos los campos e  inténtelo nuevamente.',
         icon: 'error'
       })
     }
