@@ -31,6 +31,12 @@ body {
   margin: 0px;
 }
 
+#navbar .nav-toggler{
+  visibility: hidden;
+  margin-left: auto;
+  margin-right: 15px;
+}
+
 .nav.sidebar {
   position: fixed;
   display: block;
@@ -206,6 +212,12 @@ a.page-link{
   }
 
   #navbar #div-ul {
+    visibility: visible;
+  }
+}
+
+@media (max-width: 991px){
+  #navbar .nav-toggler{
     visibility: visible;
   }
 }
