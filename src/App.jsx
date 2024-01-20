@@ -20,6 +20,7 @@ import CustomerProfile from './pages/CustomerProfile'
 import ManageProducts from './pages/ManageProducts'
 import ProtectedRoute from './components/ProtectedRoute'
 import Login from './pages/Login'
+import Swal from 'sweetalert2'
 
 function App () {
   const { setSellers } = useContext(DataContext)
@@ -183,7 +184,7 @@ function App () {
     if (user !== null) token = user.token
     try {
       const request = await getSales(token)
-      console.log(request)
+      // console.log(request)
       return request
     } catch (error) {
       console.log(error)
@@ -318,12 +319,33 @@ function App () {
     return firstAndMiddleName
   }
 
+  const isTokenExpired = () => {
+    const tokenExpiration = JSON.parse(window.localStorage.getItem('loggedApp'))
+    if (tokenExpiration) {
+      const tokenExpirationTime = new Date(tokenExpiration.expiredToken).getTime()
+      const dateNow = new Date().getTime()
+      if (dateNow >= tokenExpirationTime) {
+        Swal.fire({
+          title: 'Tu sesión ha expirado.',
+          text: 'Por favor, vuelve a iniciar sesión.',
+          icon: 'warning'
+        }).then((result) => {
+          if (result.isConfirmed) {
+            setUser(null)
+            window.localStorage.removeItem('loggedApp')
+          }
+        })
+      }
+    }
+  }
+
   useEffect(() => {
     fetchSellerPerformanceFromApi()
   }, [newSellerPerformance])
 
   useEffect(() => {
     fetchDepartmentFromApi()
+    isTokenExpired()
   }, [])
 
   useEffect(() => {
