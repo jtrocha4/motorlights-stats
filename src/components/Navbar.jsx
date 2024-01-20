@@ -26,15 +26,15 @@ const Navbar = () => {
               <li className='nav-item'>
                 <Link className='nav-link' to='/detailed-sales'>Informe Detallado Ventas</Link>
               </li>
-              <li className='nav-item'>
+              {/* <li className='nav-item'>
                 <Link className='nav-link' to='/manage-products'>Productos</Link>
-              </li>
+              </li> */}
               <li className='nav-item'>
                 <Link className='nav-link' to='/manage-sellers'>Vendedores</Link>
               </li>
-              <li className='nav-item'>
-                <Link className='nav-link' to='/manage-customers'>Cliente</Link>
-              </li>
+              {/* <li className='nav-item'>
+                <Link className='nav-link' to='/manage-customers'>Clientes</Link>
+              </li> */}
             </ul>
           </div>
           <div className='navbar-logout'>

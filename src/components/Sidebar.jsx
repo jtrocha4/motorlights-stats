@@ -14,15 +14,15 @@ const Sidebar = () => {
         <li className='nav-item'>
           <Link className='nav-link' to='/detailed-sales'><i className='fa-solid fa-file-invoice' /> Informe Detallado Ventas</Link>
         </li>
-        <li className='nav-item'>
-          <Link className='nav-link' to='/manage-products'><i className='fa-solid fa-tag' /> Producto</Link>
-        </li>
+        {/* <li className='nav-item'>
+          <Link className='nav-link' to='/manage-products'><i className='fa-solid fa-tag' /> Productos</Link>
+        </li> */}
         <li className='nav-item'>
           <Link className='nav-link' to='/manage-sellers'><i className='fa-solid fa-users' /> Vendedores</Link>
         </li>
-        <li className='nav-item'>
+        {/* <li className='nav-item'>
           <Link className='nav-link' to='/manage-customers'><i className='fa-solid fa-users' /> Clientes</Link>
-        </li>
+        </li> */}
       </ul>
     </>
   )
