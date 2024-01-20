@@ -15,7 +15,7 @@ const ManageSellers = ({ postSellerToApi, deleteSellerToApi, putSellerToApi, cap
 
   const maximum = Math.ceil(sellers.length / elementsPerPage)
 
-  const { user } = useContext(UserContext)
+  const { user, setUser } = useContext(UserContext)
 
   const handleDelete = (event, id) => {
     event.preventDefault()
@@ -35,7 +35,24 @@ const ManageSellers = ({ postSellerToApi, deleteSellerToApi, putSellerToApi, cap
           await deleteSellerToApi(id, token)
           Swal.fire('El vendedor  ha sido eliminado con éxito.', '', 'success')
         } catch (error) {
-          Swal.fire('Ha ocurrido un error al momento de eliminar al vendedor. Por favor intentelo de nuevo', '', 'error')
+          if (error.response.data.error === 'authorization required, token has expired') {
+            Swal.fire({
+              title: 'Tu sesión ha expirado.',
+              text: 'Por favor, vuelve a iniciar sesión.',
+              icon: 'warning'
+            }).then((result) => {
+              if (result.isConfirmed) {
+                setUser(null)
+                window.localStorage.removeItem('loggedApp')
+              }
+            })
+          } else {
+            Swal.fire({
+              title: 'Lo sentimos, ha ocurrido un error al crear el vendedor.',
+              text: 'Por favor, asegúrese de completar todos los campos e  inténtelo nuevamente.',
+              icon: 'error'
+            })
+          }
         }
       }
     })
