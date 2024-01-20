@@ -289,7 +289,7 @@ function App () {
     const regex = /\d+/
     const id = string.match(regex)
     if (id !== null) {
-      return id[0]
+      return parseInt(id[0])
     } else {
       console.error('the string must contain numbers')
     }
@@ -357,9 +357,9 @@ function App () {
   useEffect(() => {
     if (user !== null) {
       fetchSellerFromApi()
-      fetchCustomerFromApi()
-      fetchProductsFromApi()
-      fetchSalesFromApi()
+      // fetchCustomerFromApi()
+      // fetchProductsFromApi()
+      // fetchSalesFromApi()
     }
   }, [user, newSeller, newCustomer, newProduct])
 
@@ -387,9 +387,9 @@ function App () {
           <Route path='/detailed-sales' element={<DetailedSalesPage splitName={splitName} postSaleToApi={postSaleToApi} />} />
           <Route path='/manage-sellers' element={<ManageSellers postSellerToApi={postSellerToApi} deleteSellerToApi={deleteSellerToApi} putSellerToApi={putSellerToApi} capitalizeWords={capitalizeWords} removeExtraSpaces={removeExtraSpaces} />} />
           <Route path='/manage-sellers/:id' element={<SellerProfile />} />
-          <Route path='/manage-customers' element={<ManageCustomers department={department} extractDate={extractDate} extractIdNumber={extractIdNumber} capitalizeWords={capitalizeWords} removeExtraSpaces={removeExtraSpaces} postCustomerToApi={postCustomerToApi} />} />
+          {/* <Route path='/manage-customers' element={<ManageCustomers department={department} extractDate={extractDate} extractIdNumber={extractIdNumber} capitalizeWords={capitalizeWords} removeExtraSpaces={removeExtraSpaces} postCustomerToApi={postCustomerToApi} />} />
           <Route path='/manage-customers/:id' element={<CustomerProfile />} />
-          <Route path='/manage-products' element={<ManageProducts postProductToApi={postProductToApi} removeExtraSpaces={removeExtraSpaces} />} />
+          <Route path='/manage-products' element={<ManageProducts postProductToApi={postProductToApi} removeExtraSpaces={removeExtraSpaces} />} /> */}
         </Route>
         <Route path='/login' element={<Login />} />
       </Routes>
