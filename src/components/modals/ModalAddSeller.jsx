@@ -10,7 +10,7 @@ const ModalAddSeller = ({ title, icon, background = 'btn btn-outline-primary', p
     metaRecaudo: 0
   })
 
-  const { user } = useContext(UserContext)
+  const { user, setUser } = useContext(UserContext)
 
   const handleChange = (event) => {
     setForm({
@@ -39,11 +39,24 @@ const ModalAddSeller = ({ title, icon, background = 'btn btn-outline-primary', p
         identificacion: ''
       })
     } catch (error) {
-      Swal.fire({
-        title: 'Lo sentimos, ha ocurrido un error al crear el vendedor.',
-        text: 'Por favor, asegúrese de completar todos los campos e  inténtelo nuevamente.',
-        icon: 'error'
-      })
+      if (error.response.data.error === 'authorization required, token has expired') {
+        Swal.fire({
+          title: 'Tu sesión ha expirado.',
+          text: 'Por favor, vuelve a iniciar sesión.',
+          icon: 'warning'
+        }).then((result) => {
+          if (result.isConfirmed) {
+            setUser(null)
+            window.localStorage.removeItem('loggedApp')
+          }
+        })
+      } else {
+        Swal.fire({
+          title: 'Lo sentimos, ha ocurrido un error al crear el vendedor.',
+          text: 'Por favor, asegúrese de completar todos los campos e  inténtelo nuevamente.',
+          icon: 'error'
+        })
+      }
     }
   }
 

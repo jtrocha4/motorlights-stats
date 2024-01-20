@@ -4,7 +4,7 @@ import { UserContext } from '../../context/user'
 
 const ButtonUploadDb = ({ title, background = 'primary', data = [], sales = [], customers = [], sellers = [], products = [], postFunction }) => {
   const [isLoading, setIsLoading] = useState(false)
-  const { user } = useContext(UserContext)
+  const { user, setUser } = useContext(UserContext)
   const { token } = user
 
   const leakedData = []
@@ -80,12 +80,27 @@ const ButtonUploadDb = ({ title, background = 'primary', data = [], sales = [], 
             })
             setIsLoading(false)
           } catch (error) {
-            Swal.fire({
-              title: 'Lo sentimos, ha ocurrido un error al guardar los datos.',
-              text: 'Por favor, asegúrese de haber cargado todos los informes necesarios.',
-              icon: 'error'
-            })
-            setIsLoading(false)
+            console.log(error)
+            if (error.response.data.error === 'authorization required, token has expired') {
+              Swal.fire({
+                title: 'Tu sesión ha expirado.',
+                text: 'Por favor, vuelve a iniciar sesión.',
+                icon: 'warning'
+              }).then((result) => {
+                if (result.isConfirmed) {
+                  setUser(null)
+                  window.localStorage.removeItem('loggedApp')
+                }
+              })
+              setIsLoading(false)
+            } else {
+              Swal.fire({
+                title: 'Lo sentimos, ha ocurrido un error al guardar los datos.',
+                text: 'Por favor, asegúrese de haber cargado todos los informes necesarios.',
+                icon: 'error'
+              })
+              setIsLoading(false)
+            }
           }
         } else {
           Swal.fire({
