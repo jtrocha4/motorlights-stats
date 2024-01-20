@@ -156,21 +156,48 @@ const InputSaleItemFile = ({ label, convertExcelDateToReadable, extractIdNumber,
     return categorizedSalesData
   }
 
+  //* Customers en la Api
+  // const extractSalesFromData = (dataArray = [], dataThirdParties = []) => {
+  //   const sales = dataThirdParties.flatMap(customer =>
+  //     dataArray.filter(element => element.itemsVendidos !== undefined)
+  //       .map(element =>
+  //         element.itemsVendidos.filter(el => {
+  //           const idCustomer = parseInt(extractIdNumber(el.cliente))
+  //           // return idCustomer === extractIdNumber(customer.id)
+  //           return (customer.identificacion !== undefined) ? (idCustomer === customer.identificacion) : ('Customer id is undefined')
+  //         })
+  //           .map(({ fecha, cliente, descripcion, cantidad, ...restOfData }) => ({
+  //             ...restOfData,
+  //             fecha: convertExcelDateToReadable(fecha),
+  //             cliente: extractText(cliente),
+  //             idCliente: parseInt(extractIdNumber(cliente)),
+  //             ciudadCliente: customer.municipio,
+  //             departamentoCliente: customer.departamento,
+  //             idProducto: extractIdNumber(descripcion),
+  //             producto: capitalizeWords(extractText(descripcion)),
+  //             unidadesProducto: cantidad
+  //           }))
+  //       )
+  //       .flat()
+  //   )
+  //   const salesWithCategory = addCategory(sales)
+  //   setSellerSalesData(salesWithCategory)
+  // }
+
   const extractSalesFromData = (dataArray = [], dataThirdParties = []) => {
     const sales = dataThirdParties.flatMap(customer =>
       dataArray.filter(element => element.itemsVendidos !== undefined)
         .map(element =>
           element.itemsVendidos.filter(el => {
-            const idCustomer = parseInt(extractIdNumber(el.cliente))
-            // return idCustomer === extractIdNumber(customer.id)
-            return (customer.identificacion !== undefined) ? (idCustomer === customer.identificacion) : ('Customer id is undefined')
+            const idCustomer = extractIdNumber(el.cliente)
+            return (customer.id !== undefined) ? (idCustomer === customer.id) : ('Customer id is undefined')
           })
             .map(({ fecha, cliente, descripcion, cantidad, ...restOfData }) => ({
               ...restOfData,
               fecha: convertExcelDateToReadable(fecha),
               cliente: extractText(cliente),
-              idCliente: parseInt(extractIdNumber(cliente)),
-              ciudadCliente: customer.municipio,
+              idCliente: extractIdNumber(cliente),
+              ciudadCliente: customer.ciudad,
               departamentoCliente: customer.departamento,
               idProducto: extractIdNumber(descripcion),
               producto: capitalizeWords(extractText(descripcion)),
@@ -190,9 +217,14 @@ const InputSaleItemFile = ({ label, convertExcelDateToReadable, extractIdNumber,
     setDateSaleItemFile(reportDate)
   }, [excelDataSaleItem])
 
+  //* Customers en la Api
+  // useEffect(() => {
+  //   extractSalesFromData(dataSaleItem, customers)
+  // }, [dataSaleItem])
+
   useEffect(() => {
     extractSalesFromData(dataSaleItem, customers)
-  }, [dataSaleItem])
+  }, [customers])
 
   return (
     <>
