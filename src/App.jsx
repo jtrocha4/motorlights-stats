@@ -39,6 +39,7 @@ function App () {
 
   const [department, setDepartment] = useState([])
 
+  //* SellerPerformance
   const fetchSellerPerformanceFromApi = async () => {
     try {
       const response = await getSellerPerformance()
@@ -49,6 +50,18 @@ function App () {
     }
   }
 
+  const postSellerPerformanceToApi = async (newData) => {
+    try {
+      const request = await createSellerPerformance(newData)
+      setNewSellerPerformance(request)
+      return request
+    } catch (error) {
+      console.error(error)
+      throw error
+    }
+  }
+
+  //* Departments
   const fetchDepartmentFromApi = async () => {
     try {
       const response = await getDepartments()
@@ -69,11 +82,13 @@ function App () {
     }
   }
 
-  const postSellerPerformanceToApi = async (newData) => {
+  //* Sellers
+  const fetchSellerFromApi = async () => {
+    let token
+    if (user !== null) token = user.token
     try {
-      const request = await createSellerPerformance(newData)
-      setNewSellerPerformance(request)
-      return request
+      const response = await getSellers(token)
+      setSellers(response)
     } catch (error) {
       console.error(error)
       throw error
@@ -113,18 +128,7 @@ function App () {
     }
   }
 
-  const fetchSellerFromApi = async () => {
-    let token
-    if (user !== null) token = user.token
-    try {
-      const response = await getSellers(token)
-      setSellers(response)
-    } catch (error) {
-      console.error(error)
-      throw error
-    }
-  }
-
+  //* Customer
   const fetchCustomerFromApi = async () => {
     let token
     if (user !== null) token = user.token
@@ -147,6 +151,7 @@ function App () {
     }
   }
 
+  //* Products
   const fetchProductsFromApi = async () => {
     let token
     if (user !== null) token = user.token
@@ -169,9 +174,13 @@ function App () {
     }
   }
 
-  const postSaleToApi = async (newSale, token) => {
+  //* Sales
+  const fetchSalesFromApi = async () => {
+    let token
+    if (user !== null) token = user.token
     try {
-      const request = await createNewSale(newSale, token)
+      const request = await getSales(token)
+      // console.log(request)
       return request
     } catch (error) {
       console.log(error)
@@ -179,12 +188,9 @@ function App () {
     }
   }
 
-  const fetchSalesFromApi = async () => {
-    let token
-    if (user !== null) token = user.token
+  const postSaleToApi = async (newSale, token) => {
     try {
-      const request = await getSales(token)
-      // console.log(request)
+      const request = await createNewSale(newSale, token)
       return request
     } catch (error) {
       console.log(error)
