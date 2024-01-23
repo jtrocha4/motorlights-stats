@@ -14,6 +14,9 @@ const Sidebar = () => {
         <li className='nav-item'>
           <Link className='nav-link' to='/detailed-sales'><i className='fa-solid fa-file-invoice' /> Informe Detallado Ventas</Link>
         </li>
+        <li className='nav-item'>
+          <Link className='nav-link' to='/credit-portfolio'><i className='fa-solid fa-wallet' /> Informe de Cartera</Link>
+        </li>
         {/* <li className='nav-item'>
           <Link className='nav-link' to='/manage-products'><i className='fa-solid fa-tag' /> Productos</Link>
         </li> */}
