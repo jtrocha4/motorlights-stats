@@ -21,6 +21,7 @@ import ManageProducts from './pages/ManageProducts'
 import ProtectedRoute from './components/ProtectedRoute'
 import Login from './pages/Login'
 import Swal from 'sweetalert2'
+import CreditAndPortfolio from './pages/CreditAndPortfolio'
 
 function App () {
   const { setSellers } = useContext(DataContext)
@@ -390,6 +391,7 @@ function App () {
           {/* <Route path='/manage-customers' element={<ManageCustomers department={department} extractDate={extractDate} extractIdNumber={extractIdNumber} capitalizeWords={capitalizeWords} removeExtraSpaces={removeExtraSpaces} postCustomerToApi={postCustomerToApi} />} />
           <Route path='/manage-customers/:id' element={<CustomerProfile />} />
           <Route path='/manage-products' element={<ManageProducts postProductToApi={postProductToApi} removeExtraSpaces={removeExtraSpaces} />} /> */}
+          <Route path='/credit-portfolio' element={<CreditAndPortfolio />} />
         </Route>
         <Route path='/login' element={<Login />} />
       </Routes>
