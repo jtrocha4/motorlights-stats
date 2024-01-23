@@ -11,6 +11,7 @@ import InputThirdParties from '../components/inputs/InputThirdParties'
 import ModalGoals from '../components/modals/ModalGoals'
 import { DataContext } from '../context/data'
 import { DataExcelContext } from '../context/dataExcel'
+import InputCreditAndPortfolio from '../components/inputs/InputCreditAndPortfolio'
 
 const UploadReports = ({ toFixed, department, convertExcelDateToReadable, extractIdNumber, extractText, extractDate, capitalizeWords, removeExtraSpaces, putSellerToApi }) => {
   const { data, dataCollection, salesGoalBySeller, setSalesGoalBySeller, collectionGoalBySeller, setCollectionGoalBySeller, sellers } = useContext(DataContext)
@@ -260,6 +261,7 @@ const UploadReports = ({ toFixed, department, convertExcelDateToReadable, extrac
           <InputNewCustomersFile label='Informe Clientes Nuevos' />
           <InputSaleItemFile label='Informe Ventas Items' convertExcelDateToReadable={convertExcelDateToReadable} extractIdNumber={extractIdNumber} extractText={extractText} extractDate={extractDate} capitalizeWords={capitalizeWords} removeExtraSpaces={removeExtraSpaces} />
           <InputThirdParties label='Informe de Terceros' department={department} extractDate={extractDate} capitalizeWords={capitalizeWords} removeExtraSpaces={removeExtraSpaces} extractIdNumber={extractIdNumber} />
+          <InputCreditAndPortfolio label='Informe de Cartera' />
           <div className='button-group'>
             <ModalGoals title='Modificar metas' sendForm={sendForm} putSellerToApi={putSellerToApi} />
           </div>
