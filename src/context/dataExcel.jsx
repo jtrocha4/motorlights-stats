@@ -11,6 +11,7 @@ export const DataExcelProvider = ({ children }) => {
   const [excelDataNewCustomers, setExcelDataNewCustomers] = useState([])
   const [excelDataSaleItem, setExcelDataSaleItem] = useState([])
   const [excelDataThirdParties, setExcelDataThirdParties] = useState([])
+  const [excelDataCreditAndPortfolio, setExcelDataCreditAndPortfolio] = useState([])
 
   return (
     <DataExcelContext.Provider value={{
@@ -27,7 +28,9 @@ export const DataExcelProvider = ({ children }) => {
       excelDataSaleItem,
       setExcelDataSaleItem,
       excelDataThirdParties,
-      setExcelDataThirdParties
+      setExcelDataThirdParties,
+      excelDataCreditAndPortfolio,
+      setExcelDataCreditAndPortfolio
     }}
     >
       {children}
