@@ -11,7 +11,7 @@ const Logout = ({ background = 'btn btn-outline-light', title }) => {
 
   return (
     <>
-      <button type='button' className={`${background}`} onClick={handleLogout}>{title} <i className='fa-solid fa-right-from-bracket' /></button>
+      <button type='button' className={`${background}`} onClick={handleLogout}>{title} <i className='fa-solid fa-right-from-bracket' title='Cerrar sesión' /></button>
     </>
   )
 }
