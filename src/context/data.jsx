@@ -9,6 +9,9 @@ export const DataProvider = ({ children }) => {
   const [totalDebitByDocNum, setTotalDebitByDocNum] = useState({})
   const [errorRc, setErrorRc] = useState([])
 
+  const [dataPortfolio, setDataPortfolio] = useState([])
+  const [portfolioBehavior, setPortfolioBehavior] = useState([])
+
   const [salesGoalBySeller, setSalesGoalBySeller] = useState({})
   const [collectionGoalBySeller, setCollectionGoalBySeller] = useState({})
 
@@ -26,6 +29,10 @@ export const DataProvider = ({ children }) => {
       setTotalDebitByDocNum,
       errorRc,
       setErrorRc,
+      dataPortfolio,
+      setDataPortfolio,
+      portfolioBehavior,
+      setPortfolioBehavior,
       salesGoalBySeller,
       setSalesGoalBySeller,
       collectionGoalBySeller,
