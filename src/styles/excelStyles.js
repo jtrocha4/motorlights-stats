@@ -67,7 +67,7 @@ const excelStyles = {
   // Blue
   headerBlueStyle: {
     fill: { fgColor: { rgb: 'B8CCE4' } },
-    alignment: { horizontal: 'left' },
+    alignment: { horizontal: 'left', vertical: 'center' },
     font: {
       name: 'MS Sans Serif',
       bold: true
@@ -388,7 +388,7 @@ const excelStyles = {
   whiteRowStyleNumberFormat: {
     numFmt: '0',
     fill: { fgColor: { rgb: 'FFFFFF' } },
-    alignment: { horizontal: 'left' },
+    alignment: { horizontal: 'right' },
     font: {
       bold: false
     },
