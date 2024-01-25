@@ -261,7 +261,7 @@ const UploadReports = ({ toFixed, department, convertExcelDateToReadable, extrac
           <InputNewCustomersFile label='Informe Clientes Nuevos' />
           <InputSaleItemFile label='Informe Ventas Items' convertExcelDateToReadable={convertExcelDateToReadable} extractIdNumber={extractIdNumber} extractText={extractText} extractDate={extractDate} capitalizeWords={capitalizeWords} removeExtraSpaces={removeExtraSpaces} />
           <InputThirdParties label='Informe de Terceros' department={department} extractDate={extractDate} capitalizeWords={capitalizeWords} removeExtraSpaces={removeExtraSpaces} extractIdNumber={extractIdNumber} />
-          <InputCreditAndPortfolio label='Informe de Cartera' />
+          <InputCreditAndPortfolio label='Informe de Cartera' convertExcelDateToReadable={convertExcelDateToReadable} />
           <div className='button-group'>
             <ModalGoals title='Modificar metas' sendForm={sendForm} putSellerToApi={putSellerToApi} />
           </div>
