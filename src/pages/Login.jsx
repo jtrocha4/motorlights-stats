@@ -50,7 +50,7 @@ const Login = () => {
       <section className='section-login'>
         <form action='' onSubmit={handleSubmit}>
           <div className='container-logo mb-4'>
-            <img className='logo' src='\banner-motorlights.png' alt='logo' />
+            <img className='logo' src='src\assets\banner-motorlights.png' alt='logo' />
           </div>
 
           {
