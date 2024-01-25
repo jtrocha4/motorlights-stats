@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react'
-import InputProduct from '../components/inputs/inputProduct'
+import InputProduct from '../components/inputs/InputProduct'
 import Pagination from '../components/Pagination'
 
 import { ProductContext } from '../context/product'
