@@ -2,9 +2,11 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { DataContext } from '../../context/data'
 import Swal from 'sweetalert2'
+import { UserContext } from '../../context/user'
 
 const ModalGoals = ({ title, buttonBackground = 'dark', sendForm, putSellerToApi }) => {
   const { sellers } = useContext(DataContext)
+  const { user } = useContext(UserContext)
   const [isLoading, setIsLoading] = useState(false)
 
   const salesGoals = []
@@ -40,19 +42,20 @@ const ModalGoals = ({ title, buttonBackground = 'dark', sendForm, putSellerToApi
 
   const handleSubmit = async (event) => {
     event.preventDefault()
+    const token = user.token
     try {
       setIsLoading(true)
       for (const key in saleGoalsForm) {
         const saleGoal = saleGoalsForm[key]
         await putSellerToApi(key, {
           metaVentas: saleGoal
-        })
+        }, token)
       }
       for (const key in collectionGoalForm) {
         const collectionGoal = collectionGoalForm[key]
         await putSellerToApi(key, {
           metaRecaudo: collectionGoal
-        })
+        }, token)
       }
       setIsLoading(false)
       Swal.fire({
@@ -65,6 +68,7 @@ const ModalGoals = ({ title, buttonBackground = 'dark', sendForm, putSellerToApi
         title: 'Lo sentimos, ha ocurrido un error al actualizar las metas de los vendedores. Por favor vuelva a intentarlo',
         icon: 'error'
       })
+      setIsLoading(false)
     }
   }
 
