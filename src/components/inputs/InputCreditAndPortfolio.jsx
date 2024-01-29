@@ -40,9 +40,18 @@ const InputCreditAndPortfolio = ({ label, convertExcelDateToReadable }) => {
   const formattedDataPortfolio = formatPortfolioFile(reportHeaders, reportRows)
 
   const formatterDoc = (doc) => {
-    if (doc) {
-      return doc.replace(/[^\w\s]/g, '').replace(/\s+/g, ' ').trim()
+    const document = doc.replace(/[^\w\s]/g, '').replace(/\s+/g, ' ').trim()
+    if (document.startsWith('NCCL')) {
+      const split = document.split(' ')
+      const docNumber = split.length - 1
+      return `NCCL NCE ${split[docNumber]}`
     }
+    if (document.startsWith('DMC')) {
+      const split = document.split(' ')
+      const docNumber = split.length - 1
+      return `DMC DMCE ${split[docNumber]}`
+    }
+    return document
   }
 
   const getMonth = (date) => {
@@ -83,6 +92,7 @@ const InputCreditAndPortfolio = ({ label, convertExcelDateToReadable }) => {
               const { doc, direccion, ...restOfData } = el
               return {
                 ...restOfData,
+                direccion: direccion.replace(/\s+/g, ' ').trim(),
                 doc: formatterDoc(doc)
               }
             })
@@ -129,20 +139,21 @@ const InputCreditAndPortfolio = ({ label, convertExcelDateToReadable }) => {
         const goal = parseFloat(element.totalMes / iva)
         const difference = parseFloat(element.totalMes - matchingCollection.recaudo)
         behavior.push({
-          vendedor: element.vendedor,
-          cliente: element.cliente,
-          doc: element.doc,
-          fechaVencimiento: expirationDate,
           anio: getYear(expirationDate),
-          mes: getMonth(expirationDate),
+          cliente: element.cliente,
+          diasEnPagar: (difference === 0) ? (differenceInDays(expirationDate, paymentDate)) : (0),
+          diasSinPagar: (difference !== 0) ? (differenceInDays(expirationDate, paymentDate)) : (0),
+          diferencia: difference || 0,
+          direccion: element.direccion,
+          doc: element.doc,
           empresa: element.empresa,
+          fechaDePago: paymentDate,
+          fechaVencimiento: expirationDate,
+          mes: getMonth(expirationDate),
           meta: goal,
           totalMes: element.totalMes,
-          fechaDePago: paymentDate,
           valorPago: matchingCollection.recaudo,
-          diferencia: difference || 0,
-          diasEnPagar: (difference === 0) ? (differenceInDays(expirationDate, paymentDate)) : (0),
-          diasSinPagar: (difference !== 0) ? (differenceInDays(expirationDate, paymentDate)) : (0)
+          vendedor: element.vendedor
         })
       }
     })
