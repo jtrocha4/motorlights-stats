@@ -30,13 +30,14 @@ const ButtonDownloadPortfolio = ({ title }) => {
       { v: 'Valor Pago', s: excelStyles.headerBlueStyle },
       { v: 'Diferencia', s: excelStyles.headerBlueStyle },
       { v: 'Dias En Pagar', s: excelStyles.headerBlueStyle },
-      { v: 'Dias Sin Pagar', s: excelStyles.headerBlueStyle }
+      { v: 'Dias Sin Pagar', s: excelStyles.headerBlueStyle },
+      { v: 'Sancionado', s: excelStyles.headerBlueStyle }
     ])
 
     const wsData = portfolioBehavior.map(row => ({
       vendedor: { v: row.vendedor, s: excelStyles.whiteRowStyleTextFormat },
-      cliente: { v: row.vendedor, s: excelStyles.whiteRowStyleTextFormat },
-      direccion: { v: 'Direccion', s: excelStyles.whiteRowStyleTextFormat },
+      cliente: { v: row.cliente, s: excelStyles.whiteRowStyleTextFormat },
+      direccion: { v: row.direccion, s: excelStyles.whiteRowStyleTextFormat },
       doc: { v: row.doc, s: excelStyles.whiteRowStyleTextFormat },
       fechaVencimiento: { v: row.fechaVencimiento, s: excelStyles.whiteRowStyleNumberFormat },
       anio: { v: row.anio, s: excelStyles.whiteRowStyleNumberFormat },
@@ -48,7 +49,8 @@ const ButtonDownloadPortfolio = ({ title }) => {
       valorPago: { v: row.valorPago, s: excelStyles.whiteRowStyleCurrencyFormat, t: 'n' },
       diferencia: { v: row.diferencia, s: excelStyles.whiteRowStyleCurrencyFormat, t: 'n' },
       diasEnPagar: { v: row.diasEnPagar, s: excelStyles.whiteRowStyleNumberFormat, t: 'n' },
-      diasSinPagar: { v: row.diasSinPagar, s: excelStyles.whiteRowStyleNumberFormat, t: 'n' }
+      diasSinPagar: { v: row.diasSinPagar, s: excelStyles.whiteRowStyleNumberFormat, t: 'n' },
+      sancionado: { v: '', s: excelStyles.whiteRowStyleTextFormat }
     }))
 
     const worksheet = XLSX.utils.json_to_sheet(wsData, { origin: 'A5' })
@@ -78,8 +80,9 @@ const ButtonDownloadPortfolio = ({ title }) => {
     worksheet['!cols'][12] = { wch: 20 }
     worksheet['!cols'][13] = { wch: 18 }
     worksheet['!cols'][14] = { wch: 18 }
+    worksheet['!cols'][15] = { wch: 15 }
 
-    worksheet['!autofilter'] = { ref: 'A5:O5' }
+    worksheet['!autofilter'] = { ref: 'A5:P5' }
 
     const mergeOptions = {
       '!merge': [
