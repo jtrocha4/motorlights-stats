@@ -103,7 +103,6 @@ const SimpleBarCharts = ({ sellerPerformance, extractDateFromData }) => {
 
   return (
     <>
-      <h4 className='text-center mb-4'>{(dia !== undefined && mes !== undefined) ? (`Como Vamos ${dia} ${mes}`) : 'Como Vamos'}</h4>
       <section className='charts-button-group'>
         {/* <div className='chart-button'><Calendar /></div> */}
         <div className='chart-button'><Filters splitName={splitName} /></div>
@@ -111,8 +110,9 @@ const SimpleBarCharts = ({ sellerPerformance, extractDateFromData }) => {
       <section className='charts-button-download'>
         <ButtonDownloadImg title='Descargar grafica' fileName='Como Vamos' screenSize={screenSize} containerRef={containerRef} date={`${dia} ${mes}`} />
       </section>
-      <section>
-        <div ref={containerRef} className='simple-bar-charts' id='simple-bar-charts'>
+      <section ref={containerRef}>
+        <h4 className='text-center mt-2'>{(dia !== undefined && mes !== undefined) ? (`Como Vamos ${dia} ${mes}`) : 'Como Vamos'}</h4>
+        <div className='simple-bar-charts'>
           <ResponsiveContainer width={screenSize} aspect={2}>
             <ComposedChart data={leakedData} margin={{ top: 50, bottom: 95 }}>
               <CartesianGrid strokeDasharray='3 3' />
