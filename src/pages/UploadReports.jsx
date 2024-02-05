@@ -198,18 +198,22 @@ const UploadReports = ({ toFixed, department, convertExcelDateToReadable, extrac
       const combinedData = collectionBySeller.find(element => element.vendedor === el.vendedor)
 
       if (combinedData) {
+        console.log(combinedData)
         el.totalRecaudo = combinedData.totalRecaudo || 0
         el.porcentajeRecaudo = combinedData.porcentajeRecaudo
         el.recaudoPendiente = combinedData.recaudoPendiente
         el.bonoResultado = combinedData.bonoResultado || 0
 
         // Bonos resultados
+
+        // 1,2% Recaudo - Recaudo > 100% + Venta >100%
         if (el.porcentajeVentas > 100 && el.porcentajeRecaudo > 100) {
-          el.bonoResultado = (el.totalRecaudo * 0.012) + combinedData.bonoResultado
+          el.bonoResultado += (el.totalRecaudo * 0.012)
         }
 
+        // 0,1% Recaudo - Por cada cliente nuevo
         if (el.clientesNuevos > 0) {
-          el.bonoResultado = ((el.totalRecaudo * 0.001) * el.clientesNuevos) + combinedData.bonoResultado
+          el.bonoResultado += ((el.totalRecaudo * 0.001) * el.clientesNuevos)
         }
 
         el.comisionTotal = (el.comisionVenta + combinedData.comisionRecaudo + el.bonoResultado) || 0
