@@ -198,7 +198,6 @@ const UploadReports = ({ toFixed, department, convertExcelDateToReadable, extrac
       const combinedData = collectionBySeller.find(element => element.vendedor === el.vendedor)
 
       if (combinedData) {
-        console.log(combinedData)
         el.totalRecaudo = combinedData.totalRecaudo || 0
         el.porcentajeRecaudo = combinedData.porcentajeRecaudo
         el.recaudoPendiente = combinedData.recaudoPendiente
@@ -247,7 +246,7 @@ const UploadReports = ({ toFixed, department, convertExcelDateToReadable, extrac
     extractDateFromExcel(dateCostFile)
     reportInputValidator(costReportName, collectionReportName, auxiliaryBookReportName, salesItemsReportName, thirdPartiesReportName)
     reportDateValidator(dateCostFile, dateCollectionFile, dateAuxiliaryBookFile, dateSaleItemFile)
-  }, [dateCostFile, collectionReportName, auxiliaryBookReportName, salesItemsReportName, thirdPartiesReportName])
+  }, [dateCostFile, collectionReportName, auxiliaryBookReportName, salesItemsReportName, thirdPartiesReportName, sellers])
 
   useEffect(() => {
     sendForm()
