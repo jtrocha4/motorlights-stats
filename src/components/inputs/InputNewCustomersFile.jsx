@@ -59,14 +59,16 @@ const InputNewCustomersFile = ({ label }) => {
     const customersBySeller = {}
     sellersCustomers.forEach(element => {
       dataNewCustomers.forEach(newCustomer => {
-        const customerId = newCustomer.id
-        const elementCustomerId = extractIdNumberFromAnArray(element.clientes)
-        if (elementCustomerId.includes(customerId)) {
-          const sellerName = element.vendedor
-          if (customersBySeller[sellerName]) {
-            customersBySeller[sellerName]++
-          } else {
-            customersBySeller[sellerName] = 1
+        if (newCustomer.id !== undefined) {
+          const customerId = newCustomer.id
+          const elementCustomerId = extractIdNumberFromAnArray(element.clientes)
+          if (elementCustomerId.includes(customerId)) {
+            const sellerName = element.vendedor
+            if (customersBySeller[sellerName]) {
+              customersBySeller[sellerName]++
+            } else {
+              customersBySeller[sellerName] = 1
+            }
           }
         }
       })
