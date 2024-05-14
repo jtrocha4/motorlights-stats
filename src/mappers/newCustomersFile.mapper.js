@@ -22,7 +22,7 @@ export const newCustomersFileToModel = (customersFile) => {
     datosActualizados: datosactualizados,
     // estado: Estado,
     // grupo: Grupo,
-    id: ID
+    id: (ID !== undefined) ? (ID.toString()) : ('')
     // listaPrecios
   }))
 
