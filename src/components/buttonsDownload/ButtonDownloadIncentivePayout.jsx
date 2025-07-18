@@ -515,7 +515,13 @@ const ButtonDownloadIncentivePayout = ({ title, data, convertExcelDateToReadable
         worksheet['!cols'][6] = { wch: 40 }
         worksheet['!cols'][7] = { wch: 25 }
 
-        XLSX.utils.book_append_sheet(workbook, worksheet, `INCENTIVO ${sheetName[0]} ${sheetName[1]}`)
+        const numberOfCharacters = sheetName[0].length + sheetName[1].length
+
+        if (numberOfCharacters > 22) {
+          XLSX.utils.book_append_sheet(workbook, worksheet, `INCENTIVO ${sheetName[0]}`)
+        } else {
+          XLSX.utils.book_append_sheet(workbook, worksheet, `INCENTIVO ${sheetName[0]} ${sheetName[1]}`)
+        }
       }
     })
 

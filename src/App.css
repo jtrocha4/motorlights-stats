@@ -67,7 +67,8 @@ body {
 
 .flex {
   width: 83.95vw;
-  height: 100vh;
+  /* height: 100vh; */
+  height: auto;
   flex: 1;
   margin-top: 4.2rem;
   margin-left: 15rem;

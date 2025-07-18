@@ -329,7 +329,13 @@ const ButtonDownloadDetailSaleAndCollection = ({ title, data, convertExcelDateTo
         const sheetName = seller.split(' ')
         const worksheet = XLSX.utils.aoa_to_sheet(sellerWsData[seller])
 
-        XLSX.utils.book_append_sheet(workbook, worksheet, `INCENTIVO ${sheetName[0]} ${sheetName[1]}`)
+        const numberOfCharacters = sheetName[0].length + sheetName[1].length
+
+        if (numberOfCharacters > 22) {
+          XLSX.utils.book_append_sheet(workbook, worksheet, `INCENTIVO ${sheetName[0]}`)
+        } else {
+          XLSX.utils.book_append_sheet(workbook, worksheet, `INCENTIVO ${sheetName[0]} ${sheetName[1]}`)
+        }
 
         XLSX.utils.sheet_add_aoa(worksheet, salesDetailTableHeaders, { origin: 'A17' })
         XLSX.utils.sheet_add_aoa(worksheet, sellerWsDataSale[seller], { origin: 'A19' })
