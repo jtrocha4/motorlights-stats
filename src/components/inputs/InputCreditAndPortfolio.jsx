@@ -88,7 +88,10 @@ const InputCreditAndPortfolio = ({ label, convertExcelDateToReadable }) => {
       if (row.vendedor) {
         if (row.vendedor.startsWith('Total')) {
           if (currentSeller) {
-            portfolioData[currentSeller] = portfolioData[currentSeller].map(el => {
+            portfolioData[currentSeller] = portfolioData[currentSeller].filter(el => {
+              const docType = formatterDoc(el.doc).split(' ')[0].toUpperCase()
+              return docType === 'FV' || docType === 'NCCL' || docType === 'DMC'
+            }).map(el => {
               const { doc, direccion, ...restOfData } = el
               return {
                 ...restOfData,
