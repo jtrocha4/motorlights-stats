@@ -177,6 +177,7 @@ const ButtonDownloadIncentivePayout = ({ title, data, convertExcelDateToReadable
     salesDetailHeaderTable.push([
       { v: 'Fecha', s: excelStyles.headerYellowStyle },
       { v: 'Nombre Cliente', s: excelStyles.headerYellowStyle },
+      { v: 'Factura', s: excelStyles.headerYellowStyle },
       { v: 'Ventas', s: excelStyles.headerYellowStyle }
     ])
 
@@ -190,39 +191,46 @@ const ButtonDownloadIncentivePayout = ({ title, data, convertExcelDateToReadable
         sellerDataSale[seller].forEach(element => {
           const date = element.fecha
           const customer = element.cliente
+          const factura = element.doc
 
           if (!dateSalesPerCustomer[date]) {
             dateSalesPerCustomer[date] = {}
           }
           if (!dateSalesPerCustomer[date][customer]) {
-            dateSalesPerCustomer[date][customer] = 0
+            dateSalesPerCustomer[date][customer] = {}
+          }
+          if (!dateSalesPerCustomer[date][customer][factura]) {
+            dateSalesPerCustomer[date][customer][factura] = 0
           }
 
-          dateSalesPerCustomer[date][customer] += element.ventas
+          dateSalesPerCustomer[date][customer][factura] += element.ventas
         })
       }
 
       for (const key in customer) {
         const seller = key
         let total = 0
-        for (const key in dateSalesPerCustomer) {
+
+        for (const date in dateSalesPerCustomer) {
           if (sellerWsDataSale[seller]) {
-            const date = key
-            for (const item in dateSalesPerCustomer[key]) {
-              const customer = item
-              const totalSales = dateSalesPerCustomer[key][item]
-              total += totalSales
-              sellerWsDataSale[seller].push([
-                { v: convertExcelDateToReadable(date), s: excelStyles.whiteRowStyleNumberFormat },
-                { v: customer, s: excelStyles.whiteRowStyleTextFormat },
-                { v: totalSales, s: excelStyles.yellowStyleCurrencyFormat, t: 'n' }
-              ])
+            for (const customer in dateSalesPerCustomer[date]) {
+              for (const factura in dateSalesPerCustomer[date][customer]) {
+                const totalSales = dateSalesPerCustomer[date][customer][factura]
+                total += totalSales
+                sellerWsDataSale[seller].push([
+                  { v: convertExcelDateToReadable(date), s: excelStyles.whiteRowStyleNumberFormat },
+                  { v: customer, s: excelStyles.whiteRowStyleTextFormat },
+                  { v: factura, s: excelStyles.whiteRowStyleTextFormat },
+                  { v: totalSales, s: excelStyles.yellowStyleCurrencyFormat, t: 'n' }
+                ])
+              }
             }
           }
         }
 
         sellerWsDataSale[seller].push([
           { v: 'Total', s: excelStyles.headerBlackStyle },
+          { v: '', s: excelStyles.headerBlackStyle },
           { v: '', s: excelStyles.headerBlackStyle },
           { v: total, s: excelStyles.blackStyleCurrencyFormat, t: 'n' }
         ])
@@ -330,6 +338,7 @@ const ButtonDownloadIncentivePayout = ({ title, data, convertExcelDateToReadable
         })
       }
     }
+
     for (const key in data) {
       const seller = data[key].vendedor
       if (incentiveWsData[seller]) {
@@ -356,6 +365,7 @@ const ButtonDownloadIncentivePayout = ({ title, data, convertExcelDateToReadable
         })
       }
     }
+
     for (const key in data) {
       const seller = data[key].vendedor
       if (incentiveWsData[seller]) {
@@ -382,6 +392,7 @@ const ButtonDownloadIncentivePayout = ({ title, data, convertExcelDateToReadable
         })
       }
     }
+
     for (const key in data) {
       const seller = data[key].vendedor
 
@@ -498,22 +509,25 @@ const ButtonDownloadIncentivePayout = ({ title, data, convertExcelDateToReadable
         const worksheet = XLSX.utils.aoa_to_sheet(sellerWsData[seller])
         XLSX.utils.sheet_add_aoa(worksheet, incentiveWsData[seller], { origin: 'D2' })
 
+        // Tabla Detalle Ventas
         XLSX.utils.sheet_add_aoa(worksheet, salesDetailHeaderTable, { origin: 'A17' })
         XLSX.utils.sheet_add_aoa(worksheet, sellerWsDataSale[seller], { origin: 'A19' })
 
-        XLSX.utils.sheet_add_aoa(worksheet, collectionDetailHeaderTable, { origin: 'E17' })
-        XLSX.utils.sheet_add_aoa(worksheet, sellerWsDataCollection[seller], { origin: 'E19' })
+        // Tabla Detalle Gestion Cobranza
+        XLSX.utils.sheet_add_aoa(worksheet, collectionDetailHeaderTable, { origin: 'F17' })
+        XLSX.utils.sheet_add_aoa(worksheet, sellerWsDataCollection[seller], { origin: 'F19' })
 
         worksheet['!cols'] = []
 
         worksheet['!cols'][0] = { wch: 20 }
         worksheet['!cols'][1] = { wch: 40 }
         worksheet['!cols'][2] = { wch: 25 }
-        worksheet['!cols'][3] = { wch: 20 }
+        worksheet['!cols'][3] = { wch: 25 }
         worksheet['!cols'][4] = { wch: 20 }
-        worksheet['!cols'][5] = { wch: 40 }
+        worksheet['!cols'][5] = { wch: 30 }
         worksheet['!cols'][6] = { wch: 40 }
-        worksheet['!cols'][7] = { wch: 25 }
+        worksheet['!cols'][7] = { wch: 40 }
+        worksheet['!cols'][8] = { wch: 25 }
 
         const numberOfCharacters = sheetName[0].length + sheetName[1].length
 
