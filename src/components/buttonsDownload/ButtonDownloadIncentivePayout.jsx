@@ -397,9 +397,34 @@ const ButtonDownloadIncentivePayout = ({ title, data, convertExcelDateToReadable
       const seller = data[key].vendedor
 
       // Bonos
-      const firstBonus = sellerData[seller].map(el => el.totalRecaudo * 0.02)
+
+      // * 1. gana el 1% del recaudo si cumple al 100% si cumple del 90 al 100% se gana el 0,6% del recaudo.
+
+      let firstBonus = 0
+      sellerData[seller].forEach(el => {
+        if (el.porcentajeRecaudo >= 100) {
+          firstBonus = el.totalRecaudo * 0.01
+        }
+        if (el.porcentajeRecaudo >= 90 && el.porcentajeRecaudo < 100) {
+          firstBonus = el.totalRecaudo * 0.006
+        }
+      })
+
+      // const firstBonus = sellerData[seller].map(el => el.totalRecaudo * 0.02)
+
+      // * 2. gana el 1% del recaudo si cumple al 100% (la venta)  si cumple del 90 al 100% se gana el 0,6% del recaudo.  Ambos se pagan por el recaudo pero debo tener en cuenta si cumplió la venta
 
       let secondBonus = 0
+      sellerData[seller].forEach(el => {
+        if (el.porcentajeVentas >= 100) {
+          secondBonus = el.totalRecaudo * 0.01
+        }
+        if (el.porcentajeRecaudo >= 90 && el.porcentajeRecaudo < 100) {
+          secondBonus = el.totalRecaudo * 0.006
+        }
+      })
+
+      /*
       sellerData[seller].forEach(el => {
         if (el.porcentajeVentas > 100 && el.porcentajeRecaudo > 100) {
           secondBonus = el.totalRecaudo * 0.012
@@ -407,21 +432,20 @@ const ButtonDownloadIncentivePayout = ({ title, data, convertExcelDateToReadable
           secondBonus = 0
         }
       })
+      */
 
-      // TODO: Trabajar las funcionalidades de los siguientes bonos
+      // * 3. se calcula meta de rotación con el 3% de la meta de venta,  debemos tener un campo donde podamos poner un listado de productos y que el software consulte este listado y revise si la venta de los productos cumplió la meta (ese 3% que se calculó)  en caso de cumplirlo se gana el 1% del recaudo
+
       const thirdBonus = 0
       sellerData[seller].forEach(el => {
         // el.totalRecaudo * 0.06
       })
+
+      // * 4. meta para clientes de portafolio, si se cumple el 100% de la meta de clientes se gana el 1% del recaudo
+
       const fourthBonus = 0
       sellerData[seller].forEach(el => {
         // el => el.totalRecaudo * 0.07
-      })
-      let fifthBonus = 0
-      sellerData[seller].forEach(el => {
-        if (el.clientesNuevos > 0) {
-          fifthBonus = (el.totalRecaudo * 0.001) * el.clientesNuevos
-        }
       })
 
       if (incentiveWsData[seller]) {
@@ -450,14 +474,14 @@ const ButtonDownloadIncentivePayout = ({ title, data, convertExcelDateToReadable
             ],
             [
               { v: 'Bono Resultados', s: excelStyles.headerYellowStyle },
-              { v: '2% Recaudo', s: excelStyles.whiteStyleTextFormat },
-              { v: 'Sin condiciones', s: excelStyles.whiteStyleTextFormat },
+              { v: 'Bono adicional por recaudo', s: excelStyles.whiteStyleTextFormat },
+              { v: 'Gana el 1% del recaudo si cumple al 100% si cumple del 90 al 100% se gana el 0,6% del recaudo.', s: excelStyles.whiteStyleTextFormat },
               { v: `${firstBonus}`, s: excelStyles.whiteStyleCurrencyFormat, t: 'n' }
             ],
             [
               { v: '', s: {} },
-              { v: '1,2% Recaudo', s: excelStyles.whiteStyleTextFormat },
-              { v: 'Recaudo > 100% + Venta >100%', s: excelStyles.whiteStyleTextFormat },
+              { v: 'Bono adicional por venta', s: excelStyles.whiteStyleTextFormat },
+              { v: 'Gana el 1% del recaudo si cumple al 100% (la venta)  si cumple del 90 al 100% se gana el 0,6% del recaudo. Ambos se pagan por el recaudo pero debo tener en cuenta si cumplió la venta', s: excelStyles.whiteStyleTextFormat },
               { v: `${secondBonus}`, s: excelStyles.whiteStyleCurrencyFormat, t: 'n' }
             ],
             [
@@ -471,12 +495,14 @@ const ButtonDownloadIncentivePayout = ({ title, data, convertExcelDateToReadable
               { v: '0,7% Recaudo', s: excelStyles.whiteStyleTextFormat },
               { v: 'Util ml del mes >20%', s: excelStyles.whiteStyleTextFormat },
               { v: `${fourthBonus}`, s: excelStyles.whiteStyleCurrencyFormat, t: 'n' }
-            ],
+            ]
+            /*
             [{ v: '', s: {} },
               { v: '0,1% Recaudo', s: excelStyles.whiteStyleTextFormat },
               { v: 'Por cada cliente nuevo', s: excelStyles.whiteStyleTextFormat },
               { v: `${fifthBonus}`, s: excelStyles.whiteStyleCurrencyFormat, t: 'n' }
             ]
+            */
           )
           incentiveWsData[seller].push([{ v: '', s: {} }])
         })
