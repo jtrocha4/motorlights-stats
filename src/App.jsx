@@ -22,6 +22,7 @@ import ProtectedRoute from './components/ProtectedRoute'
 import Login from './pages/Login'
 import Swal from 'sweetalert2'
 import CreditAndPortfolio from './pages/CreditAndPortfolio'
+import ManageInventoryTurnover from './pages/ManageInventoryTurnover'
 
 function App () {
   const { setSellers } = useContext(DataContext)
@@ -98,6 +99,7 @@ function App () {
 
   const postSellerToApi = async (newSeller, token) => {
     try {
+      console.log(newSeller)
       const request = await createNewSeller(newSeller, token)
       setNewSeller(request)
       return request
@@ -392,6 +394,7 @@ function App () {
           <Route path='/manage-customers/:id' element={<CustomerProfile />} />
           <Route path='/manage-products' element={<ManageProducts postProductToApi={postProductToApi} removeExtraSpaces={removeExtraSpaces} />} /> */}
           <Route path='/credit-portfolio' element={<CreditAndPortfolio />} />
+          <Route path='/manage-inventory-turnover' element={<ManageInventoryTurnover />} />
         </Route>
         <Route path='/login' element={<Login />} />
       </Routes>
