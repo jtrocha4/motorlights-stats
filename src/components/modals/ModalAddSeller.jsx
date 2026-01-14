@@ -7,7 +7,8 @@ const ModalAddSeller = ({ title, icon, background = 'btn btn-outline-primary', p
     nombre: '',
     identificacion: '',
     metaVentas: 0,
-    metaRecaudo: 0
+    metaRecaudo: 0,
+    metaClientesDePortafolio: 0
   })
 
   const { user, setUser } = useContext(UserContext)
@@ -21,14 +22,15 @@ const ModalAddSeller = ({ title, icon, background = 'btn btn-outline-primary', p
 
   const handleSubmit = async (event) => {
     event.preventDefault()
-    const { nombre, metaVentas, metaRecaudo, ...restOfData } = form
+    const { nombre, metaVentas, metaRecaudo, metaClientesDePortafolio, ...restOfData } = form
     const { token } = user
     try {
       await postSellerToApi({
         ...restOfData,
         nombre: removeExtraSpaces(capitalizeWords(nombre)),
-        metaRecaudo: metaRecaudo || 0,
-        metaVentas: metaVentas || 0
+        metaRecaudo: Number(metaRecaudo) || 0,
+        metaVentas: Number(metaVentas) || 0,
+        metaClientesDePortafolio: Number(metaClientesDePortafolio) || 0
       }, token)
       Swal.fire({
         title: 'El vendedor se ha creado con éxito.',
@@ -65,7 +67,8 @@ const ModalAddSeller = ({ title, icon, background = 'btn btn-outline-primary', p
       nombre: '',
       identificacion: '',
       metaVentas: 0,
-      metaRecaudo: 0
+      metaRecaudo: 0,
+      metaClientesDePortafolio: 0
     })
   }
 
@@ -91,11 +94,15 @@ const ModalAddSeller = ({ title, icon, background = 'btn btn-outline-primary', p
                 </div>
                 <div className='mb-3'>
                   <label className='form-label'>Meta de ventas</label>
-                  <input name='metaVentas' className='form-control' type='text' onChange={handleChange} value={form.metaVentas || 0} />
+                  <input name='metaVentas' className='form-control' type='number' onChange={handleChange} value={form.metaVentas || 0} />
                 </div>
                 <div className='mb-3'>
                   <label className='form-label'>Meta de recaudo</label>
-                  <input name='metaRecaudo' className='form-control' type='text' onChange={handleChange} value={form.metaRecaudo || 0} />
+                  <input name='metaRecaudo' className='form-control' type='number' onChange={handleChange} value={form.metaRecaudo || 0} />
+                </div>
+                <div className='mb-3'>
+                  <label className='form-label'>Meta de clientes de portafolio</label>
+                  <input name='metaClientesDePortafolio' className='form-control' type='number' onChange={handleChange} value={form.metaClientesDePortafolio || 0} />
                 </div>
                 <div className='mb-3'>
                   <span><b>Importante:</b> La identificación del vendedor debe coincidir con la identificación utilizada en los informes.</span>

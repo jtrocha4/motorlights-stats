@@ -7,7 +7,8 @@ const ModalEditSeller = ({ title, icon, background = 'btn btn-outline-primary', 
     nombre: '',
     identificacion: '',
     metaVentas: 0,
-    metaRecaudo: 0
+    metaRecaudo: 0,
+    metaClientesDePortafolio: 0
   })
 
   const { user, setUser } = useContext(UserContext)
@@ -93,11 +94,15 @@ const ModalEditSeller = ({ title, icon, background = 'btn btn-outline-primary', 
                 </div>
                 <div className='mb-3'>
                   <label className='form-label'>Meta de ventas</label>
-                  <input name='metaVentas' className='form-control' type='text' onChange={handleChange} value={form.metaVentas || 0} />
+                  <input name='metaVentas' className='form-control' type='number' onChange={handleChange} value={form.metaVentas || 0} />
                 </div>
                 <div className='mb-3'>
                   <label className='form-label'>Meta de recaudo</label>
-                  <input name='metaRecaudo' className='form-control' type='text' onChange={handleChange} value={form.metaRecaudo || 0} />
+                  <input name='metaRecaudo' className='form-control' type='number' onChange={handleChange} value={form.metaRecaudo || 0} />
+                </div>
+                <div className='mb-3'>
+                  <label className='form-label'>Meta de clientes de portafolio</label>
+                  <input name='metaClientesDePortafolio' className='form-control' type='number' onChange={handleChange} value={form.metaClientesDePortafolio || 0} />
                 </div>
                 <div className='mb-3'>
                   <span><b>Importante:</b> La identificación del vendedor debe coincidir con la identificación utilizada en los informes.</span>
