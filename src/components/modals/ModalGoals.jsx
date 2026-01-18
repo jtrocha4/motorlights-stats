@@ -20,10 +20,12 @@ const ModalGoals = ({ title, buttonBackground = 'dark', sendForm, putSellerToApi
 
   const [saleGoalsForm, setSaleGoalsForm] = useState([])
   const [collectionGoalForm, setCollectionGoalForm] = useState([])
+  const [portfolioClientsGoal, setPortfolioClientsGoal] = useState([])
 
   const setGoals = () => {
     setSaleGoalsForm(salesGoals)
     setCollectionGoalForm(collectionGoals)
+    setPortfolioClientsGoal(portfolioClientsGoal)
   }
 
   const handleChange = (event) => {
@@ -36,6 +38,13 @@ const ModalGoals = ({ title, buttonBackground = 'dark', sendForm, putSellerToApi
   const handleChangeCollectionGoal = (event) => {
     setCollectionGoalForm({
       ...collectionGoalForm,
+      [event.target.name]: parseFloat(event.target.value)
+    })
+  }
+
+  const handleChangePortfolioClientsGoals = (event) => {
+    setPortfolioClientsGoal({
+      ...portfolioClientsGoal,
       [event.target.name]: parseFloat(event.target.value)
     })
   }
@@ -55,6 +64,12 @@ const ModalGoals = ({ title, buttonBackground = 'dark', sendForm, putSellerToApi
         const collectionGoal = collectionGoalForm[key]
         await putSellerToApi(key, {
           metaRecaudo: collectionGoal
+        }, token)
+      }
+      for (const key in portfolioClientsGoal) {
+        const portfolioGoal = portfolioClientsGoal[key]
+        await putSellerToApi(key, {
+          metaClientesDePortafolio: portfolioGoal
         }, token)
       }
       setIsLoading(false)
@@ -115,6 +130,10 @@ const ModalGoals = ({ title, buttonBackground = 'dark', sendForm, putSellerToApi
                               <div>
                                 <label className='form-label'>Meta de recaudo:</label>
                                 <input name={`${id}`} type='number' className='form-control' placeholder='Meta de recaudo' onChange={handleChangeCollectionGoal} value={collectionGoalForm[`${id}`] || 0} title='Meta de recaudo' />
+                              </div>
+                              <div>
+                                <label className='form-label'>Meta de clientes de portafolio:</label>
+                                <input name={`${id}`} type='number' className='form-control' placeholder='Meta de clientes de portafolio' onChange={handleChangePortfolioClientsGoals} value={portfolioClientsGoal[`${id}`] || 0} title='Meta de clientes de portafolio' />
                               </div>
                             </div>
                           ))
