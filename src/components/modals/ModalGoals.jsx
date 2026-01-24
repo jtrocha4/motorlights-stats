@@ -11,21 +11,23 @@ const ModalGoals = ({ title, buttonBackground = 'dark', sendForm, putSellerToApi
 
   const salesGoals = []
   const collectionGoals = []
+  const portfolioClientsGoals = []
 
   sellers.forEach(seller => {
-    const { id, metaVentas, metaRecaudo } = seller
+    const { id, metaVentas, metaRecaudo, metaClientesDePortafolio } = seller
     salesGoals[id] = metaVentas
     collectionGoals[id] = metaRecaudo
+    portfolioClientsGoals[id] = metaClientesDePortafolio
   })
 
   const [saleGoalsForm, setSaleGoalsForm] = useState([])
   const [collectionGoalForm, setCollectionGoalForm] = useState([])
-  const [portfolioClientsGoal, setPortfolioClientsGoal] = useState([])
+  const [portfolioClientsGoalForm, setPortfolioClientsGoalForm] = useState([])
 
   const setGoals = () => {
     setSaleGoalsForm(salesGoals)
     setCollectionGoalForm(collectionGoals)
-    setPortfolioClientsGoal(portfolioClientsGoal)
+    setPortfolioClientsGoalForm(portfolioClientsGoals)
   }
 
   const handleChange = (event) => {
@@ -43,11 +45,13 @@ const ModalGoals = ({ title, buttonBackground = 'dark', sendForm, putSellerToApi
   }
 
   const handleChangePortfolioClientsGoals = (event) => {
-    setPortfolioClientsGoal({
-      ...portfolioClientsGoal,
+    setPortfolioClientsGoalForm({
+      ...portfolioClientsGoalForm,
       [event.target.name]: parseFloat(event.target.value)
     })
   }
+
+  console.log(portfolioClientsGoals)
 
   const handleSubmit = async (event) => {
     event.preventDefault()
@@ -66,8 +70,8 @@ const ModalGoals = ({ title, buttonBackground = 'dark', sendForm, putSellerToApi
           metaRecaudo: collectionGoal
         }, token)
       }
-      for (const key in portfolioClientsGoal) {
-        const portfolioGoal = portfolioClientsGoal[key]
+      for (const key in portfolioClientsGoalForm) {
+        const portfolioGoal = portfolioClientsGoalForm[key]
         await putSellerToApi(key, {
           metaClientesDePortafolio: portfolioGoal
         }, token)
@@ -133,7 +137,7 @@ const ModalGoals = ({ title, buttonBackground = 'dark', sendForm, putSellerToApi
                               </div>
                               <div>
                                 <label className='form-label'>Meta de clientes de portafolio:</label>
-                                <input name={`${id}`} type='number' className='form-control' placeholder='Meta de clientes de portafolio' onChange={handleChangePortfolioClientsGoals} value={portfolioClientsGoal[`${id}`] || 0} title='Meta de clientes de portafolio' />
+                                <input name={`${id}`} type='number' className='form-control' placeholder='Meta de clientes de portafolio' onChange={handleChangePortfolioClientsGoals} value={portfolioClientsGoalForm[`${id}`] || 0} title='Meta de clientes de portafolio' />
                               </div>
                             </div>
                           ))
