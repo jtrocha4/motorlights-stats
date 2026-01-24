@@ -142,7 +142,7 @@ const ButtonDownloadExcel = ({ title, data, toFixed, splitName }) => {
           cell.s = excelStyles.grayStyleCurrencyFormat
         }
         if (value === 'Clientes nuevos') {
-          cell.v = item.clientesNuevos
+          cell.v = item.clientesNuevos.length
           cell.t = 'n'
           cell.s = excelStyles.orangeStyleNumberFormat
         }
@@ -225,7 +225,9 @@ const ButtonDownloadExcel = ({ title, data, toFixed, splitName }) => {
       total.porcentajeRecaudo = (total.recaudo * 100) / total.metaRecaudoSinIva
       total.recaudoPendiente = data.reduce((acc, item) => acc + item.recaudoPendiente, 0)
 
-      total.clientesNuevos = data.reduce((acc, item) => acc + item.clientesNuevos, 0)
+      // total.clientesNuevos = data.reduce((acc, item) => acc + item.clientesNuevos, 0)
+
+      total.clientesNuevos = data.reduce((acc, item) => acc + item.clientesNuevos.length, 0)
 
       total.margen = data.reduce((acc, item) => acc + item.margen, 0)
       total.costo = data.reduce((acc, item) => acc + item.totalCosto, 0)
