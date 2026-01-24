@@ -14,6 +14,7 @@ export const DataProvider = ({ children }) => {
 
   const [salesGoalBySeller, setSalesGoalBySeller] = useState({})
   const [collectionGoalBySeller, setCollectionGoalBySeller] = useState({})
+  const [portfolioClientsGoals, setPortfolioClientsGoals] = useState({})
 
   const [sellers, setSellers] = useState([])
 
@@ -37,6 +38,8 @@ export const DataProvider = ({ children }) => {
       setSalesGoalBySeller,
       collectionGoalBySeller,
       setCollectionGoalBySeller,
+      portfolioClientsGoals,
+      setPortfolioClientsGoals,
       sellers,
       setSellers
     }}
