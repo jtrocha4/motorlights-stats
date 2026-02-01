@@ -5,8 +5,8 @@ import { ReportDetailsContext } from '../../context/reportDetails'
 import { DataContext } from '../../context/data'
 import { DataExcelContext } from '../../context/dataExcel'
 
-const InputCostFile = ({ label, toFixed, salesGoalBySeller, collectionGoalBySeller, extractIdNumber, extractText, extractDate, removeExtraSpaces }) => {
-  const { setData, sellers } = useContext(DataContext)
+const InputCostFile = ({ label, toFixed, salesGoalBySeller, collectionGoalBySeller, portfolioClientsGoals, extractIdNumber, extractText, extractDate, removeExtraSpaces }) => {
+  const { setData, sellers, inventoryTurnover } = useContext(DataContext)
   const { excelDataCost, setExcelDataCost } = useContext(DataExcelContext)
   const { setDateCostFile, setCostReportName } = useContext(ReportDetailsContext)
 
@@ -60,7 +60,15 @@ const InputCostFile = ({ label, toFixed, salesGoalBySeller, collectionGoalBySell
     }
   }
 
-  const extractCostData = (formattedData, salesGoalBySeller = {}, collectionGoalBySeller = {}) => {
+  const getPortfolioClientsGoals = (sellerName, portfolioClientsGoal) => {
+    if (portfolioClientsGoal[sellerName] !== undefined) {
+      return portfolioClientsGoal[sellerName]
+    } else {
+      return 0
+    }
+  }
+
+  const extractCostData = (formattedData, salesGoalBySeller = {}, collectionGoalBySeller = {}, portfolioClientsGoals = {}) => {
     const saleData = {}
     const sale = []
     let currentSeller
@@ -75,6 +83,11 @@ const InputCostFile = ({ label, toFixed, salesGoalBySeller, collectionGoalBySell
     let percetageSale
     let pendingSalesTarget
     let pendingCollectionTarget
+    let portfolioClientsGoal
+
+    let inventoryTurnoverGoal
+    const salesByInventoryTurnover = {}
+    let totalSalesInventoryTurnover = 0
 
     let totalWithFreight
     let margin
@@ -90,8 +103,12 @@ const InputCostFile = ({ label, toFixed, salesGoalBySeller, collectionGoalBySell
       cantidadFacturas: 0,
       metaRecaudoSinIva: getSalesGoal('MOTORLIGHTS S.A.S', salesGoalBySeller),
       metaVentas: getGoalCollection('MOTORLIGHTS S.A.S', collectionGoalBySeller),
+      metaClientesDePortafolio: getPortfolioClientsGoals('MOTORLIGHTS S.A.S', portfolioClientsGoals),
       porcentajeRecaudo: 0,
       porcentajeVentas: 0,
+      metaRotacionDeInventario: 0,
+      ventasRotacionDeInventario: [],
+      totalVentasRotacionDeInventario: 0,
       promedioVentas: 0,
       recaudoPendiente: 0,
       totalRecaudo: 0,
@@ -101,7 +118,7 @@ const InputCostFile = ({ label, toFixed, salesGoalBySeller, collectionGoalBySell
       comisionTotal: 0,
       margen: 0,
       porcentajeMargen: 0,
-      clientesNuevos: 0
+      clientesNuevos: []
     }
 
     formattedData.forEach(row => {
@@ -127,6 +144,10 @@ const InputCostFile = ({ label, toFixed, salesGoalBySeller, collectionGoalBySell
             collectionTarget = collectionGoalBySeller[currentSeller] || 0
 
             pendingCollectionTarget = collectionGoalBySeller[currentSeller] || 0
+
+            portfolioClientsGoal = portfolioClientsGoals[currentSeller] || 0
+
+            inventoryTurnoverGoal = salesGoalBySeller[currentSeller] * 0.03
 
             // Aproximacion de los datos
             averageSale = toFixed(averageSale, 2)
@@ -157,6 +178,24 @@ const InputCostFile = ({ label, toFixed, salesGoalBySeller, collectionGoalBySell
 
             saleData[currentSeller] = processedSalesData
 
+            salesByInventoryTurnover[currentSeller] = {}
+
+            saleData[currentSeller].forEach(({ idProducto, producto, ventas }) => {
+              inventoryTurnover.forEach(({ codigo, nombre }) => {
+                if (idProducto === Number(codigo)) {
+                  totalSalesInventoryTurnover += ventas
+                  if (!salesByInventoryTurnover[currentSeller][Number(codigo)]) {
+                    salesByInventoryTurnover[currentSeller][Number(codigo)] = {
+                      producto,
+                      codigo,
+                      totalDeVenta: 0
+                    }
+                  }
+                  salesByInventoryTurnover[currentSeller][Number(codigo)].totalDeVenta += Number(ventas) || 0
+                }
+              })
+            })
+
             sale.push(
               {
                 cantidadFacturas: billCounter,
@@ -165,9 +204,13 @@ const InputCostFile = ({ label, toFixed, salesGoalBySeller, collectionGoalBySell
                 margen: margin,
                 metaRecaudoSinIva: collectionTarget,
                 metaVentas: goalSale,
+                metaClientesDePortafolio: portfolioClientsGoal,
                 porcentajeMargen: percentageMargin,
                 porcentajeRecaudo: 0,
                 porcentajeVentas: percetageSale,
+                metaRotacionDeInventario: inventoryTurnoverGoal,
+                ventasRotacionDeInventario: salesByInventoryTurnover[currentSeller],
+                totalVentasRotacionDeInventario: totalSalesInventoryTurnover,
                 promedioVentas: averageSale,
                 recaudoPendiente: pendingCollectionTarget,
                 totalCosto: totalCost,
@@ -176,7 +219,7 @@ const InputCostFile = ({ label, toFixed, salesGoalBySeller, collectionGoalBySell
                 vendedor: currentSeller,
                 venta: saleData[currentSeller],
                 ventasPendiente: pendingSalesTarget,
-                clientesNuevos: 0
+                clientesNuevos: []
               }
             )
           }
@@ -220,18 +263,21 @@ const InputCostFile = ({ label, toFixed, salesGoalBySeller, collectionGoalBySell
           cantidadFacturas: 0,
           metaVentas: getSalesGoal(identificacion, salesGoalBySeller),
           metaRecaudoSinIva: getGoalCollection(identificacion, collectionGoalBySeller),
+          metaClientesDePortafolio: getPortfolioClientsGoals(identificacion, portfolioClientsGoals),
           porcentajeRecaudo: 0,
           porcentajeVentas: 0,
+          metaRotacionDeInventario: 0,
           promedioVentas: 0,
           recaudoPendiente: 0,
           totalRecaudo: 0,
           totalVenta: 0,
+          totalVentasRotacionDeInventario: 0,
           vendedor: identificacion,
           ventasPendiente: 0,
           comisionTotal: 0,
           margen: 0,
           porcentajeMargen: 0,
-          clientesNuevos: 0
+          clientesNuevos: []
         })
       })
 
@@ -240,15 +286,14 @@ const InputCostFile = ({ label, toFixed, salesGoalBySeller, collectionGoalBySell
         sale.push(motorlightsObject)
       }
     }
-
     setData(sale)
   }
 
   useEffect(() => {
-    extractCostData(formattedDataCost, salesGoalBySeller, collectionGoalBySeller)
+    extractCostData(formattedDataCost, salesGoalBySeller, collectionGoalBySeller, portfolioClientsGoals)
     setCostReportName(reportName)
     setDateCostFile(reportDate)
-  }, [excelDataCost, salesGoalBySeller, collectionGoalBySeller, sellers])
+  }, [excelDataCost, salesGoalBySeller, collectionGoalBySeller, portfolioClientsGoals, sellers])
 
   return (
     <>
