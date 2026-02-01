@@ -18,6 +18,8 @@ export const DataProvider = ({ children }) => {
 
   const [sellers, setSellers] = useState([])
 
+  const [inventoryTurnover, setInventoryTurnover] = useState([])
+
   return (
     <DataContext.Provider value={{
       data,
@@ -41,7 +43,9 @@ export const DataProvider = ({ children }) => {
       portfolioClientsGoals,
       setPortfolioClientsGoals,
       sellers,
-      setSellers
+      setSellers,
+      inventoryTurnover,
+      setInventoryTurnover
     }}
     >
       {children}
