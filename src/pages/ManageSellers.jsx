@@ -9,13 +9,12 @@ import { DataContext } from '../context/data'
 
 const ManageSellers = ({ postSellerToApi, deleteSellerToApi, putSellerToApi, capitalizeWords, removeExtraSpaces }) => {
   const { sellers } = useContext(DataContext)
+  const { user, setUser } = useContext(UserContext)
 
   const [page, setPage] = useState(1)
   const [elementsPerPage, setElementsPerPage] = useState(25)
 
   const maximum = Math.ceil(sellers.length / elementsPerPage)
-
-  const { user, setUser } = useContext(UserContext)
 
   const handleDelete = (event, id) => {
     event.preventDefault()
@@ -48,7 +47,7 @@ const ManageSellers = ({ postSellerToApi, deleteSellerToApi, putSellerToApi, cap
             })
           } else {
             Swal.fire({
-              title: 'Lo sentimos, ha ocurrido un error al crear el vendedor.',
+              title: 'Lo sentimos, ha ocurrido un error al eliminar el vendedor.',
               text: 'Por favor, asegúrese de completar todos los campos e  inténtelo nuevamente.',
               icon: 'error'
             })
