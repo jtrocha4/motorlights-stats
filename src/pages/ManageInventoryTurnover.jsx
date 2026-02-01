@@ -1,40 +1,81 @@
-import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import React, { useContext, useState } from 'react'
 import Pagination from '../components/Pagination'
+import { DataContext } from '../context/data'
+import ModalAddInventoryTurnover from '../components/modals/ModalAddInventoryTurnover'
+import Swal from 'sweetalert2'
+import { UserContext } from '../context/user'
+import ModalEditInventoryTurnover from '../components/modals/ModalEditInventoryTurnover'
 
-const ManageInventoryTurnover = () => {
-  const products = [
-    {
-      name: 'Bombillo Farola P15D M3 Ceramica (X10)(541)',
-      id: '10771502201'
-    },
-    {
-      name: 'Switche Antishock AZUL (606)',
-      id: '18446010042'
-    },
-    {
-      name: 'Bombillo Farola H4 Premium Smart ACDC 60V(39)',
-      id: '10770401801'
-    }
-  ]
+const ManageInventoryTurnover = ({ postInventoryTurnoverToApi, deleteInventoryTurnoverToApi, putInventoryTurnoverToApi, removeExtraSpaces }) => {
+  const { inventoryTurnover } = useContext(DataContext)
+  const { user, setUser } = useContext(UserContext)
 
   const [page, setPage] = useState(1)
   const [elementsPerPage, setElementsPerPage] = useState(25)
 
-  const maximum = Math.ceil(products.length / elementsPerPage)
+  const maximum = Math.ceil(inventoryTurnover.length / elementsPerPage)
+
+  const handleDelete = (event, id) => {
+    event.preventDefault()
+    const { token } = user
+
+    Swal.fire({
+      title: '¿Seguro que deseas eliminar este artículo?',
+      text: 'Esta acción no se puede deshacer. Si eliminas el artículo de la rotación de inventario, se perderán todos los datos asociados.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      denyButtonColor: '#6e7881',
+      denyButtonText: 'Cancelar',
+      confirmButtonText: 'Guardar'
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          await deleteInventoryTurnoverToApi(id, token)
+          Swal.fire('El artículo ha sido eliminado con éxito de la rotación de inventario.', '', 'success')
+        } catch (error) {
+          if (error.response.data.error === 'authorization required, token has expired') {
+            Swal.fire({
+              title: 'Tu sesión ha expirado.',
+              text: 'Por favor, vuelve a iniciar sesión.',
+              icon: 'warning'
+            }).then((result) => {
+              if (result.isConfirmed) {
+                setUser(null)
+                window.localStorage.removeItem('loggedApp')
+              }
+            })
+          } else {
+            Swal.fire({
+              title: 'Lo sentimos, ha ocurrido un error al eliminar el artículo.',
+              text: 'Por favor, asegúrese de completar todos los campos e  inténtelo nuevamente.',
+              icon: 'error'
+            })
+          }
+        }
+      }
+    })
+  }
 
   return (
     <div className='flex'>
       <div className='container-fluid'>
         <h2>Gestionar Rotación de Inventario</h2>
+        <div className='mt-4'>
+          <ModalAddInventoryTurnover title='Agregar nuevo artículo de rotación' postInventoryTurnoverToApi={postInventoryTurnoverToApi} removeExtraSpaces={removeExtraSpaces} />
+        </div>
         <section className='mt-4'>
           <Pagination page={page} setPage={setPage} maximum={maximum} />
           {
-                products.map(el => (
+                inventoryTurnover.map(el => (
                   <div className='card mt-3' key={el.id}>
+                    <div className='button-group-card'>
+                      <button type='button' title='Eliminar' className='btn btn-outline-danger' onClick={(event) => handleDelete(event, el.id)}><i className='fa-solid fa-trash' /></button>
+                      <ModalEditInventoryTurnover title='Editar artículo de rotación' icon={<i className='fa-solid fa-pen-to-square' />} dataInventoryTurnover={el} idInventoryTurnover={el.id} putInventoryTurnoverToApi={putInventoryTurnoverToApi} removeExtraSpaces={removeExtraSpaces} />
+                    </div>
                     <div className='card-body'>
-                      <h5 className='card-title'>{el.name}</h5>
-                      <h6 className='card-subtitle mb-2 text-body-secondary'>{el.id}</h6>
+                      <h5 className='card-title'>{el.nombre}</h5>
+                      <h6 className='card-subtitle mb-2 text-body-secondary'>{el.codigo}</h6>
                     </div>
                   </div>
                 ))
