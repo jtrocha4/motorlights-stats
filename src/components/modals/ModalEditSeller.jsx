@@ -60,7 +60,7 @@ const ModalEditSeller = ({ title, icon, background = 'btn btn-outline-primary', 
         })
       } else {
         Swal.fire({
-          title: 'Lo sentimos, ha ocurrido un error al crear el vendedor.',
+          title: 'Lo sentimos, ha ocurrido un error al editar el vendedor.',
           text: 'Por favor, asegúrese de completar todos los campos e  inténtelo nuevamente.',
           icon: 'error'
         })

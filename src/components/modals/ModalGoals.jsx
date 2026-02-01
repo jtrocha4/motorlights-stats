@@ -51,8 +51,6 @@ const ModalGoals = ({ title, buttonBackground = 'dark', sendForm, putSellerToApi
     })
   }
 
-  console.log(portfolioClientsGoals)
-
   const handleSubmit = async (event) => {
     event.preventDefault()
     const token = user.token
