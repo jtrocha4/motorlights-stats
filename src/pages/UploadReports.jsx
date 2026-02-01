@@ -14,7 +14,7 @@ import { DataExcelContext } from '../context/dataExcel'
 import InputCreditAndPortfolio from '../components/inputs/InputCreditAndPortfolio'
 
 const UploadReports = ({ toFixed, department, convertExcelDateToReadable, extractIdNumber, extractText, extractDate, capitalizeWords, removeExtraSpaces, putSellerToApi }) => {
-  const { data, dataCollection, salesGoalBySeller, setSalesGoalBySeller, collectionGoalBySeller, setCollectionGoalBySeller, sellers } = useContext(DataContext)
+  const { data, dataCollection, salesGoalBySeller, setSalesGoalBySeller, collectionGoalBySeller, setCollectionGoalBySeller, portfolioClientsGoals, setPortfolioClientsGoals, sellers } = useContext(DataContext)
 
   const { dateExcel, setDateExcel, excelDataCost } = useContext(DataExcelContext)
 
@@ -189,6 +189,7 @@ const UploadReports = ({ toFixed, department, convertExcelDateToReadable, extrac
     }
   }
 
+  // TODO: Revisar funcionalidad
   const joinData = (dataCollection = [], dataCost = []) => {
     const collectionBySeller = []
     dataCollection.forEach(({ vendedor, totalRecaudo, metaRecaudoSinIva, porcentajeRecaudo, recaudoPendiente, comisionRecaudo, bonoResultado, clientesNuevos }) => {
@@ -229,16 +230,21 @@ const UploadReports = ({ toFixed, department, convertExcelDateToReadable, extrac
   const sendForm = () => {
     const salesGoals = []
     const collectionGoals = []
+    const portfolioClientsGoals = []
     sellers.forEach(seller => {
-      const { identificacion, metaVentas, metaRecaudo } = seller
+      const { identificacion, metaVentas, metaRecaudo, metaClientesDePortafolio } = seller
       salesGoals[identificacion] = metaVentas
       collectionGoals[identificacion] = metaRecaudo
+      portfolioClientsGoals[identificacion] = metaClientesDePortafolio
     })
     if (salesGoals !== null) {
       setSalesGoalBySeller(salesGoals)
     }
     if (collectionGoals !== null) {
       setCollectionGoalBySeller(collectionGoals)
+    }
+    if (portfolioClientsGoals !== null) {
+      setPortfolioClientsGoals(portfolioClientsGoals)
     }
   }
 
@@ -258,7 +264,7 @@ const UploadReports = ({ toFixed, department, convertExcelDateToReadable, extrac
         <h2>Cargar Informes</h2>
         <p>Añada los siguientes archivos:</p>
         <div className='inputFile-group'>
-          <InputCostFile label='Informe de Costo' toFixed={toFixed} salesGoalBySeller={salesGoalBySeller} collectionGoalBySeller={collectionGoalBySeller} extractIdNumber={extractIdNumber} extractText={extractText} extractDate={extractDate} removeExtraSpaces={removeExtraSpaces} />
+          <InputCostFile label='Informe de Costo' toFixed={toFixed} salesGoalBySeller={salesGoalBySeller} collectionGoalBySeller={collectionGoalBySeller} portfolioClientsGoals={portfolioClientsGoals} extractIdNumber={extractIdNumber} extractText={extractText} extractDate={extractDate} removeExtraSpaces={removeExtraSpaces} />
           <InputCollectionFile label='Informe de Recaudo' toFixed={toFixed} salesGoalBySeller={salesGoalBySeller} collectionGoalBySeller={collectionGoalBySeller} extractDate={extractDate} />
           <InputAuxiliaryBookFile label='Informe Libro auxiliar' salesGoalBySeller={salesGoalBySeller} collectionGoalBySeller={collectionGoalBySeller} extractDate={extractDate} />
           <InputNewCustomersFile label='Informe Clientes Nuevos' />
