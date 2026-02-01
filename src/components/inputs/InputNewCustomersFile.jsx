@@ -65,15 +65,82 @@ const InputNewCustomersFile = ({ label }) => {
           if (elementCustomerId.includes(customerId)) {
             const sellerName = element.vendedor
             if (customersBySeller[sellerName]) {
-              customersBySeller[sellerName]++
+              // customersBySeller[sellerName]++
+              customersBySeller[sellerName].push({
+                id: newCustomer.id,
+                nombre: newCustomer.cliente
+              })
             } else {
-              customersBySeller[sellerName] = 1
+              // customersBySeller[sellerName] = 1
+              customersBySeller[sellerName] = [{
+                id: newCustomer.id,
+                nombre: newCustomer.cliente
+              }]
             }
           }
         }
       })
     })
     setCustomersBySeller(customersBySeller)
+  }
+
+  // Minimo de clientes de portafolio
+
+  const findNewCustomersThroughSales = (data = []) => {
+    const newCustomersWithSales = {}
+    const sellerData = {}
+
+    for (const key in data) {
+      const seller = data[key].vendedor
+      sellerData[seller] = []
+
+      if (sellerData[seller]) {
+        sellerData[seller].push(data[key])
+      }
+
+      sellerData[seller].forEach(({ vendedor, clientesNuevos, venta }) => {
+        venta.forEach(({ cliente }) => {
+          clientesNuevos.forEach(({ nombre }) => {
+            /*
+            *Comparación de clientes:
+            Se realiza esta lógica debido a que el nombre del cliente no tiene el mismo formato
+            en los distintos informes. En Venta Items está como "Nombres Apellidos" y
+            en Costos como "Apellidos Nombres".
+            */
+
+            const splitCliente = cliente.split(' ')
+            const splitNombre = nombre.split(' ')
+
+            const sameCustomer = splitCliente.every(el => splitNombre.includes(el))
+
+            if (sameCustomer) {
+              if (newCustomersWithSales[vendedor]) {
+                newCustomersWithSales[vendedor].add(cliente)
+              } else {
+                newCustomersWithSales[vendedor] = new Set([cliente])
+              }
+            }
+          })
+        })
+      })
+
+      // Calcular el porcentaje de clientes de portafolio
+      sellerData[seller].forEach((el) => {
+        // TODO: Calcular el porcentaje de clientes de portafolio
+
+        const { vendedor, metaClientesDePortafolio } = el
+
+        let percentagePortfolioClients = 0
+
+        if (newCustomersWithSales[vendedor] && metaClientesDePortafolio > 0) {
+          percentagePortfolioClients = (newCustomersWithSales[vendedor].size * 100) / metaClientesDePortafolio
+        } else {
+          percentagePortfolioClients = 0
+        }
+
+        el.porcentajeClientesDePortafolio = percentagePortfolioClients
+      })
+    }
   }
 
   const addCustomersToData = (customerBySeller, data) => {
@@ -84,7 +151,7 @@ const InputNewCustomersFile = ({ label }) => {
       if (customerBySeller[vendedor] !== undefined) {
         sellerData.clientesNuevos = customerBySeller[vendedor]
       } else {
-        sellerData.clientesNuevos = 0
+        sellerData.clientesNuevos = []
       }
     }
     setData([...data])
@@ -97,6 +164,7 @@ const InputNewCustomersFile = ({ label }) => {
 
   useEffect(() => {
     addCustomersToData(customersBySeller, data)
+    findNewCustomersThroughSales(data)
   }, [customersBySeller])
 
   return (
