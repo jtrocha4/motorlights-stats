@@ -98,7 +98,7 @@ const InputCollectionFile = ({ label, toFixed, salesGoalBySeller, collectionGoal
             collectionData[currentSeller] = sellerSales
             sellerCollection.push({
               bonoResultado: resultBonus,
-              clientesNuevos: 0,
+              clientesNuevos: [],
               comisionRecaudo: commission,
               comisionTotal: 0,
               metaRecaudoSinIva: 0,
