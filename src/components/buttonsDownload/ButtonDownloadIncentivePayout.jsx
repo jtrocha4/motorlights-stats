@@ -14,7 +14,7 @@ const ButtonDownloadIncentivePayout = ({ title, data, convertExcelDateToReadable
   }
 
   const handleDownload = () => {
-    const values = ['Vendedor', 'Facturas', 'Meta de Venta', 'Venta (Sin flete)', '% Venta', 'Meta de Recaudo', 'Recaudo', '% Recaudo']
+    const values = ['Vendedor', 'Facturas', 'Meta de Venta', 'Venta (Sin flete)', '% Venta', 'Meta de Recaudo', 'Recaudo', '% Recaudo', 'Meta de clientes del portafolio', '% Clientes del portafolio', 'Meta de rotación de inventario (3% de la meta de venta)', 'Venta de rotación de inventario']
     const wsData = []
 
     values.forEach(value => {
@@ -120,6 +120,23 @@ const ButtonDownloadIncentivePayout = ({ title, data, convertExcelDateToReadable
             cellValue.v = value
             cellValue.s = excelStyles.headerYellowStyle
           }
+          if (value === 'Meta de clientes del portafolio') {
+            cellValue.v = value
+            cellValue.s = excelStyles.headerYellowStyle
+          }
+          if (value === '% Clientes del portafolio') {
+            cellValue.v = value
+            cellValue.s = excelStyles.headerYellowStyle
+          }
+          if (value === 'Meta de rotación de inventario (3% de la meta de venta)') {
+            cellValue.v = value
+            cellValue.s = excelStyles.headerYellowStyle
+          }
+          if (value === 'Venta de rotación de inventario') {
+            cellValue.v = value
+            cellValue.s = excelStyles.headerYellowStyle
+          }
+
           row = [cellValue]
           sellerData[seller].forEach(element => {
             const cellElement = { v: '', s: {}, t: '' }
@@ -161,6 +178,26 @@ const ButtonDownloadIncentivePayout = ({ title, data, convertExcelDateToReadable
               cellElement.v = excelPercentageFormat(element.porcentajeRecaudo)
               cellElement.t = 'n'
               cellElement.s = excelStyles.percentageGrayStyle
+            }
+            if (value === 'Meta de clientes del portafolio') {
+              cellElement.v = element.metaClientesDePortafolio
+              cellElement.t = 'n'
+              cellElement.s = excelStyles.whiteStyleNumberFormat
+            }
+            if (value === '% Clientes del portafolio') {
+              cellElement.v = excelPercentageFormat(element.porcentajeClientesDePortafolio)
+              cellElement.t = 'n'
+              cellElement.s = excelStyles.percentageGrayStyle
+            }
+            if (value === 'Meta de rotación de inventario (3% de la meta de venta)') {
+              cellElement.v = element.metaRotacionDeInventario
+              cellElement.t = 'n'
+              cellElement.s = excelStyles.whiteStyleCurrencyFormat
+            }
+            if (value === 'Venta de rotación de inventario') {
+              cellElement.v = element.totalVentasRotacionDeInventario
+              cellElement.t = 'n'
+              cellElement.s = excelStyles.whiteStyleCurrencyFormat
             }
             row.push(cellElement)
           })
@@ -436,16 +473,20 @@ const ButtonDownloadIncentivePayout = ({ title, data, convertExcelDateToReadable
 
       // * 3. se calcula meta de rotación con el 3% de la meta de venta,  debemos tener un campo donde podamos poner un listado de productos y que el software consulte este listado y revise si la venta de los productos cumplió la meta (ese 3% que se calculó)  en caso de cumplirlo se gana el 1% del recaudo
 
-      const thirdBonus = 0
+      let thirdBonus = 0
       sellerData[seller].forEach(el => {
-        // el.totalRecaudo * 0.06
+        if (el.totalVentasRotacionDeInventario >= el.metaRotacionDeInventario) {
+          thirdBonus = el.totalRecaudo * 0.01
+        }
       })
 
       // * 4. meta para clientes de portafolio, si se cumple el 100% de la meta de clientes se gana el 1% del recaudo
 
-      const fourthBonus = 0
+      let fourthBonus = 0
       sellerData[seller].forEach(el => {
-        // el => el.totalRecaudo * 0.07
+        if (el.porcentajeClientesDePortafolio >= 100) {
+          fourthBonus = el.totalRecaudo * 0.01
+        }
       })
 
       if (incentiveWsData[seller]) {
@@ -475,25 +516,25 @@ const ButtonDownloadIncentivePayout = ({ title, data, convertExcelDateToReadable
             [
               { v: 'Bono Resultados', s: excelStyles.headerYellowStyle },
               { v: 'Bono adicional por recaudo', s: excelStyles.whiteStyleTextFormat },
-              { v: 'Gana el 1% del recaudo si cumple al 100% si cumple del 90 al 100% se gana el 0,6% del recaudo.', s: excelStyles.whiteStyleTextFormat },
+              { v: 'Gana el 1% del recaudo cuando el cumplimiento del recaudo es del 100%. Si el cumplimiento se encuentra entre el 90% y un valor inferior al 100%, el incentivo corresponde al 0,6% del recaudo.', s: excelStyles.whiteStyleTextFormat },
               { v: `${firstBonus}`, s: excelStyles.whiteStyleCurrencyFormat, t: 'n' }
             ],
             [
               { v: '', s: {} },
               { v: 'Bono adicional por venta', s: excelStyles.whiteStyleTextFormat },
-              { v: 'Gana el 1% del recaudo si cumple al 100% (la venta)  si cumple del 90 al 100% se gana el 0,6% del recaudo. Ambos se pagan por el recaudo pero debo tener en cuenta si cumplió la venta', s: excelStyles.whiteStyleTextFormat },
+              { v: 'Gana el 1% del recaudo cuando el cumplimiento de la venta es del 100%. Si el cumplimiento de la venta se encuentra entre el 90% y un valor inferior al 100%, el incentivo corresponde al 0,6% del recaudo.', s: excelStyles.whiteStyleTextFormat },
               { v: `${secondBonus}`, s: excelStyles.whiteStyleCurrencyFormat, t: 'n' }
             ],
             [
               { v: '', s: {} },
-              { v: '0,6% Recaudo', s: excelStyles.whiteStyleTextFormat },
-              { v: 'Util ml del mes >10% al 20% *para los que cumplen recaudo*', s: excelStyles.whiteStyleTextFormat },
+              { v: 'Rotación de productos', s: excelStyles.whiteStyleTextFormat },
+              { v: 'Gana el 1% del recaudo cuando el cumplimiento de la meta de rotación de inventario (3% de la meta de venta) es superada.', s: excelStyles.whiteStyleTextFormat },
               { v: `${thirdBonus}`, s: excelStyles.whiteStyleCurrencyFormat, t: 'n' }
             ],
             [
               { v: '', s: {} },
-              { v: '0,7% Recaudo', s: excelStyles.whiteStyleTextFormat },
-              { v: 'Util ml del mes >20%', s: excelStyles.whiteStyleTextFormat },
+              { v: 'Impacto minimo de clientes del portafolio', s: excelStyles.whiteStyleTextFormat },
+              { v: 'Gana el 1% del recaudo cuando el cumplimiento de clientes atendidos en el mes es del 100%', s: excelStyles.whiteStyleTextFormat },
               { v: `${fourthBonus}`, s: excelStyles.whiteStyleCurrencyFormat, t: 'n' }
             ]
             /*
@@ -545,11 +586,11 @@ const ButtonDownloadIncentivePayout = ({ title, data, convertExcelDateToReadable
 
         worksheet['!cols'] = []
 
-        worksheet['!cols'][0] = { wch: 20 }
+        worksheet['!cols'][0] = { wch: 35 }
         worksheet['!cols'][1] = { wch: 40 }
         worksheet['!cols'][2] = { wch: 25 }
         worksheet['!cols'][3] = { wch: 25 }
-        worksheet['!cols'][4] = { wch: 20 }
+        worksheet['!cols'][4] = { wch: 35 }
         worksheet['!cols'][5] = { wch: 30 }
         worksheet['!cols'][6] = { wch: 40 }
         worksheet['!cols'][7] = { wch: 40 }
