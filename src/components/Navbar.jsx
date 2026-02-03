@@ -38,6 +38,9 @@ const Navbar = () => {
               {/* <li className='nav-item'>
                 <Link className='nav-link' to='/manage-customers'>Clientes</Link>
               </li> */}
+              <li className='nav-item'>
+                <Link className='nav-link' to='/manage-inventory-turnover'> Rotación de Inventario</Link>
+              </li>
             </ul>
           </div>
           <div className='navbar-logout'>
