@@ -14,7 +14,7 @@ const ButtonDownloadIncentivePayout = ({ title, data, convertExcelDateToReadable
   }
 
   const handleDownload = () => {
-    const values = ['Vendedor', 'Facturas', 'Meta de Venta', 'Venta (Sin flete)', '% Venta', 'Meta de Recaudo', 'Recaudo', '% Recaudo', 'Meta de clientes del portafolio', '% Clientes del portafolio', 'Meta de rotación de inventario (3% de la meta de venta)', 'Venta de rotación de inventario']
+    const values = ['Vendedor', 'Facturas', 'Meta de Venta', 'Venta (Sin flete)', '% Venta', 'Meta de Recaudo', 'Recaudo', '% Recaudo', 'Meta de clientes del portafolio', 'Clientes del portafolio con ventas', '% Clientes del portafolio', 'Meta de rotación de inventario (3% de la meta de venta)', 'Venta de rotación de inventario']
     const wsData = []
 
     values.forEach(value => {
@@ -124,6 +124,10 @@ const ButtonDownloadIncentivePayout = ({ title, data, convertExcelDateToReadable
             cellValue.v = value
             cellValue.s = excelStyles.headerYellowStyle
           }
+          if (value === 'Clientes del portafolio con ventas') {
+            cellValue.v = value
+            cellValue.s = excelStyles.headerYellowStyle
+          }
           if (value === '% Clientes del portafolio') {
             cellValue.v = value
             cellValue.s = excelStyles.headerYellowStyle
@@ -181,6 +185,11 @@ const ButtonDownloadIncentivePayout = ({ title, data, convertExcelDateToReadable
             }
             if (value === 'Meta de clientes del portafolio') {
               cellElement.v = element.metaClientesDePortafolio
+              cellElement.t = 'n'
+              cellElement.s = excelStyles.whiteStyleNumberFormat
+            }
+            if (value === 'Clientes del portafolio con ventas') {
+              cellElement.v = element.clientesDelPortafolioConVentas
               cellElement.t = 'n'
               cellElement.s = excelStyles.whiteStyleNumberFormat
             }
