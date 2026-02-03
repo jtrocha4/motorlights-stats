@@ -24,7 +24,7 @@ const Sidebar = () => {
           <Link className='nav-link' to='/manage-sellers'><i className='fa-solid fa-users' /> Vendedores</Link>
         </li>
         <li className='nav-item'>
-          <Link className='nav-link' to='/manage-inventory-turnover'><i class='fa-solid fa-boxes-stacked' />Rotación de Inventario</Link>
+          <Link className='nav-link' to='/manage-inventory-turnover'><i className='fa-solid fa-boxes-stacked' />Rotación de Inventario</Link>
         </li>
         {/* <li className='nav-item'>
           <Link className='nav-link' to='/manage-customers'><i className='fa-solid fa-users' /> Clientes</Link>
