@@ -1,12 +1,10 @@
 /* eslint-disable no-undef */
 import { Route, Routes, useLocation, useNavigate } from 'react-router-dom'
 import './App.css'
-import { getSellerPerformance, createSellerPerformance, getDepartments, createMunicipality } from './services/dataService'
-import { createNewSeller, getSellers, deleteSeller, editSeller, getCustomers, createNewCustomer, getProducts, createNewProduct, getSales, createNewSale } from './services/index'
+import { getSellerPerformance, createSellerPerformance, getDepartments } from './services/dataService'
+import { createNewSeller, getSellers, deleteSeller, editSeller, getInventoryTurnover, postInventoryTurnover, putInventoryTurnover, deleteInventoryTurnover } from './services/index'
 import { useContext, useEffect, useState } from 'react'
 import { DataContext } from './context/data'
-import { ThirdPartiesContext } from './context/thirdParties'
-import { ProductContext } from './context/product'
 import { UserContext } from './context/user'
 import Navbar from './components/Navbar'
 import Sidebar from './components/Sidebar'
@@ -25,9 +23,9 @@ import CreditAndPortfolio from './pages/CreditAndPortfolio'
 import ManageInventoryTurnover from './pages/ManageInventoryTurnover'
 
 function App () {
-  const { setSellers } = useContext(DataContext)
-  const { setCustomers } = useContext(ThirdPartiesContext)
-  const { setProducts } = useContext(ProductContext)
+  const { setSellers, setInventoryTurnover } = useContext(DataContext)
+  // const { setCustomers } = useContext(ThirdPartiesContext)
+  // const { setProducts } = useContext(ProductContext)
   const { user, setUser } = useContext(UserContext)
 
   const [sellerPerformance, setSellerPerformance] = useState([])
@@ -35,11 +33,13 @@ function App () {
 
   const [newSeller, setNewSeller] = useState([])
 
-  const [newCustomer, setNewCustomer] = useState([])
+  // const [newCustomer, setNewCustomer] = useState([])
 
-  const [newProduct, setNewProduct] = useState([])
+  // const [newProduct, setNewProduct] = useState([])
 
   const [department, setDepartment] = useState([])
+
+  const [newInventoryTurnover, setNewInventoryTurnover] = useState([])
 
   //* SellerPerformance
   const fetchSellerPerformanceFromApi = async () => {
@@ -74,6 +74,7 @@ function App () {
     }
   }
 
+  /*
   const postMunicipalityToApi = async (newData) => {
     try {
       const response = await createMunicipality(newData)
@@ -83,6 +84,7 @@ function App () {
       throw error
     }
   }
+  */
 
   //* Sellers
   const fetchSellerFromApi = async () => {
@@ -132,6 +134,7 @@ function App () {
   }
 
   //* Customer
+  /*
   const fetchCustomerFromApi = async () => {
     let token
     if (user !== null) token = user.token
@@ -153,8 +156,10 @@ function App () {
       throw error
     }
   }
+  /*
 
   //* Products
+  /*
   const fetchProductsFromApi = async () => {
     let token
     if (user !== null) token = user.token
@@ -176,8 +181,10 @@ function App () {
       throw error
     }
   }
+  */
 
   //* Sales
+  /*
   const fetchSalesFromApi = async () => {
     let token
     if (user !== null) token = user.token
@@ -197,6 +204,53 @@ function App () {
       return request
     } catch (error) {
       console.log(error)
+      throw error
+    }
+  }
+  */
+
+  //* Inventory Turnover
+  const fetchInventoryTurnoverToApi = async () => {
+    let token
+    if (user !== null) token = user.token
+    try {
+      const response = await getInventoryTurnover(token)
+      setInventoryTurnover(response)
+    } catch (error) {
+      console.error(error)
+      throw error
+    }
+  }
+
+  const postInventoryTurnoverToApi = async (newInventoryTurnover, token) => {
+    try {
+      console.log(newInventoryTurnover)
+      const request = await postInventoryTurnover(newInventoryTurnover, token)
+      setNewInventoryTurnover(request)
+    } catch (error) {
+      console.error(error)
+      throw error
+    }
+  }
+
+  const putInventoryTurnoverToApi = async (id, inventoryTurnoverData, token) => {
+    try {
+      const request = await putInventoryTurnover(id, inventoryTurnoverData, token)
+      setNewInventoryTurnover(request)
+      return request
+    } catch (error) {
+      console.log(error)
+      throw error
+    }
+  }
+
+  const deleteInventoryTurnoverToApi = async (id, token) => {
+    try {
+      const request = await deleteInventoryTurnover(id, token)
+      setNewInventoryTurnover(request)
+      return request
+    } catch (error) {
+      console.error(error)
       throw error
     }
   }
@@ -360,11 +414,12 @@ function App () {
   useEffect(() => {
     if (user !== null) {
       fetchSellerFromApi()
+      fetchInventoryTurnoverToApi()
       // fetchCustomerFromApi()
       // fetchProductsFromApi()
       // fetchSalesFromApi()
     }
-  }, [user, newSeller, newCustomer, newProduct])
+  }, [user, newSeller, newInventoryTurnover])
 
   const navigate = useNavigate()
   const location = useLocation()
@@ -387,14 +442,14 @@ function App () {
         <Route element={<ProtectedRoute user={user} />}>
           <Route path='/' element={<UploadReports toFixed={toFixed} department={department} convertExcelDateToReadable={convertExcelDateToReadable} extractIdNumber={extractIdNumber} extractText={extractText} extractDate={extractDate} capitalizeWords={capitalizeWords} removeExtraSpaces={removeExtraSpaces} putSellerToApi={putSellerToApi} />} />
           <Route path='/sales' element={<SalesPage postSellerPerformanceToApi={postSellerPerformanceToApi} toFixed={toFixed} convertExcelDateToReadable={convertExcelDateToReadable} sellerPerformance={sellerPerformance} extractDateFromData={extractDateFromData} splitName={splitName} />} />
-          <Route path='/detailed-sales' element={<DetailedSalesPage splitName={splitName} postSaleToApi={postSaleToApi} />} />
+          <Route path='/detailed-sales' element={<DetailedSalesPage splitName={splitName} />} />
           <Route path='/manage-sellers' element={<ManageSellers postSellerToApi={postSellerToApi} deleteSellerToApi={deleteSellerToApi} putSellerToApi={putSellerToApi} capitalizeWords={capitalizeWords} removeExtraSpaces={removeExtraSpaces} />} />
           <Route path='/manage-sellers/:id' element={<SellerProfile />} />
           {/* <Route path='/manage-customers' element={<ManageCustomers department={department} extractDate={extractDate} extractIdNumber={extractIdNumber} capitalizeWords={capitalizeWords} removeExtraSpaces={removeExtraSpaces} postCustomerToApi={postCustomerToApi} />} />
           <Route path='/manage-customers/:id' element={<CustomerProfile />} />
           <Route path='/manage-products' element={<ManageProducts postProductToApi={postProductToApi} removeExtraSpaces={removeExtraSpaces} />} /> */}
           <Route path='/credit-portfolio' element={<CreditAndPortfolio />} />
-          <Route path='/manage-inventory-turnover' element={<ManageInventoryTurnover />} />
+          <Route path='/manage-inventory-turnover' element={<ManageInventoryTurnover postInventoryTurnoverToApi={postInventoryTurnoverToApi} putInventoryTurnoverToApi={putInventoryTurnoverToApi} deleteInventoryTurnoverToApi={deleteInventoryTurnoverToApi} removeExtraSpaces={removeExtraSpaces} />} />
         </Route>
         <Route path='/login' element={<Login />} />
       </Routes>
