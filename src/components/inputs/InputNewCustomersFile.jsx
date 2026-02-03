@@ -137,14 +137,19 @@ const InputNewCustomersFile = ({ label }) => {
           portfolioClientsWithSales = newCustomersWithSales[vendedor].size
           percentagePortfolioClients = (newCustomersWithSales[vendedor].size * 100) / metaClientesDePortafolio
         } else {
-          portfolioClientsWithSales = 0
           percentagePortfolioClients = 0
+        }
+
+        if (newCustomersWithSales[vendedor] !== undefined) {
+          portfolioClientsWithSales = newCustomersWithSales[vendedor].size || 0
         }
 
         el.porcentajeClientesDePortafolio = percentagePortfolioClients
         el.clientesDelPortafolioConVentas = portfolioClientsWithSales
       })
     }
+
+    console.log(newCustomersWithSales)
   }
 
   const addCustomersToData = (customerBySeller, data) => {
