@@ -131,14 +131,18 @@ const InputNewCustomersFile = ({ label }) => {
         const { vendedor, metaClientesDePortafolio } = el
 
         let percentagePortfolioClients = 0
+        let portfolioClientsWithSales = 0
 
         if (newCustomersWithSales[vendedor] && metaClientesDePortafolio > 0) {
+          portfolioClientsWithSales = newCustomersWithSales[vendedor].size
           percentagePortfolioClients = (newCustomersWithSales[vendedor].size * 100) / metaClientesDePortafolio
         } else {
+          portfolioClientsWithSales = 0
           percentagePortfolioClients = 0
         }
 
         el.porcentajeClientesDePortafolio = percentagePortfolioClients
+        el.clientesDelPortafolioConVentas = portfolioClientsWithSales
       })
     }
   }
