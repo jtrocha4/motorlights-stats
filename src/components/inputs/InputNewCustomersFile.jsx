@@ -84,7 +84,7 @@ const InputNewCustomersFile = ({ label }) => {
     setCustomersBySeller(customersBySeller)
   }
 
-  // Minimo de clientes de portafolio
+  // Clientes nuevos con ventas
 
   const findNewCustomersThroughSales = (data = []) => {
     const newCustomersWithSales = {}
@@ -124,32 +124,21 @@ const InputNewCustomersFile = ({ label }) => {
         })
       })
 
-      // Calcular el porcentaje de clientes de portafolio
+      // Calcular el total de clientes nuevos con ventas
       sellerData[seller].forEach((el) => {
-        // TODO: Calcular el porcentaje de clientes de portafolio
+        // TODO: Cambiar metaClientesDePortafolio por metaClientes (clientes atendidos)
 
         const { vendedor, metaClientesDePortafolio } = el
 
-        let percentagePortfolioClients = 0
-        let portfolioClientsWithSales = 0
+        let total = 0
 
-        if (newCustomersWithSales[vendedor] && metaClientesDePortafolio > 0) {
-          portfolioClientsWithSales = newCustomersWithSales[vendedor].size
-          percentagePortfolioClients = (newCustomersWithSales[vendedor].size * 100) / metaClientesDePortafolio
-        } else {
-          percentagePortfolioClients = 0
+        if (newCustomersWithSales[vendedor]) {
+          total = newCustomersWithSales[vendedor].size
         }
 
-        if (newCustomersWithSales[vendedor] !== undefined) {
-          portfolioClientsWithSales = newCustomersWithSales[vendedor].size || 0
-        }
-
-        el.porcentajeClientesDePortafolio = percentagePortfolioClients
-        el.clientesDelPortafolioConVentas = portfolioClientsWithSales
+        el.clientesNuevosConVentas = total
       })
     }
-
-    console.log(newCustomersWithSales)
   }
 
   const addCustomersToData = (customerBySeller, data) => {
