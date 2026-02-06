@@ -85,9 +85,10 @@ const InputCostFile = ({ label, toFixed, salesGoalBySeller, collectionGoalBySell
     let pendingCollectionTarget
     let portfolioClientsGoal
 
-    let inventoryTurnoverGoal
-    const salesByInventoryTurnover = {}
-    let totalSalesInventoryTurnover = 0
+    let portfolioGoal
+    const portfolioSales = {}
+    let totalPortfolioSales = 0
+    let percentagePortfolioSold = 0
 
     let totalWithFreight
     let margin
@@ -106,9 +107,10 @@ const InputCostFile = ({ label, toFixed, salesGoalBySeller, collectionGoalBySell
       metaClientesDePortafolio: getPortfolioClientsGoals('MOTORLIGHTS S.A.S', portfolioClientsGoals),
       porcentajeRecaudo: 0,
       porcentajeVentas: 0,
-      metaRotacionDeInventario: 0,
-      ventasRotacionDeInventario: [],
-      totalVentasRotacionDeInventario: 0,
+      metaPortafolio: 0,
+      ventasDelPortafolio: [],
+      totalVentasPortafolio: 0,
+      porcentajeVentasPortafolio: 0,
       promedioVentas: 0,
       recaudoPendiente: 0,
       totalRecaudo: 0,
@@ -145,9 +147,10 @@ const InputCostFile = ({ label, toFixed, salesGoalBySeller, collectionGoalBySell
 
             pendingCollectionTarget = collectionGoalBySeller[currentSeller] || 0
 
+            // Cambiar portfolioClientsGoals por meta clientes (clientes atendidos)
             portfolioClientsGoal = portfolioClientsGoals[currentSeller] || 0
 
-            inventoryTurnoverGoal = salesGoalBySeller[currentSeller] * 0.03
+            portfolioGoal = salesGoalBySeller[currentSeller] * 0.03 || 0
 
             // Aproximacion de los datos
             averageSale = toFixed(averageSale, 2)
@@ -178,23 +181,25 @@ const InputCostFile = ({ label, toFixed, salesGoalBySeller, collectionGoalBySell
 
             saleData[currentSeller] = processedSalesData
 
-            salesByInventoryTurnover[currentSeller] = {}
+            portfolioSales[currentSeller] = {}
 
             saleData[currentSeller].forEach(({ idProducto, producto, ventas }) => {
               inventoryTurnover.forEach(({ codigo, nombre }) => {
                 if (idProducto === Number(codigo)) {
-                  totalSalesInventoryTurnover += ventas
-                  if (!salesByInventoryTurnover[currentSeller][Number(codigo)]) {
-                    salesByInventoryTurnover[currentSeller][Number(codigo)] = {
+                  totalPortfolioSales += ventas
+                  if (!portfolioSales[currentSeller][Number(codigo)]) {
+                    portfolioSales[currentSeller][Number(codigo)] = {
                       producto,
                       codigo,
                       totalDeVenta: 0
                     }
                   }
-                  salesByInventoryTurnover[currentSeller][Number(codigo)].totalDeVenta += Number(ventas) || 0
+                  portfolioSales[currentSeller][Number(codigo)].totalDeVenta += Number(ventas) || 0
                 }
               })
             })
+
+            percentagePortfolioSold = (portfolioGoal !== 0) ? ((totalPortfolioSales * 100) / portfolioGoal) : 0
 
             sale.push(
               {
@@ -208,9 +213,10 @@ const InputCostFile = ({ label, toFixed, salesGoalBySeller, collectionGoalBySell
                 porcentajeMargen: percentageMargin,
                 porcentajeRecaudo: 0,
                 porcentajeVentas: percetageSale,
-                metaRotacionDeInventario: inventoryTurnoverGoal,
-                ventasRotacionDeInventario: salesByInventoryTurnover[currentSeller],
-                totalVentasRotacionDeInventario: totalSalesInventoryTurnover,
+                metaPortafolio: portfolioGoal,
+                ventasDelPortafolio: portfolioSales[currentSeller],
+                totalVentasPortafolio: totalPortfolioSales,
+                porcentajeVentasPortafolio: percentagePortfolioSold,
                 promedioVentas: averageSale,
                 recaudoPendiente: pendingCollectionTarget,
                 totalCosto: totalCost,
@@ -266,12 +272,13 @@ const InputCostFile = ({ label, toFixed, salesGoalBySeller, collectionGoalBySell
           metaClientesDePortafolio: getPortfolioClientsGoals(identificacion, portfolioClientsGoals),
           porcentajeRecaudo: 0,
           porcentajeVentas: 0,
-          metaRotacionDeInventario: 0,
+          metaPortafolio: 0,
           promedioVentas: 0,
           recaudoPendiente: 0,
           totalRecaudo: 0,
           totalVenta: 0,
-          totalVentasRotacionDeInventario: 0,
+          totalVentasPortafolio: 0,
+          porcentajeVentasPortafolio: 0,
           vendedor: identificacion,
           ventasPendiente: 0,
           comisionTotal: 0,
