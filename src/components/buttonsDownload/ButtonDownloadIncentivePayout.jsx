@@ -14,7 +14,8 @@ const ButtonDownloadIncentivePayout = ({ title, data, convertExcelDateToReadable
   }
 
   const handleDownload = () => {
-    const values = ['Vendedor', 'Facturas', 'Meta de Venta', 'Venta (Sin flete)', '% Venta', 'Meta de Recaudo', 'Recaudo', '% Recaudo', 'Meta de clientes del portafolio', 'Clientes del portafolio con ventas', '% Clientes del portafolio', 'Meta de rotación de inventario (3% de la meta de venta)', 'Venta de rotación de inventario']
+    // const values = ['Vendedor', 'Facturas', 'Meta de Venta', 'Venta (Sin flete)', '% Venta', 'Meta de Recaudo', 'Recaudo', '% Recaudo', 'Meta de clientes del portafolio', 'Clientes del portafolio con ventas', '% Clientes del portafolio', 'Meta de rotación de inventario (3% de la meta de venta)', 'Venta de rotación de inventario']
+    const values = ['Vendedor', 'Facturas', 'Meta de Venta', 'Venta (Sin flete)', '% Venta', 'Meta de Recaudo', 'Recaudo', '% Recaudo', 'Meta de clientes', 'Clientes atendidos', '% Clientes', 'Clientes nuevos con ventas', 'Meta portafolio', 'Venta portafolio', '% Venta portafolio']
     const wsData = []
 
     values.forEach(value => {
@@ -106,7 +107,7 @@ const ButtonDownloadIncentivePayout = ({ title, data, convertExcelDateToReadable
           }
           if (value === '% Venta') {
             cellValue.v = value
-            cellValue.s = excelStyles.headerYellowStyle
+            cellValue.s = excelStyles.headerGrayStyle
           }
           if (value === 'Meta de Recaudo') {
             cellValue.v = value
@@ -118,27 +119,35 @@ const ButtonDownloadIncentivePayout = ({ title, data, convertExcelDateToReadable
           }
           if (value === '% Recaudo') {
             cellValue.v = value
-            cellValue.s = excelStyles.headerYellowStyle
+            cellValue.s = excelStyles.headerGrayStyle
           }
-          if (value === 'Meta de clientes del portafolio') {
+          if (value === 'Meta de clientes') {
             cellValue.v = value
             cellValue.s = excelStyles.headerYellowStyle
           }
-          if (value === 'Clientes del portafolio con ventas') {
+          if (value === 'Clientes atendidos') {
             cellValue.v = value
             cellValue.s = excelStyles.headerYellowStyle
           }
-          if (value === '% Clientes del portafolio') {
+          if (value === '% Clientes') {
+            cellValue.v = value
+            cellValue.s = excelStyles.headerGrayStyle
+          }
+          if (value === 'Clientes nuevos con ventas') {
             cellValue.v = value
             cellValue.s = excelStyles.headerYellowStyle
           }
-          if (value === 'Meta de rotación de inventario (3% de la meta de venta)') {
+          if (value === 'Meta portafolio') {
             cellValue.v = value
             cellValue.s = excelStyles.headerYellowStyle
           }
-          if (value === 'Venta de rotación de inventario') {
+          if (value === 'Venta portafolio') {
             cellValue.v = value
             cellValue.s = excelStyles.headerYellowStyle
+          }
+          if (value === '% Venta portafolio') {
+            cellValue.v = value
+            cellValue.s = excelStyles.headerGrayStyle
           }
 
           row = [cellValue]
@@ -183,6 +192,42 @@ const ButtonDownloadIncentivePayout = ({ title, data, convertExcelDateToReadable
               cellElement.t = 'n'
               cellElement.s = excelStyles.percentageGrayStyle
             }
+            if (value === 'Meta de clientes') {
+              cellElement.v = 696969
+              cellElement.t = 'n'
+              cellElement.s = excelStyles.whiteStyleNumberFormat
+            }
+            if (value === 'Clientes atendidos') {
+              cellElement.v = 696969
+              cellElement.t = 'n'
+              cellElement.s = excelStyles.whiteStyleNumberFormat
+            }
+            if (value === '% Clientes') {
+              cellElement.v = excelPercentageFormat(696969)
+              cellElement.t = 'n'
+              cellElement.s = excelStyles.percentageGrayStyle
+            }
+            if (value === 'Clientes nuevos con ventas') {
+              cellElement.v = element.clientesNuevosConVentas
+              cellElement.t = 'n'
+              cellElement.s = excelStyles.whiteStyleNumberFormat
+            }
+            if (value === 'Meta portafolio') {
+              cellElement.v = element.metaPortafolio
+              cellElement.t = 'n'
+              cellElement.s = excelStyles.whiteStyleCurrencyFormat
+            }
+            if (value === 'Venta portafolio') {
+              cellElement.v = element.totalVentasPortafolio
+              cellElement.t = 'n'
+              cellElement.s = excelStyles.whiteStyleCurrencyFormat
+            }
+            if (value === '% Venta portafolio') {
+              cellElement.v = excelPercentageFormat(element.porcentajeVentasPortafolio)
+              cellElement.t = 'n'
+              cellElement.s = excelStyles.percentageGrayStyle
+            }
+            /*
             if (value === 'Meta de clientes del portafolio') {
               cellElement.v = element.metaClientesDePortafolio
               cellElement.t = 'n'
@@ -208,6 +253,7 @@ const ButtonDownloadIncentivePayout = ({ title, data, convertExcelDateToReadable
               cellElement.t = 'n'
               cellElement.s = excelStyles.whiteStyleCurrencyFormat
             }
+            */
             row.push(cellElement)
           })
           sellerWsData[seller].push(row)
