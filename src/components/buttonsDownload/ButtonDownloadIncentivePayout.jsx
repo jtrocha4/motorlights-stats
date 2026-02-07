@@ -14,7 +14,6 @@ const ButtonDownloadIncentivePayout = ({ title, data, convertExcelDateToReadable
   }
 
   const handleDownload = () => {
-    // const values = ['Vendedor', 'Facturas', 'Meta de Venta', 'Venta (Sin flete)', '% Venta', 'Meta de Recaudo', 'Recaudo', '% Recaudo', 'Meta de clientes del portafolio', 'Clientes del portafolio con ventas', '% Clientes del portafolio', 'Meta de rotación de inventario (3% de la meta de venta)', 'Venta de rotación de inventario']
     const values = ['Vendedor', 'Facturas', 'Meta de Venta', 'Venta (Sin flete)', '% Venta', 'Meta de Recaudo', 'Recaudo', '% Recaudo', 'Meta de clientes', 'Clientes atendidos', '% Clientes', 'Clientes nuevos con ventas', 'Meta portafolio', 'Venta portafolio', '% Venta portafolio']
     const wsData = []
 
@@ -45,6 +44,9 @@ const ButtonDownloadIncentivePayout = ({ title, data, convertExcelDateToReadable
     const sellerDataCollection = {}
     const sellerWsDataCollection = {}
 
+    const sellerDataPortfolioSales = {}
+    const sellerWsDataPortfolioSales = {}
+
     sellerName.forEach(seller => {
       if (seller !== 'Vendedor') {
         sellerData[seller] = []
@@ -55,6 +57,9 @@ const ButtonDownloadIncentivePayout = ({ title, data, convertExcelDateToReadable
 
         sellerDataCollection[seller] = []
         sellerWsDataCollection[seller] = []
+
+        sellerDataPortfolioSales[seller] = []
+        sellerWsDataPortfolioSales[seller] = []
       }
     })
 
@@ -80,6 +85,17 @@ const ButtonDownloadIncentivePayout = ({ title, data, convertExcelDateToReadable
         collection.forEach(element => {
           sellerDataCollection[seller].push(element)
         })
+      }
+    }
+
+    for (const key in data) {
+      const seller = data[key].vendedor
+      const portfolioSales = data[key].ventasDelPortafolio
+
+      if (sellerDataPortfolioSales[seller]) {
+        for (const productId in portfolioSales) {
+          sellerDataPortfolioSales[seller].push(portfolioSales[productId])
+        }
       }
     }
 
@@ -227,33 +243,6 @@ const ButtonDownloadIncentivePayout = ({ title, data, convertExcelDateToReadable
               cellElement.t = 'n'
               cellElement.s = excelStyles.percentageGrayStyle
             }
-            /*
-            if (value === 'Meta de clientes del portafolio') {
-              cellElement.v = element.metaClientesDePortafolio
-              cellElement.t = 'n'
-              cellElement.s = excelStyles.whiteStyleNumberFormat
-            }
-            if (value === 'Clientes del portafolio con ventas') {
-              cellElement.v = element.clientesDelPortafolioConVentas
-              cellElement.t = 'n'
-              cellElement.s = excelStyles.whiteStyleNumberFormat
-            }
-            if (value === '% Clientes del portafolio') {
-              cellElement.v = excelPercentageFormat(element.porcentajeClientesDePortafolio)
-              cellElement.t = 'n'
-              cellElement.s = excelStyles.percentageGrayStyle
-            }
-            if (value === 'Meta de rotación de inventario (3% de la meta de venta)') {
-              cellElement.v = element.metaRotacionDeInventario
-              cellElement.t = 'n'
-              cellElement.s = excelStyles.whiteStyleCurrencyFormat
-            }
-            if (value === 'Venta de rotación de inventario') {
-              cellElement.v = element.totalVentasRotacionDeInventario
-              cellElement.t = 'n'
-              cellElement.s = excelStyles.whiteStyleCurrencyFormat
-            }
-            */
             row.push(cellElement)
           })
           sellerWsData[seller].push(row)
@@ -380,6 +369,36 @@ const ButtonDownloadIncentivePayout = ({ title, data, convertExcelDateToReadable
           { v: 'Total', s: excelStyles.headerBlackStyle },
           { v: '', s: excelStyles.headerBlackStyle },
           { v: '', s: excelStyles.headerBlackStyle },
+          { v: total, s: excelStyles.blackStyleCurrencyFormat, t: 'n' }
+        ])
+      }
+    }
+
+    // Tabla detalle de ventas del portafolio
+    const salesDetailsOfThePortfolioHeaderTable = []
+    salesDetailsOfThePortfolioHeaderTable.push([
+      { v: 'Detalle Ventas Del Portafolio ', s: excelStyles.headerYellowStyle }
+    ])
+    salesDetailsOfThePortfolioHeaderTable.push([
+      { v: 'Producto', s: excelStyles.headerYellowStyle },
+      { v: 'Valor', s: excelStyles.headerYellowStyle }
+    ])
+
+    for (const key in data) {
+      const seller = data[key].vendedor
+
+      let total = 0
+
+      if (sellerWsDataPortfolioSales[seller]) {
+        sellerDataPortfolioSales[seller].forEach(({ producto, codigo, totalDeVenta }) => {
+          total += totalDeVenta
+          sellerWsDataPortfolioSales[seller].push([
+            { v: codigo + '-' + producto, s: excelStyles.whiteRowStyleTextFormat },
+            { v: totalDeVenta, s: excelStyles.whiteStyleCurrencyFormat, t: 'n' }
+          ])
+        })
+        sellerWsDataPortfolioSales[seller].push([
+          { v: 'Total', s: excelStyles.headerBlackStyle },
           { v: total, s: excelStyles.blackStyleCurrencyFormat, t: 'n' }
         ])
       }
@@ -592,13 +611,6 @@ const ButtonDownloadIncentivePayout = ({ title, data, convertExcelDateToReadable
               { v: 'Gana el 1% del recaudo cuando el cumplimiento de clientes atendidos en el mes es del 100%', s: excelStyles.whiteStyleTextFormat },
               { v: `${fourthBonus}`, s: excelStyles.whiteStyleCurrencyFormat, t: 'n' }
             ]
-            /*
-            [{ v: '', s: {} },
-              { v: '0,1% Recaudo', s: excelStyles.whiteStyleTextFormat },
-              { v: 'Por cada cliente nuevo', s: excelStyles.whiteStyleTextFormat },
-              { v: `${fifthBonus}`, s: excelStyles.whiteStyleCurrencyFormat, t: 'n' }
-            ]
-            */
           )
           incentiveWsData[seller].push([{ v: '', s: {} }])
         })
@@ -639,6 +651,10 @@ const ButtonDownloadIncentivePayout = ({ title, data, convertExcelDateToReadable
         XLSX.utils.sheet_add_aoa(worksheet, collectionDetailHeaderTable, { origin: 'F17' })
         XLSX.utils.sheet_add_aoa(worksheet, sellerWsDataCollection[seller], { origin: 'F19' })
 
+        // Tabla detalle de ventas del portafolio
+        XLSX.utils.sheet_add_aoa(worksheet, salesDetailsOfThePortfolioHeaderTable, { origin: 'K17' })
+        XLSX.utils.sheet_add_aoa(worksheet, sellerWsDataPortfolioSales[seller], { origin: 'K19' })
+
         worksheet['!cols'] = []
 
         worksheet['!cols'][0] = { wch: 35 }
@@ -650,6 +666,8 @@ const ButtonDownloadIncentivePayout = ({ title, data, convertExcelDateToReadable
         worksheet['!cols'][6] = { wch: 40 }
         worksheet['!cols'][7] = { wch: 40 }
         worksheet['!cols'][8] = { wch: 25 }
+        worksheet['!cols'][10] = { wch: 45 }
+        worksheet['!cols'][11] = { wch: 25 }
 
         const numberOfCharacters = sheetName[0].length + sheetName[1].length
 
