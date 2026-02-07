@@ -85,7 +85,6 @@ const InputNewCustomersFile = ({ label }) => {
   }
 
   // Clientes nuevos con ventas
-
   const findNewCustomersThroughSales = (data = []) => {
     const newCustomersWithSales = {}
     const sellerData = {}
@@ -126,9 +125,7 @@ const InputNewCustomersFile = ({ label }) => {
 
       // Calcular el total de clientes nuevos con ventas
       sellerData[seller].forEach((el) => {
-        // TODO: Cambiar metaClientesDePortafolio por metaClientes (clientes atendidos)
-
-        const { vendedor, metaClientesDePortafolio } = el
+        const { vendedor } = el
 
         let total = 0
 
