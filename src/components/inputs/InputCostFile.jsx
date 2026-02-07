@@ -83,7 +83,11 @@ const InputCostFile = ({ label, toFixed, salesGoalBySeller, collectionGoalBySell
     let percetageSale
     let pendingSalesTarget
     let pendingCollectionTarget
+
     let portfolioClientsGoal
+    // Clientes atendidos
+    const portfolioClients = {}
+    let percetagePortfolioClients = 0
 
     let portfolioGoal
     const portfolioSales = {}
@@ -105,6 +109,7 @@ const InputCostFile = ({ label, toFixed, salesGoalBySeller, collectionGoalBySell
       metaRecaudoSinIva: getSalesGoal('MOTORLIGHTS S.A.S', salesGoalBySeller),
       metaVentas: getGoalCollection('MOTORLIGHTS S.A.S', collectionGoalBySeller),
       metaClientesDePortafolio: getPortfolioClientsGoals('MOTORLIGHTS S.A.S', portfolioClientsGoals),
+      totalClientesAtendidosDelPortafolio: 0,
       porcentajeRecaudo: 0,
       porcentajeVentas: 0,
       metaPortafolio: 0,
@@ -147,7 +152,7 @@ const InputCostFile = ({ label, toFixed, salesGoalBySeller, collectionGoalBySell
 
             pendingCollectionTarget = collectionGoalBySeller[currentSeller] || 0
 
-            // Cambiar portfolioClientsGoals por meta clientes (clientes atendidos)
+            // Meta clientes (clientes atendidos)
             portfolioClientsGoal = portfolioClientsGoals[currentSeller] || 0
 
             portfolioGoal = salesGoalBySeller[currentSeller] * 0.03 || 0
@@ -183,6 +188,7 @@ const InputCostFile = ({ label, toFixed, salesGoalBySeller, collectionGoalBySell
 
             portfolioSales[currentSeller] = {}
 
+            // * Ventas por productos del portafolio
             saleData[currentSeller].forEach(({ idProducto, producto, ventas }) => {
               inventoryTurnover.forEach(({ codigo, nombre }) => {
                 if (idProducto === Number(codigo)) {
@@ -199,7 +205,17 @@ const InputCostFile = ({ label, toFixed, salesGoalBySeller, collectionGoalBySell
               })
             })
 
+            saleData[currentSeller].forEach(({ cliente, ventas }) => {
+              if (portfolioClients[currentSeller]) {
+                portfolioClients[currentSeller].add(cliente)
+              } else {
+                portfolioClients[currentSeller] = new Set([cliente])
+              }
+            })
+
             percentagePortfolioSold = (portfolioGoal !== 0) ? ((totalPortfolioSales * 100) / portfolioGoal) : 0
+
+            percetagePortfolioClients = (portfolioClientsGoal !== 0) ? ((portfolioClients[currentSeller].size * 100) / portfolioClientsGoal) : 0
 
             sale.push(
               {
@@ -210,6 +226,8 @@ const InputCostFile = ({ label, toFixed, salesGoalBySeller, collectionGoalBySell
                 metaRecaudoSinIva: collectionTarget,
                 metaVentas: goalSale,
                 metaClientesDePortafolio: portfolioClientsGoal,
+                totalClientesAtendidosDelPortafolio: portfolioClients[currentSeller].size || 0,
+                porcentajeClientesAtendidosDelPortafolio: percetagePortfolioClients,
                 porcentajeMargen: percentageMargin,
                 porcentajeRecaudo: 0,
                 porcentajeVentas: percetageSale,
@@ -270,6 +288,7 @@ const InputCostFile = ({ label, toFixed, salesGoalBySeller, collectionGoalBySell
           metaVentas: getSalesGoal(identificacion, salesGoalBySeller),
           metaRecaudoSinIva: getGoalCollection(identificacion, collectionGoalBySeller),
           metaClientesDePortafolio: getPortfolioClientsGoals(identificacion, portfolioClientsGoals),
+          totalClientesAtendidosDelPortafolio: 0,
           porcentajeRecaudo: 0,
           porcentajeVentas: 0,
           metaPortafolio: 0,
