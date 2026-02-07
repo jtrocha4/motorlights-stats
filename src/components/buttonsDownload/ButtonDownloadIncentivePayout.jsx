@@ -193,17 +193,17 @@ const ButtonDownloadIncentivePayout = ({ title, data, convertExcelDateToReadable
               cellElement.s = excelStyles.percentageGrayStyle
             }
             if (value === 'Meta de clientes') {
-              cellElement.v = 696969
+              cellElement.v = element.metaClientesDePortafolio
               cellElement.t = 'n'
               cellElement.s = excelStyles.whiteStyleNumberFormat
             }
             if (value === 'Clientes atendidos') {
-              cellElement.v = 696969
+              cellElement.v = element.totalClientesAtendidosDelPortafolio
               cellElement.t = 'n'
               cellElement.s = excelStyles.whiteStyleNumberFormat
             }
             if (value === '% Clientes') {
-              cellElement.v = excelPercentageFormat(696969)
+              cellElement.v = excelPercentageFormat(element.porcentajeClientesAtendidosDelPortafolio)
               cellElement.t = 'n'
               cellElement.s = excelStyles.percentageGrayStyle
             }
