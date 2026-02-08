@@ -66,6 +66,8 @@ const ManageSellers = ({ postSellerToApi, deleteSellerToApi, putSellerToApi, cap
         </div>
         <section className='mt-4'>
           <Pagination page={page} setPage={setPage} maximum={maximum} />
+          Cantidad de registros: {sellers.length || 0}
+
           {
             sellers
               .filter(el => el.estado !== false)
