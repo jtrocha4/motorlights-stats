@@ -30,7 +30,9 @@ const ButtonUploadInventoryTurnover = ({ background = 'primary', title, postInve
             for (const element of newInventoryTurnover) {
               await postInventoryTurnoverToApi({
                 nombre: removeExtraSpaces(element.nombre),
-                codigo: Number(element.codigo)
+                codigo: Number(element.codigo),
+                categoriaMotos: element.motos,
+                categoriaCarros: element.carro
               }, token)
             }
             Swal.fire({
