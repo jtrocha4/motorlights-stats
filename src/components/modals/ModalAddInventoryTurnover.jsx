@@ -20,6 +20,7 @@ const ModalAddInventoryTurnover = ({ title, icon, background = 'btn btn-outline-
 
   const handleSubmit = async (event) => {
     event.preventDefault()
+    // TODO: eliminar la meta de la API, la meta no es por producto sino por cliente
     const { nombre, codigo, meta } = form
     const { token } = user
 
