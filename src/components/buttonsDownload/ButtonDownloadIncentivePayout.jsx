@@ -549,7 +549,8 @@ const ButtonDownloadIncentivePayout = ({ title, data, convertExcelDateToReadable
 
       let thirdBonus = 0
       sellerData[seller].forEach(el => {
-        if (el.totalVentasRotacionDeInventario >= el.metaRotacionDeInventario) {
+        console.log(el.totalVentasRotacionDeInventario)
+        if (el.totalVentasPortafolio >= el.metaPortafolio) {
           thirdBonus = el.totalRecaudo * 0.01
         }
       })
@@ -558,7 +559,7 @@ const ButtonDownloadIncentivePayout = ({ title, data, convertExcelDateToReadable
 
       let fourthBonus = 0
       sellerData[seller].forEach(el => {
-        if (el.porcentajeClientesDePortafolio >= 100) {
+        if (el.porcentajeClientesAtendidosDelPortafolio >= 100) {
           fourthBonus = el.totalRecaudo * 0.01
         }
       })
