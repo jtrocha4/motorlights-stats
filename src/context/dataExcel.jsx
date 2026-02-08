@@ -13,6 +13,8 @@ export const DataExcelProvider = ({ children }) => {
   const [excelDataThirdParties, setExcelDataThirdParties] = useState([])
   const [excelDataCreditAndPortfolio, setExcelDataCreditAndPortfolio] = useState([])
 
+  const [excelDataInventoryTurnover, setExcelDataInventoryTurnover] = useState([])
+
   return (
     <DataExcelContext.Provider value={{
       dateExcel,
@@ -30,7 +32,9 @@ export const DataExcelProvider = ({ children }) => {
       excelDataThirdParties,
       setExcelDataThirdParties,
       excelDataCreditAndPortfolio,
-      setExcelDataCreditAndPortfolio
+      setExcelDataCreditAndPortfolio,
+      excelDataInventoryTurnover,
+      setExcelDataInventoryTurnover
     }}
     >
       {children}

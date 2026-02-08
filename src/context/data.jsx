@@ -20,6 +20,9 @@ export const DataProvider = ({ children }) => {
 
   const [inventoryTurnover, setInventoryTurnover] = useState([])
 
+  // Hace referencia a los productos cargados a través del reporte de rotación de inventario
+  const [newInventoryTurnover, setNewInventoryTurnover] = useState([])
+
   return (
     <DataContext.Provider value={{
       data,
@@ -45,7 +48,9 @@ export const DataProvider = ({ children }) => {
       sellers,
       setSellers,
       inventoryTurnover,
-      setInventoryTurnover
+      setInventoryTurnover,
+      newInventoryTurnover,
+      setNewInventoryTurnover
     }}
     >
       {children}
