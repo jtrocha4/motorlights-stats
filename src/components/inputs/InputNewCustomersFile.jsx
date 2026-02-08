@@ -98,8 +98,9 @@ const InputNewCustomersFile = ({ label }) => {
       }
 
       sellerData[seller].forEach(({ vendedor, clientesNuevos, venta }) => {
-        venta.forEach(({ cliente }) => {
-          clientesNuevos.forEach(({ nombre }) => {
+        if (venta !== undefined) {
+          venta.forEach(({ cliente }) => {
+            clientesNuevos.forEach(({ nombre }) => {
             /*
             *Comparación de clientes:
             Se realiza esta lógica debido a que el nombre del cliente no tiene el mismo formato
@@ -107,20 +108,21 @@ const InputNewCustomersFile = ({ label }) => {
             en Costos como "Apellidos Nombres".
             */
 
-            const splitCliente = cliente.split(' ')
-            const splitNombre = nombre.split(' ')
+              const splitCliente = cliente.split(' ')
+              const splitNombre = nombre.split(' ')
 
-            const sameCustomer = splitCliente.every(el => splitNombre.includes(el))
+              const sameCustomer = splitCliente.every(el => splitNombre.includes(el))
 
-            if (sameCustomer) {
-              if (newCustomersWithSales[vendedor]) {
-                newCustomersWithSales[vendedor].add(cliente)
-              } else {
-                newCustomersWithSales[vendedor] = new Set([cliente])
+              if (sameCustomer) {
+                if (newCustomersWithSales[vendedor]) {
+                  newCustomersWithSales[vendedor].add(cliente)
+                } else {
+                  newCustomersWithSales[vendedor] = new Set([cliente])
+                }
               }
-            }
+            })
           })
-        })
+        }
       })
 
       // Calcular el total de clientes nuevos con ventas
