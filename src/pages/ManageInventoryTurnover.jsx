@@ -1,7 +1,6 @@
 import React, { useContext, useState } from 'react'
 import Pagination from '../components/Pagination'
 import { DataContext } from '../context/data'
-import ModalAddInventoryTurnover from '../components/modals/ModalAddInventoryTurnover'
 import Swal from 'sweetalert2'
 import { UserContext } from '../context/user'
 import ModalEditInventoryTurnover from '../components/modals/ModalEditInventoryTurnover'
@@ -69,7 +68,7 @@ const ManageInventoryTurnover = ({ postInventoryTurnoverToApi, deleteInventoryTu
         </div>
         <div className='button-group mt-4'>
           <ButtonUploadInventoryTurnover title='Subir rotación de inventario' postInventoryTurnoverToApi={postInventoryTurnoverToApi} removeExtraSpaces={removeExtraSpaces} />
-          <ModalAddInventoryTurnover title='Agregar nuevo artículo de rotación' postInventoryTurnoverToApi={postInventoryTurnoverToApi} removeExtraSpaces={removeExtraSpaces} />
+          {/* <ModalAddInventoryTurnover title='Agregar nuevo artículo de rotación' postInventoryTurnoverToApi={postInventoryTurnoverToApi} removeExtraSpaces={removeExtraSpaces} /> */}
           <ButtonDeleteAllInventoryTurnover title='Vaciar rotación de inventario' deleteInventoryTurnoverToApi={deleteInventoryTurnoverToApi} />
         </div>
         <section className='mt-4'>
@@ -89,6 +88,8 @@ const ManageInventoryTurnover = ({ postInventoryTurnoverToApi, deleteInventoryTu
                       <div className='card-body'>
                         <h5 className='card-title'>{el.nombre}</h5>
                         <h6 className='card-subtitle mb-2 text-body-secondary'>{el.codigo}</h6>
+                        <h6 className='card-subtitle mb-2 text-body-secondary'>Categoria moto: {el.categoriaMotos ? 'Sí' : 'No'}</h6>
+                        <h6 className='card-subtitle mb-2 text-body-secondary'>Categoria carro: {el.categoriaCarros ? 'Sí' : 'No'}</h6>
                       </div>
                     </div>
                   ))
