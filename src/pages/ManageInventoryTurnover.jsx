@@ -5,8 +5,11 @@ import ModalAddInventoryTurnover from '../components/modals/ModalAddInventoryTur
 import Swal from 'sweetalert2'
 import { UserContext } from '../context/user'
 import ModalEditInventoryTurnover from '../components/modals/ModalEditInventoryTurnover'
+import InputInventoryTurnover from '../components/inputs/InputInventoryTurnover'
+import ButtonUploadInventoryTurnover from '../components/buttonsUpload/ButtonUploadInventoryTurnover'
+import ButtonDeleteAllInventoryTurnover from '../components/buttonsUpload/ButtonDeleteAllInventoryTurnover'
 
-const ManageInventoryTurnover = ({ postInventoryTurnoverToApi, deleteInventoryTurnoverToApi, putInventoryTurnoverToApi, removeExtraSpaces }) => {
+const ManageInventoryTurnover = ({ postInventoryTurnoverToApi, deleteInventoryTurnoverToApi, putInventoryTurnoverToApi, removeExtraSpaces, extractIdNumber, extractText }) => {
   const { inventoryTurnover } = useContext(DataContext)
   const { user, setUser } = useContext(UserContext)
 
@@ -62,23 +65,33 @@ const ManageInventoryTurnover = ({ postInventoryTurnoverToApi, deleteInventoryTu
       <div className='container-fluid'>
         <h2>Gestionar Rotación de Inventario</h2>
         <div className='mt-4'>
+          <InputInventoryTurnover label='Rotación de productos' extractIdNumber={extractIdNumber} extractText={extractText} />
+        </div>
+        <div className='button-group mt-4'>
+          <ButtonUploadInventoryTurnover title='Subir rotación de inventario' postInventoryTurnoverToApi={postInventoryTurnoverToApi} removeExtraSpaces={removeExtraSpaces} />
           <ModalAddInventoryTurnover title='Agregar nuevo artículo de rotación' postInventoryTurnoverToApi={postInventoryTurnoverToApi} removeExtraSpaces={removeExtraSpaces} />
+          <ButtonDeleteAllInventoryTurnover title='Vaciar rotación de inventario' deleteInventoryTurnoverToApi={deleteInventoryTurnoverToApi} />
         </div>
         <section className='mt-4'>
           <Pagination page={page} setPage={setPage} maximum={maximum} />
+          <p>
+            Cantidad de registros: {inventoryTurnover.length || 0}
+          </p>
           {
-                inventoryTurnover.map(el => (
-                  <div className='card mt-3' key={el.id}>
-                    <div className='button-group-card'>
-                      <button type='button' title='Eliminar' className='btn btn-outline-danger' onClick={(event) => handleDelete(event, el.id)}><i className='fa-solid fa-trash' /></button>
-                      <ModalEditInventoryTurnover title='Editar artículo de rotación' icon={<i className='fa-solid fa-pen-to-square' />} dataInventoryTurnover={el} idInventoryTurnover={el.id} putInventoryTurnoverToApi={putInventoryTurnoverToApi} removeExtraSpaces={removeExtraSpaces} />
+                inventoryTurnover
+                  .slice((page - 1) * elementsPerPage, (page - 1) * elementsPerPage + elementsPerPage)
+                  .map(el => (
+                    <div className='card mt-3' key={el.id}>
+                      <div className='button-group-card'>
+                        <button type='button' title='Eliminar' className='btn btn-outline-danger' onClick={(event) => handleDelete(event, el.id)}><i className='fa-solid fa-trash' /></button>
+                        <ModalEditInventoryTurnover title='Editar artículo de rotación' icon={<i className='fa-solid fa-pen-to-square' />} dataInventoryTurnover={el} idInventoryTurnover={el.id} putInventoryTurnoverToApi={putInventoryTurnoverToApi} removeExtraSpaces={removeExtraSpaces} />
+                      </div>
+                      <div className='card-body'>
+                        <h5 className='card-title'>{el.nombre}</h5>
+                        <h6 className='card-subtitle mb-2 text-body-secondary'>{el.codigo}</h6>
+                      </div>
                     </div>
-                    <div className='card-body'>
-                      <h5 className='card-title'>{el.nombre}</h5>
-                      <h6 className='card-subtitle mb-2 text-body-secondary'>{el.codigo}</h6>
-                    </div>
-                  </div>
-                ))
+                  ))
             }
         </section>
       </div>
