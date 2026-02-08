@@ -224,7 +224,6 @@ function App () {
 
   const postInventoryTurnoverToApi = async (newInventoryTurnover, token) => {
     try {
-      console.log(newInventoryTurnover)
       const request = await postInventoryTurnover(newInventoryTurnover, token)
       setNewInventoryTurnover(request)
     } catch (error) {
