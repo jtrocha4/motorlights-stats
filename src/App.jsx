@@ -449,7 +449,7 @@ function App () {
           <Route path='/manage-customers/:id' element={<CustomerProfile />} />
           <Route path='/manage-products' element={<ManageProducts postProductToApi={postProductToApi} removeExtraSpaces={removeExtraSpaces} />} /> */}
           <Route path='/credit-portfolio' element={<CreditAndPortfolio />} />
-          <Route path='/manage-inventory-turnover' element={<ManageInventoryTurnover postInventoryTurnoverToApi={postInventoryTurnoverToApi} putInventoryTurnoverToApi={putInventoryTurnoverToApi} deleteInventoryTurnoverToApi={deleteInventoryTurnoverToApi} removeExtraSpaces={removeExtraSpaces} />} />
+          <Route path='/manage-inventory-turnover' element={<ManageInventoryTurnover postInventoryTurnoverToApi={postInventoryTurnoverToApi} putInventoryTurnoverToApi={putInventoryTurnoverToApi} deleteInventoryTurnoverToApi={deleteInventoryTurnoverToApi} removeExtraSpaces={removeExtraSpaces} extractIdNumber={extractIdNumber} extractText={extractText} />} />
         </Route>
         <Route path='/login' element={<Login />} />
       </Routes>
