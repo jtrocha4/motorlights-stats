@@ -91,7 +91,7 @@ const InputCostFile = ({ label, toFixed, salesGoalBySeller, collectionGoalBySell
 
     let portfolioGoal
     const portfolioSales = {}
-    let totalPortfolioSales = 0
+    // const totalPortfolioSales = {}
     let percentagePortfolioSold = 0
 
     let totalWithFreight
@@ -189,19 +189,36 @@ const InputCostFile = ({ label, toFixed, salesGoalBySeller, collectionGoalBySell
 
             portfolioSales[currentSeller] = {}
 
+            const totalPortfolioSales = { [currentSeller]: 0 }
+
             // * Ventas por productos del portafolio
             saleData[currentSeller].forEach(({ idProducto, producto, ventas }) => {
-              inventoryTurnover.forEach(({ codigo, nombre }) => {
+              inventoryTurnover.forEach(({ codigo, categoriaMotos, categoriaCarros }) => {
                 if (idProducto === Number(codigo)) {
-                  totalPortfolioSales += ventas
-                  if (!portfolioSales[currentSeller][Number(codigo)]) {
-                    portfolioSales[currentSeller][Number(codigo)] = {
-                      producto,
-                      codigo,
-                      totalDeVenta: 0
+                  if (currentSeller === 'ORLANDO DAVID LASTRA TRESPALACIOS' && categoriaCarros === true) {
+                    totalPortfolioSales[currentSeller] += ventas
+                    if (!portfolioSales[currentSeller][Number(codigo)]) {
+                      portfolioSales[currentSeller][Number(codigo)] = {
+                        producto,
+                        codigo,
+                        totalDeVenta: 0
+                      }
                     }
                   }
-                  portfolioSales[currentSeller][Number(codigo)].totalDeVenta += Number(ventas) || 0
+                  if (currentSeller !== 'ORLANDO DAVID LASTRA TRESPALACIOS' && categoriaMotos === true) {
+                    totalPortfolioSales[currentSeller] += ventas
+                    if (!portfolioSales[currentSeller][Number(codigo)]) {
+                      portfolioSales[currentSeller][Number(codigo)] = {
+                        producto,
+                        codigo,
+                        totalDeVenta: 0
+                      }
+                    }
+                  }
+
+                  if (portfolioSales[currentSeller][Number(codigo)] !== undefined) {
+                    portfolioSales[currentSeller][Number(codigo)].totalDeVenta += Number(ventas) || 0
+                  }
                 }
               })
             })
@@ -214,7 +231,7 @@ const InputCostFile = ({ label, toFixed, salesGoalBySeller, collectionGoalBySell
               }
             })
 
-            percentagePortfolioSold = (portfolioGoal !== 0) ? ((totalPortfolioSales * 100) / portfolioGoal) : 0
+            percentagePortfolioSold = (portfolioGoal !== 0) ? ((totalPortfolioSales[currentSeller] * 100) / portfolioGoal) : 0
 
             percetagePortfolioClients = (portfolioClientsGoal !== 0) ? ((portfolioClients[currentSeller].size * 100) / portfolioClientsGoal) : 0
 
@@ -234,7 +251,7 @@ const InputCostFile = ({ label, toFixed, salesGoalBySeller, collectionGoalBySell
                 porcentajeVentas: percetageSale,
                 metaPortafolio: portfolioGoal,
                 ventasDelPortafolio: portfolioSales[currentSeller],
-                totalVentasPortafolio: totalPortfolioSales,
+                totalVentasPortafolio: totalPortfolioSales[currentSeller],
                 porcentajeVentasPortafolio: percentagePortfolioSold,
                 promedioVentas: averageSale,
                 recaudoPendiente: pendingCollectionTarget,

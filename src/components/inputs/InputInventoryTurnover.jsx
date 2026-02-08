@@ -7,7 +7,7 @@ import { DataContext } from '../../context/data'
 const InputInventoryTurnover = ({ label, extractIdNumber, extractText }) => {
   const { excelDataInventoryTurnover, setExcelDataInventoryTurnover } = useContext(DataExcelContext)
 
-  const { setNewInventoryTurnover } = useContext(DataContext)
+  const { newInventoryTurnover, setNewInventoryTurnover } = useContext(DataContext)
 
   const handleReadCostFile = (event) => {
     const file = event.target.files[0]
@@ -40,27 +40,34 @@ const InputInventoryTurnover = ({ label, extractIdNumber, extractText }) => {
   const reportRows = excelDataInventoryTurnover.slice(3)
   const formattedDataInventoryTurnover = formatDataCost(reportHeader, reportRows)
 
-  console.log(reportHeader)
-  console.log(formattedDataInventoryTurnover)
+  // const extractInventoryTurnoverData = (formattedData) => {
+  //   const newInventory = formattedData
+  //     .filter(row => row.producto !== undefined && row.motos !== undefined && row.carros !== undefined && (row.motos.includes('ROTACION') || row.carros.includes('CARROS')))
+  //     .map(row => ({
+  //       codigo: extractIdNumber(row.producto),
+  //       nombre: extractText(row.producto),
+  //       motos: row.motos.includes('ROTACION'),
+  //       carro: row.carros.includes('CARROS')
+  //     }))
+
+  //   setNewInventoryTurnover(newInventory)
+  // }
 
   const extractInventoryTurnoverData = (formattedData) => {
-    const newInventory = formattedData.map(row => {
-      if (row.producto !== undefined) {
-        const productId = extractIdNumber(row.producto)
-        const product = extractText(row.producto)
-        return {
-          codigo: productId,
-          nombre: product
+    const newInventory = formattedData
+      .filter(row => row.producto !== undefined && (row.motos !== undefined || row.carros !== undefined))
+      .map(row => (
+        {
+          codigo: extractIdNumber(row.producto),
+          nombre: extractText(row.producto),
+          motos: !!((row.motos !== undefined && row.motos === 'ROTACION 1')),
+          carro: !!((row.carros !== undefined && row.carros === 'CARROS'))
         }
-      } else {
-        return undefined
-      }
-    })
-
-    if (newInventory[0] !== undefined) {
-      setNewInventoryTurnover(newInventory)
-    }
+      ))
+    setNewInventoryTurnover(newInventory)
   }
+
+  console.log(newInventoryTurnover)
 
   useEffect(() => {
     extractInventoryTurnoverData(formattedDataInventoryTurnover)
