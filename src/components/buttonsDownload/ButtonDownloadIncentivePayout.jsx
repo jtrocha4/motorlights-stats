@@ -380,6 +380,7 @@ const ButtonDownloadIncentivePayout = ({ title, data, convertExcelDateToReadable
       { v: 'Detalle Ventas Del Portafolio ', s: excelStyles.headerYellowStyle }
     ])
     salesDetailsOfThePortfolioHeaderTable.push([
+      { v: 'Fecha', s: excelStyles.headerYellowStyle },
       { v: 'Producto', s: excelStyles.headerYellowStyle },
       { v: 'Valor', s: excelStyles.headerYellowStyle }
     ])
@@ -390,15 +391,17 @@ const ButtonDownloadIncentivePayout = ({ title, data, convertExcelDateToReadable
       let total = 0
 
       if (sellerWsDataPortfolioSales[seller]) {
-        sellerDataPortfolioSales[seller].forEach(({ producto, codigo, totalDeVenta }) => {
+        sellerDataPortfolioSales[seller].forEach(({ producto, codigo, totalDeVenta, fecha }) => {
           total += totalDeVenta
           sellerWsDataPortfolioSales[seller].push([
+            { v: convertExcelDateToReadable(fecha), s: excelStyles.whiteRowStyleNumberFormat },
             { v: codigo + '-' + producto, s: excelStyles.whiteRowStyleTextFormat },
             { v: totalDeVenta, s: excelStyles.whiteStyleCurrencyFormat, t: 'n' }
           ])
         })
         sellerWsDataPortfolioSales[seller].push([
           { v: 'Total', s: excelStyles.headerBlackStyle },
+          { v: '', s: excelStyles.headerBlackStyle },
           { v: total, s: excelStyles.blackStyleCurrencyFormat, t: 'n' }
         ])
       }
@@ -666,8 +669,9 @@ const ButtonDownloadIncentivePayout = ({ title, data, convertExcelDateToReadable
         worksheet['!cols'][6] = { wch: 40 }
         worksheet['!cols'][7] = { wch: 40 }
         worksheet['!cols'][8] = { wch: 25 }
-        worksheet['!cols'][10] = { wch: 45 }
-        worksheet['!cols'][11] = { wch: 25 }
+        worksheet['!cols'][10] = { wch: 30 }
+        worksheet['!cols'][11] = { wch: 45 }
+        worksheet['!cols'][12] = { wch: 25 }
 
         const numberOfCharacters = sheetName[0].length + sheetName[1].length
 
