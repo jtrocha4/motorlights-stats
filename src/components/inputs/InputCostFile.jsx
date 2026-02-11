@@ -192,32 +192,34 @@ const InputCostFile = ({ label, toFixed, salesGoalBySeller, collectionGoalBySell
             const totalPortfolioSales = { [currentSeller]: 0 }
 
             // * Ventas por productos del portafolio
-            saleData[currentSeller].forEach(({ idProducto, producto, ventas }) => {
+            saleData[currentSeller].forEach(({ idProducto, producto, ventas, fecha }) => {
               inventoryTurnover.forEach(({ codigo, categoriaMotos, categoriaCarros }) => {
-                if (idProducto === Number(codigo)) {
+                if (idProducto === codigo) {
                   if (currentSeller === 'ORLANDO DAVID LASTRA TRESPALACIOS' && categoriaCarros === true) {
                     totalPortfolioSales[currentSeller] += ventas
-                    if (!portfolioSales[currentSeller][Number(codigo)]) {
-                      portfolioSales[currentSeller][Number(codigo)] = {
+                    if (!portfolioSales[currentSeller][codigo]) {
+                      portfolioSales[currentSeller][codigo] = {
                         producto,
                         codigo,
-                        totalDeVenta: 0
+                        totalDeVenta: 0,
+                        fecha
                       }
                     }
                   }
                   if (currentSeller !== 'ORLANDO DAVID LASTRA TRESPALACIOS' && categoriaMotos === true) {
                     totalPortfolioSales[currentSeller] += ventas
-                    if (!portfolioSales[currentSeller][Number(codigo)]) {
-                      portfolioSales[currentSeller][Number(codigo)] = {
+                    if (!portfolioSales[currentSeller][codigo]) {
+                      portfolioSales[currentSeller][codigo] = {
                         producto,
                         codigo,
-                        totalDeVenta: 0
+                        totalDeVenta: 0,
+                        fecha
                       }
                     }
                   }
 
-                  if (portfolioSales[currentSeller][Number(codigo)] !== undefined) {
-                    portfolioSales[currentSeller][Number(codigo)].totalDeVenta += Number(ventas) || 0
+                  if (portfolioSales[currentSeller][codigo] !== undefined) {
+                    portfolioSales[currentSeller][codigo].totalDeVenta += ventas || 0
                   }
                 }
               })
