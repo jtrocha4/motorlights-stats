@@ -345,9 +345,10 @@ function App () {
     const regex = /\d+/
     const id = string.match(regex)
     if (id !== null) {
-      return parseInt(id[0])
+      // return parseInt(id[0])
+      return id[0]
     } else {
-      console.error('the string must contain numbers')
+      console.error('La cadena debe contener números')
     }
   }
 
