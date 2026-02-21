@@ -237,6 +237,10 @@ const InputCostFile = ({ label, toFixed, salesGoalBySeller, collectionGoalBySell
 
             percetagePortfolioClients = (portfolioClientsGoal !== 0) ? ((portfolioClients[currentSeller].size * 100) / portfolioClientsGoal) : 0
 
+            // Aproximacion de los datos
+            percetagePortfolioClients = toFixed(percetagePortfolioClients, 1)
+            percentagePortfolioSold = toFixed(percentagePortfolioSold, 1)
+
             sale.push(
               {
                 cantidadFacturas: billCounter,
