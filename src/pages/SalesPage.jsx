@@ -6,6 +6,7 @@ import { FiltersProvider } from '../context/filters'
 import SimpleBarCharts from '../charts/SimpleBarCharts'
 import { DataExcelContext } from '../context/dataExcel'
 import { DataContext } from '../context/data'
+import SimpleBarChartsCustomer from '../charts/SimpleBarChartsCustomer'
 
 const SalesPage = ({ toFixed, postSellerPerformanceToApi, convertExcelDateToReadable, sellerPerformance, extractDateFromData, splitName }) => {
   const { data } = useContext(DataContext)
@@ -36,6 +37,12 @@ const SalesPage = ({ toFixed, postSellerPerformanceToApi, convertExcelDateToRead
               <SimpleBarCharts sellerPerformance={sellerPerformance} extractDateFromData={extractDateFromData} />
             </FiltersProvider>
           </div>
+        </section>
+        <section className='mt-5'>
+          <h3>Rendimiento del portafolio</h3>
+          <FiltersProvider>
+            <SimpleBarChartsCustomer sellerPerformance={sellerPerformance} extractDateFromData={extractDateFromData} />
+          </FiltersProvider>
         </section>
       </div>
     </div>
