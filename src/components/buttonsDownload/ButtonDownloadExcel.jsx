@@ -14,10 +14,52 @@ const ButtonDownloadExcel = ({ title, data, toFixed, splitName }) => {
     return percentage
   }
 
+  const buildPercentageRow = (label, property, style) => {
+    const row = [
+      { v: label, s: excelStyles.headerWhiteStyle }
+    ]
+
+    let totalValue = 0
+    let totalMeta = 0
+
+    data.forEach(item => {
+      const value = item[property]
+
+      row.push({
+        v: excelPercentageFormat(value),
+        t: 'n',
+        s: style
+      })
+
+      // Para poder calcular el total correctamente
+      if (property === 'porcentajeClientesAtendidosDelPortafolio') {
+        totalValue += item.totalClientesAtendidosDelPortafolio
+        totalMeta += item.metaClientesDePortafolio
+      }
+
+      if (property === 'porcentajeVentasPortafolio') {
+        totalValue += item.totalVentasPortafolio
+        totalMeta += item.metaPortafolio
+      }
+    })
+
+    // Calcular porcentaje total real (no promedio de porcentajes)
+    const totalPercentage =
+    totalMeta > 0 ? (totalValue * 100) / totalMeta : 0
+
+    row.push({
+      v: excelPercentageFormat(totalPercentage),
+      t: 'n',
+      s: style
+    })
+
+    return row
+  }
+
   const handleDownload = () => {
     const dates = ['Mes']
     const headers = ['Vendedor']
-    const values = ['Total ventas', 'Total ventas del portafolio', 'Cantidad de facturas', 'Promedio de ventas', 'Clientes nuevos', 'Clientes atendidos del portafolio', 'Margen bruto', '% Margen bruto', 'Meta ventas', '% Venta', 'Ventas pendiente', 'Total recaudo', 'Meta recaudo sin iva', '% Recaudo', 'Recaudo pendiente', 'Meta clientes del portafolio', '% Clientes atendidos', 'Meta ventas del portafolio', '% Ventas del portafolio']
+    const values = ['Total ventas', 'Total ventas del portafolio', 'Cantidad de facturas', 'Promedio de ventas', 'Clientes nuevos', 'Margen bruto', '% Margen bruto', 'Meta ventas', '% Venta', 'Ventas pendiente', 'Total recaudo', 'Meta recaudo sin iva', '% Recaudo', 'Recaudo pendiente']
 
     const wsData = []
     const wsDataPercentaje = []
@@ -91,10 +133,6 @@ const ButtonDownloadExcel = ({ title, data, toFixed, splitName }) => {
         cellValue.v = value
         cellValue.s = excelStyles.headerOrangeStyle
       }
-      if (value === 'Clientes atendidos del portafolio') {
-        cellValue.v = value
-        cellValue.s = excelStyles.headerOrangeStyle
-      }
       if (value === 'Margen bruto') {
         cellValue.v = value
         cellValue.s = excelStyles.headerOrangeStyle
@@ -131,23 +169,8 @@ const ButtonDownloadExcel = ({ title, data, toFixed, splitName }) => {
         cellValue.v = value
         cellValue.s = excelStyles.headerWhiteStyle
       }
-      if (value === 'Meta clientes del portafolio') {
-        cellValue.v = value
-        cellValue.s = excelStyles.headerBlackStyle
-      }
-      if (value === '% Clientes atendidos') {
-        cellValue.v = value
-        cellValue.s = excelStyles.headerWhiteStyle
-      }
-      if (value === 'Meta ventas del portafolio') {
-        cellValue.v = value
-        cellValue.s = excelStyles.headerBlackStyle
-      }
-      if (value === '% Ventas del portafolio') {
-        cellValue.v = value
-        cellValue.s = excelStyles.headerWhiteStyle
-      }
       row = [cellValue]
+
       data.forEach(item => {
         const cell = { v: '', s: {}, t: '' }
         if (value === 'Total ventas') {
@@ -172,11 +195,6 @@ const ButtonDownloadExcel = ({ title, data, toFixed, splitName }) => {
         }
         if (value === 'Clientes nuevos') {
           cell.v = item.clientesNuevos.length
-          cell.t = 'n'
-          cell.s = excelStyles.orangeStyleNumberFormat
-        }
-        if (value === 'Clientes atendidos del portafolio') {
-          cell.v = item.totalClientesAtendidosDelPortafolio
           cell.t = 'n'
           cell.s = excelStyles.orangeStyleNumberFormat
         }
@@ -225,26 +243,6 @@ const ButtonDownloadExcel = ({ title, data, toFixed, splitName }) => {
           cell.t = 'n'
           cell.s = excelStyles.whiteStyleCurrencyFormat
         }
-        if (value === 'Meta clientes del portafolio') {
-          cell.v = item.metaClientesDePortafolio
-          cell.t = 'n'
-          cell.s = excelStyles.blackStyleNumberFormat
-        }
-        if (value === '% Clientes atendidos') {
-          cell.v = excelPercentageFormat(item.porcentajeClientesAtendidosDelPortafolio)
-          cell.t = 'n'
-          cell.s = excelStyles.percentageWhiteStyle
-        }
-        if (value === 'Meta ventas del portafolio') {
-          cell.v = item.metaPortafolio
-          cell.t = 'n'
-          cell.s = excelStyles.blackStyleCurrencyFormat
-        }
-        if (value === '% Ventas del portafolio') {
-          cell.v = excelPercentageFormat(item.porcentajeVentasPortafolio)
-          cell.t = 'n'
-          cell.s = excelStyles.percentageWhiteStyle
-        }
         row.push(cell)
       })
 
@@ -261,15 +259,8 @@ const ButtonDownloadExcel = ({ title, data, toFixed, splitName }) => {
         porcentajeRecaudo: 0,
         recaudoPendiente: 0,
         margen: 0,
-        costo: 0,
-        ventaConFlete: 0,
         porcentajeMargen: 0,
-        clientesNuevos: 0,
-        ClientesPortafolio: 0, // Clientes atendidos del portafolio
-        metaClientesPortafolio: 0,
-        porcentajeClientesPortafolio: 0,
-        metaVentasPortafolio: 0,
-        porcentajeVentasPortafolio: 0
+        clientesNuevos: 0
       }
 
       // Operaciones para calcular el total
@@ -289,17 +280,8 @@ const ButtonDownloadExcel = ({ title, data, toFixed, splitName }) => {
       // total.clientesNuevos = data.reduce((acc, item) => acc + item.clientesNuevos, 0)
 
       total.clientesNuevos = data.reduce((acc, item) => acc + item.clientesNuevos.length, 0)
-      total.ClientesPortafolio = data.reduce((acc, item) => acc + item.totalClientesAtendidosDelPortafolio, 0)
-
-      total.metaClientesPortafolio = data.reduce((acc, item) => acc + item.metaClientesDePortafolio, 0)
-      total.porcentajeClientesPortafolio = (total.ClientesPortafolio * 100) / total.metaClientesPortafolio
-
-      total.metaVentasPortafolio = data.reduce((acc, item) => acc + item.metaPortafolio, 0)
-      total.porcentajeVentasPortafolio = (total.ventasPortafolio * 100) / total.metaVentasPortafolio
 
       total.margen = data.reduce((acc, item) => acc + item.margen, 0)
-      total.costo = data.reduce((acc, item) => acc + item.totalCosto, 0)
-      total.ventaConFlete = data.reduce((acc, item) => acc + item.totalVentaConFlete, 0)
       total.porcentajeMargen = (total.margen * 100) / total.ventas
 
       // Aproximaciones
@@ -334,12 +316,6 @@ const ButtonDownloadExcel = ({ title, data, toFixed, splitName }) => {
       }
       if (value === 'Clientes nuevos') {
         cell.v = total.clientesNuevos
-        cell.t = 'n'
-        cell.s = excelStyles.orangeStyleNumberFormat
-        row.push(cell)
-      }
-      if (value === 'Clientes atendidos del portafolio') {
-        cell.v = total.ClientesPortafolio
         cell.t = 'n'
         cell.s = excelStyles.orangeStyleNumberFormat
         row.push(cell)
@@ -398,30 +374,6 @@ const ButtonDownloadExcel = ({ title, data, toFixed, splitName }) => {
         cell.s = excelStyles.whiteStyleCurrencyFormat
         row.push(cell)
       }
-      if (value === 'Meta clientes del portafolio') {
-        cell.v = total.metaClientesPortafolio
-        cell.t = 'n'
-        cell.s = excelStyles.blackStyleNumberFormat
-        row.push(cell)
-      }
-      if (value === '% Clientes atendidos') {
-        cell.v = excelPercentageFormat(total.porcentajeClientesPortafolio)
-        cell.t = 'n'
-        cell.s = excelStyles.percentageWhiteStyle
-        row.push(cell)
-      }
-      if (value === 'Meta ventas del portafolio') {
-        cell.v = total.metaVentasPortafolio
-        cell.t = 'n'
-        cell.s = excelStyles.blackStyleCurrencyFormat
-        row.push(cell)
-      }
-      if (value === '% Ventas del portafolio') {
-        cell.v = excelPercentageFormat(total.porcentajeVentasPortafolio)
-        cell.t = 'n'
-        cell.s = excelStyles.percentageWhiteStyle
-        row.push(cell)
-      }
       wsData.push(row)
     })
 
@@ -477,18 +429,34 @@ const ButtonDownloadExcel = ({ title, data, toFixed, splitName }) => {
     wsSellerData[0].v = 'Vendedores'
     wsSellerData[0].s = excelStyles.headerBlackStyle
     wsDataPercentaje.push(wsSellerData)
-    wsDataPercentaje.push(wsData[11]) // Porcentaje Ventas
-    wsDataPercentaje.push(wsData[15]) // Porcentaje Recaudo
-    wsDataPercentaje.push(wsData[18]) // Porcentaje Clientes atendidos del portafolio
-    wsDataPercentaje.push(wsData[20]) // Porcentaje ventas del portafolio
+    wsDataPercentaje.push(wsData[10]) // Porcentaje Ventas
+    wsDataPercentaje.push(wsData[14]) // Porcentaje Recaudo
+
+    // % Clientes atendidos del portafolio
+    wsDataPercentaje.push(
+      buildPercentageRow(
+        '% Clientes atendidos',
+        'porcentajeClientesAtendidosDelPortafolio',
+        excelStyles.percentageWhiteStyle
+      )
+    )
+
+    // % Ventas del portafolio
+    wsDataPercentaje.push(
+      buildPercentageRow(
+        '% Ventas del portafolio',
+        'porcentajeVentasPortafolio',
+        excelStyles.percentageWhiteStyle
+      )
+    )
 
     const workbook = XLSX.utils.book_new()
     const sheetName = 'Resumen'
 
     const worksheet = XLSX.utils.aoa_to_sheet(wsData, { origin: 'A5' })
     XLSX.utils.sheet_add_aoa(worksheet, reportDetailed, { origin: 'A1' })
-    XLSX.utils.sheet_add_aoa(worksheet, wsDateData, { origin: 'A27' })
-    XLSX.utils.sheet_add_aoa(worksheet, wsDataPercentaje, { origin: 'A31' })
+    XLSX.utils.sheet_add_aoa(worksheet, wsDateData, { origin: 'A22' })
+    XLSX.utils.sheet_add_aoa(worksheet, wsDataPercentaje, { origin: 'A26' })
 
     const columnWidths = wsData.reduce((acc, row) => {
       row.forEach((cell, colIndex) => {
@@ -500,7 +468,7 @@ const ButtonDownloadExcel = ({ title, data, toFixed, splitName }) => {
 
     worksheet['!cols'] = []
     worksheet['!cols'] = columnWidths.map(width => ({ wch: width + 7 }))
-    worksheet['!cols'][0] = { wch: 25 }
+    worksheet['!cols'][0] = { wch: 30 }
     worksheet['!cols'][2] = { wch: 33 }
 
     const mergeOptions = {
@@ -518,6 +486,7 @@ const ButtonDownloadExcel = ({ title, data, toFixed, splitName }) => {
     const excelFileName = `Informe Como Vamos ${dateExcel.dia} ${dateExcel.mes}.xlsx`
     XLSX.writeFile(workbook, excelFileName)
   }
+
   return (
     <>
       <button type='button' className='btn btn-outline-success' onClick={handleDownload}><i className='fa-regular fa-file-excel' /> {title}</button>
