@@ -78,12 +78,16 @@ const ManageSellers = ({ postSellerToApi, deleteSellerToApi, putSellerToApi, cap
                     <button type='button' title='Eliminar' className='btn btn-outline-danger' onClick={(event) => handleDelete(event, el.id)}><i className='fa-solid fa-trash' /></button>
                     <ModalEditSeller title='Editar Vendedor' icon={<i className='fa-solid fa-pen-to-square' />} dataSeller={el} idSeller={el.id} putSellerToApi={putSellerToApi} capitalizeWords={capitalizeWords} removeExtraSpaces={removeExtraSpaces} />
                   </div>
-                  <Link to={`/manage-sellers/${el.id}`}>
+                  {/* <Link to={`/manage-sellers/${el.id}`}>
                     <div className='card-body'>
                       <h5 className='card-title'>{el.nombre}</h5>
                       <h6 className='card-subtitle mb-2 text-body-secondary'>{el.id}</h6>
                     </div>
-                  </Link>
+                  </Link> */}
+                  <div className='card-body'>
+                    <h5 className='card-title'>{el.nombre}</h5>
+                    <h6 className='card-subtitle mb-2 text-body-secondary'>{el.id}</h6>
+                  </div>
                 </div>
               ))
           }
