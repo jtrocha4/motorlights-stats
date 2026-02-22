@@ -17,7 +17,7 @@ const ButtonDownloadExcel = ({ title, data, toFixed, splitName }) => {
   const handleDownload = () => {
     const dates = ['Mes']
     const headers = ['Vendedor']
-    const values = ['Total ventas', 'Cantidad de facturas', 'Promedio de ventas', 'Clientes nuevos', 'Margen bruto', '% Margen bruto', 'Meta ventas', '% Venta', 'Ventas pendiente', 'Total recaudo', 'Meta recaudo sin iva', '% Recaudo', 'Recaudo pendiente']
+    const values = ['Total ventas', 'Total ventas del portafolio', 'Cantidad de facturas', 'Promedio de ventas', 'Clientes nuevos', 'Clientes atendidos del portafolio', 'Margen bruto', '% Margen bruto', 'Meta ventas', '% Venta', 'Ventas pendiente', 'Total recaudo', 'Meta recaudo sin iva', '% Recaudo', 'Recaudo pendiente', 'Meta clientes del portafolio', '% Clientes atendidos', 'Meta ventas del portafolio', '% Ventas del portafolio']
 
     const wsData = []
     const wsDataPercentaje = []
@@ -75,6 +75,10 @@ const ButtonDownloadExcel = ({ title, data, toFixed, splitName }) => {
         cellValue.v = value
         cellValue.s = excelStyles.headerYellowStyle
       }
+      if (value === 'Total ventas del portafolio') {
+        cellValue.v = value
+        cellValue.s = excelStyles.headerYellowStyle
+      }
       if (value === 'Cantidad de facturas') {
         cellValue.v = value
         cellValue.s = excelStyles.headerGrayStyle
@@ -84,6 +88,10 @@ const ButtonDownloadExcel = ({ title, data, toFixed, splitName }) => {
         cellValue.s = excelStyles.headerGrayStyle
       }
       if (value === 'Clientes nuevos') {
+        cellValue.v = value
+        cellValue.s = excelStyles.headerOrangeStyle
+      }
+      if (value === 'Clientes atendidos del portafolio') {
         cellValue.v = value
         cellValue.s = excelStyles.headerOrangeStyle
       }
@@ -123,11 +131,32 @@ const ButtonDownloadExcel = ({ title, data, toFixed, splitName }) => {
         cellValue.v = value
         cellValue.s = excelStyles.headerWhiteStyle
       }
+      if (value === 'Meta clientes del portafolio') {
+        cellValue.v = value
+        cellValue.s = excelStyles.headerBlackStyle
+      }
+      if (value === '% Clientes atendidos') {
+        cellValue.v = value
+        cellValue.s = excelStyles.headerWhiteStyle
+      }
+      if (value === 'Meta ventas del portafolio') {
+        cellValue.v = value
+        cellValue.s = excelStyles.headerBlackStyle
+      }
+      if (value === '% Ventas del portafolio') {
+        cellValue.v = value
+        cellValue.s = excelStyles.headerWhiteStyle
+      }
       row = [cellValue]
       data.forEach(item => {
         const cell = { v: '', s: {}, t: '' }
         if (value === 'Total ventas') {
           cell.v = item.totalVenta
+          cell.t = 'n'
+          cell.s = excelStyles.yellowStyleCurrencyFormat
+        }
+        if (value === 'Total ventas del portafolio') {
+          cell.v = item.totalVentasPortafolio
           cell.t = 'n'
           cell.s = excelStyles.yellowStyleCurrencyFormat
         }
@@ -143,6 +172,11 @@ const ButtonDownloadExcel = ({ title, data, toFixed, splitName }) => {
         }
         if (value === 'Clientes nuevos') {
           cell.v = item.clientesNuevos.length
+          cell.t = 'n'
+          cell.s = excelStyles.orangeStyleNumberFormat
+        }
+        if (value === 'Clientes atendidos del portafolio') {
+          cell.v = item.totalClientesAtendidosDelPortafolio
           cell.t = 'n'
           cell.s = excelStyles.orangeStyleNumberFormat
         }
@@ -191,11 +225,32 @@ const ButtonDownloadExcel = ({ title, data, toFixed, splitName }) => {
           cell.t = 'n'
           cell.s = excelStyles.whiteStyleCurrencyFormat
         }
+        if (value === 'Meta clientes del portafolio') {
+          cell.v = item.metaClientesDePortafolio
+          cell.t = 'n'
+          cell.s = excelStyles.blackStyleNumberFormat
+        }
+        if (value === '% Clientes atendidos') {
+          cell.v = excelPercentageFormat(item.porcentajeClientesAtendidosDelPortafolio)
+          cell.t = 'n'
+          cell.s = excelStyles.percentageWhiteStyle
+        }
+        if (value === 'Meta ventas del portafolio') {
+          cell.v = item.metaPortafolio
+          cell.t = 'n'
+          cell.s = excelStyles.blackStyleCurrencyFormat
+        }
+        if (value === '% Ventas del portafolio') {
+          cell.v = excelPercentageFormat(item.porcentajeVentasPortafolio)
+          cell.t = 'n'
+          cell.s = excelStyles.percentageWhiteStyle
+        }
         row.push(cell)
       })
 
       const total = {
         ventas: 0,
+        ventasPortafolio: 0,
         facturas: 0,
         promedioVentas: 0,
         metaVentas: 0,
@@ -209,11 +264,17 @@ const ButtonDownloadExcel = ({ title, data, toFixed, splitName }) => {
         costo: 0,
         ventaConFlete: 0,
         porcentajeMargen: 0,
-        clientesNuevos: 0
+        clientesNuevos: 0,
+        ClientesPortafolio: 0, // Clientes atendidos del portafolio
+        metaClientesPortafolio: 0,
+        porcentajeClientesPortafolio: 0,
+        metaVentasPortafolio: 0,
+        porcentajeVentasPortafolio: 0
       }
 
       // Operaciones para calcular el total
       total.ventas = data.reduce((acc, item) => acc + item.totalVenta, 0)
+      total.ventasPortafolio = data.reduce((acc, item) => acc + item.totalVentasPortafolio, 0)
       total.facturas = data.reduce((acc, item) => acc + item.cantidadFacturas, 0)
       total.promedioVentas = total.ventas / total.facturas
       total.metaVentas = data.reduce((acc, item) => acc + item.metaVentas, 0)
@@ -228,6 +289,13 @@ const ButtonDownloadExcel = ({ title, data, toFixed, splitName }) => {
       // total.clientesNuevos = data.reduce((acc, item) => acc + item.clientesNuevos, 0)
 
       total.clientesNuevos = data.reduce((acc, item) => acc + item.clientesNuevos.length, 0)
+      total.ClientesPortafolio = data.reduce((acc, item) => acc + item.totalClientesAtendidosDelPortafolio, 0)
+
+      total.metaClientesPortafolio = data.reduce((acc, item) => acc + item.metaClientesDePortafolio, 0)
+      total.porcentajeClientesPortafolio = (total.ClientesPortafolio * 100) / total.metaClientesPortafolio
+
+      total.metaVentasPortafolio = data.reduce((acc, item) => acc + item.metaPortafolio, 0)
+      total.porcentajeVentasPortafolio = (total.ventasPortafolio * 100) / total.metaVentasPortafolio
 
       total.margen = data.reduce((acc, item) => acc + item.margen, 0)
       total.costo = data.reduce((acc, item) => acc + item.totalCosto, 0)
@@ -246,6 +314,12 @@ const ButtonDownloadExcel = ({ title, data, toFixed, splitName }) => {
         cell.s = excelStyles.yellowStyleCurrencyFormat
         row.push(cell)
       }
+      if (value === 'Total ventas del portafolio') {
+        cell.v = total.ventasPortafolio
+        cell.t = 'n'
+        cell.s = excelStyles.yellowStyleCurrencyFormat
+        row.push(cell)
+      }
       if (value === 'Cantidad de facturas') {
         cell.v = total.facturas
         cell.t = 'n'
@@ -260,6 +334,12 @@ const ButtonDownloadExcel = ({ title, data, toFixed, splitName }) => {
       }
       if (value === 'Clientes nuevos') {
         cell.v = total.clientesNuevos
+        cell.t = 'n'
+        cell.s = excelStyles.orangeStyleNumberFormat
+        row.push(cell)
+      }
+      if (value === 'Clientes atendidos del portafolio') {
+        cell.v = total.ClientesPortafolio
         cell.t = 'n'
         cell.s = excelStyles.orangeStyleNumberFormat
         row.push(cell)
@@ -318,6 +398,30 @@ const ButtonDownloadExcel = ({ title, data, toFixed, splitName }) => {
         cell.s = excelStyles.whiteStyleCurrencyFormat
         row.push(cell)
       }
+      if (value === 'Meta clientes del portafolio') {
+        cell.v = total.metaClientesPortafolio
+        cell.t = 'n'
+        cell.s = excelStyles.blackStyleNumberFormat
+        row.push(cell)
+      }
+      if (value === '% Clientes atendidos') {
+        cell.v = excelPercentageFormat(total.porcentajeClientesPortafolio)
+        cell.t = 'n'
+        cell.s = excelStyles.percentageWhiteStyle
+        row.push(cell)
+      }
+      if (value === 'Meta ventas del portafolio') {
+        cell.v = total.metaVentasPortafolio
+        cell.t = 'n'
+        cell.s = excelStyles.blackStyleCurrencyFormat
+        row.push(cell)
+      }
+      if (value === '% Ventas del portafolio') {
+        cell.v = excelPercentageFormat(total.porcentajeVentasPortafolio)
+        cell.t = 'n'
+        cell.s = excelStyles.percentageWhiteStyle
+        row.push(cell)
+      }
       wsData.push(row)
     })
 
@@ -373,16 +477,18 @@ const ButtonDownloadExcel = ({ title, data, toFixed, splitName }) => {
     wsSellerData[0].v = 'Vendedores'
     wsSellerData[0].s = excelStyles.headerBlackStyle
     wsDataPercentaje.push(wsSellerData)
-    wsDataPercentaje.push(wsData[9]) // Porcentaje Ventas
-    wsDataPercentaje.push(wsData[13]) // Porcentaje Recaudo
+    wsDataPercentaje.push(wsData[11]) // Porcentaje Ventas
+    wsDataPercentaje.push(wsData[15]) // Porcentaje Recaudo
+    wsDataPercentaje.push(wsData[18]) // Porcentaje Clientes atendidos del portafolio
+    wsDataPercentaje.push(wsData[20]) // Porcentaje ventas del portafolio
 
     const workbook = XLSX.utils.book_new()
     const sheetName = 'Resumen'
 
     const worksheet = XLSX.utils.aoa_to_sheet(wsData, { origin: 'A5' })
     XLSX.utils.sheet_add_aoa(worksheet, reportDetailed, { origin: 'A1' })
-    XLSX.utils.sheet_add_aoa(worksheet, wsDateData, { origin: 'A21' })
-    XLSX.utils.sheet_add_aoa(worksheet, wsDataPercentaje, { origin: 'A25' })
+    XLSX.utils.sheet_add_aoa(worksheet, wsDateData, { origin: 'A27' })
+    XLSX.utils.sheet_add_aoa(worksheet, wsDataPercentaje, { origin: 'A31' })
 
     const columnWidths = wsData.reduce((acc, row) => {
       row.forEach((cell, colIndex) => {
@@ -394,7 +500,7 @@ const ButtonDownloadExcel = ({ title, data, toFixed, splitName }) => {
 
     worksheet['!cols'] = []
     worksheet['!cols'] = columnWidths.map(width => ({ wch: width + 7 }))
-    worksheet['!cols'][0] = { wch: 21 }
+    worksheet['!cols'][0] = { wch: 25 }
     worksheet['!cols'][2] = { wch: 33 }
 
     const mergeOptions = {
