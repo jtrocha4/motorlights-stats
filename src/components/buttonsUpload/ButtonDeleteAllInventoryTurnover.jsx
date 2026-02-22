@@ -74,7 +74,7 @@ const ButtonDeleteAllInventoryTurnover = ({ background = 'btn btn-outline-danger
           (isLoading === false)
             ? (
               <div>
-                <i className='fa-solid fa-trash' />
+                <i className='fa-solid fa-trash me-1' />
                 {title}
               </div>
               )
