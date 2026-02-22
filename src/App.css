@@ -1,27 +1,12 @@
-/* =========================
-   RESET BÁSICO
-========================= */
-
-* {
-  box-sizing: border-box;
-}
-
 body {
   margin: 0;
   padding: 0;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  width: 100%;
 }
 
 #root {
-  /* display: flex; */
-  min-height: 100vh;
+  display: flex;
 }
-
-
-
-/* =========================
-   NAVBAR
-========================= */
 
 #navbar {
   width: 100%;
@@ -33,23 +18,24 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 1rem;
-  z-index: 1000;
+  padding: 0 2px;
+  z-index: 999;
+}
+
+#navbar #navbarSupportedContent{
+  visibility: hidden;
 }
 
 #navbar .logo {
   width: 40px;
+  margin: 0px;
 }
 
-#navbar .nav-toggler {
+#navbar .nav-toggler{
   visibility: hidden;
   margin-left: auto;
   margin-right: 15px;
 }
-
-/* =========================
-   SIDEBAR
-========================= */
 
 .nav.sidebar {
   position: fixed;
@@ -57,98 +43,81 @@ body {
   top: 4.2rem;
   left: 0;
   width: 15rem;
-  height: calc(100vh - 4.2rem);
+  /* height: calc(100vh - 4.2rem); */
+  height: 100vh;
   background-color: whitesmoke;
-  border-right: 1px solid #ddd;
+  border-right: 1px solid #888;
   overflow-y: auto;
-  z-index: 999;
+  z-index: 998;
 }
 
 .nav.sidebar li a {
   color: #212529;
   margin-bottom: 0.2rem;
-  transition: all 0.2s ease;
 }
 
 .nav.sidebar li a:hover {
-  color: #000;
-  font-weight: 600;
+  color: #212529db;
+  font-weight: bold;
 }
 
-.nav-link i {
+.nav-link i{
   margin-right: 5px;
 }
 
-/* =========================
-   CONTENIDO PRINCIPAL
-========================= */
-
 .flex {
+  width: 83.95vw;
+  /* height: 100vh; */
+  height: auto;
   flex: 1;
   margin-top: 4.2rem;
   margin-left: 15rem;
+  /* overflow-y: auto;
+  overflow-x: auto; */
   padding: 20px;
-  min-height: calc(100vh - 4.2rem);
 }
-
-/* =========================
-   LOGIN
-========================= */
 
 .div-login {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 100%;
+  width: 100vw;
   height: 100vh;
 }
 
 .section-login {
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: center; 
 }
 
-.section-login .container-logo {
+.section-login .container-logo{
   display: grid;
   place-items: center;
 }
 
-.section-login .logo {
+.section-login .logo{
   width: 50%;
 }
 
 .section-login form {
-  width: 100%;
-  max-width: 500px;
+  width: 50vw;
   padding: 20px;
-  border: 1px solid #ddd;
+  border: 1px solid #ccc;
   border-radius: 8px;
-  background-color: #fff;
 }
 
-/* =========================
-   BOTONES Y GRUPOS
-========================= */
 
-.inputFile-group,
-.button-group {
+.inputFile-group, .button-group {
   margin: 25px 0;
 }
 
-.button-group {
-  display: flex;
-  gap: 15px;
+button i {
+  padding-right: 0.2rem;
 }
 
-.charts-button-group {
-  display: flex;
-  gap: 10px;
-}
-
-.charts-button-download {
-  display: flex;
-  justify-content: flex-end;
+.card-title{
+  display: inline-block;
 }
 
 .button-group-card{
@@ -162,77 +131,95 @@ body {
   margin-inline-end: 5px;
 }
 
-/* =========================
-   TARJETAS
-========================= */
-
-.card {
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+.button-group{
+  display: flex;
+  justify-content: flex-start;
 }
 
-.card:hover {
-  transform: scale(1.02);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+.button-group button {
+  margin-inline-end: 15px;
 }
 
-/* =========================
-   CHARTS
-========================= */
+.charts-button-group{
+  display: flex;
+  justify-content: flex-start;
+}
 
-.simple-bar-charts {
+.charts-button-group .chart-button{
+  margin: 5px;
+  padding: 0px;
+}
+
+.charts-button-download{
+  display: flex;
+  justify-content: flex-end;
+}
+
+.simple-bar-charts{
   width: 100%;
+  margin-top: -20px;
   display: flex;
   justify-content: center;
   overflow-x: auto;
+  overflow-y: hidden;
 }
 
-/* =========================
-   RESPONSIVE
-========================= */
+a.page-link{
+  user-select: none
+}
 
-@media (max-width: 1024px) {
+ input.page-link{
+  width: 50px;
+}
 
-  #root {
+.form-check{
+  padding-left: 30px;
+}
+
+.card:hover{
+  box-shadow: 5px 5px #888;
+  zoom: 1.02;
+  /* cursor: pointer; */
+}
+
+@media (max-width: 1024px){
+  body{
+    margin: 0;
+    padding: 0;
+    width: auto;
+  }
+  #root{
+    width: auto;
     display: block;
   }
-
-  .flex {
-    margin-left: 0;
-    padding: 15px;
+  .App{
+    width: auto;
   }
-
-  .nav.sidebar {
-    display: none;
+  .flex{
+    width: auto;
+    height: auto;
+    margin-left: 0;
+    padding: 10px;
+  }
+  .nav.sidebar{
+    visibility: hidden;
+  }
+  #navbar #navbarSupportedContent {
+    visibility: visible;
   }
 
   #navbar {
     height: auto;
-    padding: 0.75rem 1rem;
+    padding: 0.54rem 2px;
   }
-}
 
-@media (max-width: 991px) {
-  #navbar .nav-toggler {
+  #navbar #div-ul {
     visibility: visible;
   }
 }
 
-/* =========================
-   CONTROL MENÚ NAVBAR
-========================= */
-
-/* Desktop: ocultar menú */
-@media (min-width: 1025px) {
-  #navbarSupportedContent {
-    visibility: hidden;
-    height: 0;
-  }
-}
-
-/* Mobile: permitir collapse */
-@media (max-width: 1024px) {
-  #navbarSupportedContent {
+@media (max-width: 991px){
+  #navbar .nav-toggler{
     visibility: visible;
   }
 }
-
