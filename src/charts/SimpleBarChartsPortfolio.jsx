@@ -5,7 +5,7 @@ import ButtonDownloadImg from '../components/buttonsDownload/ButtonDownloadImg'
 import { FiltersContext } from '../context/filters'
 import { DataContext } from '../context/data'
 
-const SimpleBarChartsCustomer = ({ sellerPerformance, extractDateFromData }) => {
+const SimpleBarChartsPortfolio = ({ sellerPerformance, extractDateFromData }) => {
   const [screenSize, setScreenSize] = useState(0)
 
   const splitName = (name) => {
@@ -42,7 +42,6 @@ const SimpleBarChartsCustomer = ({ sellerPerformance, extractDateFromData }) => 
   const percentageData = []
 
   const addDataToPercentageData = (dataArray = [], percentageArray = []) => {
-    console.log(dataArray)
     dataArray.forEach(({ vendedor, idVendedor, porcentajeClientesAtendidosDelPortafolio, porcentajeVentasPortafolio }) => {
       let firstAndMiddleName = ''
       if (vendedor) {
@@ -139,4 +138,4 @@ const SimpleBarChartsCustomer = ({ sellerPerformance, extractDateFromData }) => 
   )
 }
 
-export default SimpleBarChartsCustomer
+export default SimpleBarChartsPortfolio
