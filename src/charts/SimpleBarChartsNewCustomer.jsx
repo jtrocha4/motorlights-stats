@@ -22,7 +22,7 @@ const SimpleBarChartsNewCustomer = ({ sellerPerformance, extractDateFromData }) 
   const localData = JSON.parse(localStorage.getItem('data')) || {}
   const localDateData = JSON.parse(localStorage.getItem('dateData')) || {}
 
-  let porcentajeDiasTranscurridos, dia, mes
+  let dia, mes
 
   const getLengthOfObject = (object) => {
     const lengthOfObject = Object.keys(object).length
@@ -30,18 +30,16 @@ const SimpleBarChartsNewCustomer = ({ sellerPerformance, extractDateFromData }) 
   }
 
   if (getLengthOfObject(localDateData) === 0 && extractDateFromData(sellerPerformance)) {
-    porcentajeDiasTranscurridos = extractDateFromData(sellerPerformance).porcentajeDiasTranscurridos
     dia = extractDateFromData(sellerPerformance).dia
     mes = extractDateFromData(sellerPerformance).mes
   } else {
-    porcentajeDiasTranscurridos = localDateData.porcentajeDiasTranscurridos
     dia = localDateData.dia
     mes = localDateData.mes
   }
 
   const percentageData = []
 
-  const addDataToPercentageData = (dataArray = [], valueArray = []) => {
+  const addData = (dataArray = [], valueArray = []) => {
     dataArray.forEach(({ vendedor, idVendedor, clientesNuevos }) => {
       let firstAndMiddleName = ''
       if (vendedor) {
@@ -51,8 +49,7 @@ const SimpleBarChartsNewCustomer = ({ sellerPerformance, extractDateFromData }) 
             valueArray.push({
               vendedor: firstAndMiddleName,
               idVendedor: element.id,
-              clientesNuevos: clientesNuevos.length,
-              porcentajeMes: porcentajeDiasTranscurridos
+              clientesNuevos: clientesNuevos.length
             })
           }
         })
@@ -62,8 +59,7 @@ const SimpleBarChartsNewCustomer = ({ sellerPerformance, extractDateFromData }) 
           valueArray.push({
             vendedor: firstAndMiddleName,
             idVendedor: idVendedor.id,
-            clientesNuevos: clientesNuevos.length,
-            porcentajeMes: porcentajeDiasTranscurridos
+            clientesNuevos: clientesNuevos.length
           })
         }
       }
@@ -71,9 +67,9 @@ const SimpleBarChartsNewCustomer = ({ sellerPerformance, extractDateFromData }) 
   }
 
   if (localData.length === 0) {
-    addDataToPercentageData(sellerPerformance, percentageData)
+    addData(sellerPerformance, percentageData)
   } else {
-    addDataToPercentageData(localData, percentageData)
+    addData(localData, percentageData)
   }
 
   const leakedData = percentageData.filter(({ idVendedor }) => filters.seller.includes(idVendedor))
@@ -114,16 +110,12 @@ const SimpleBarChartsNewCustomer = ({ sellerPerformance, extractDateFromData }) 
             <ComposedChart data={leakedData} margin={{ top: 50, bottom: 95 }}>
               <CartesianGrid strokeDasharray='3 3' />
               <XAxis dataKey='vendedor' tick={{ fill: '#7d7a79' }} angle={-40} dy={50} />
-              <YAxis tick={{ fill: '#7d7a79' }} tickFormatter={customTooltipFormatter} />
+              <YAxis domain={[0, 'dataMax + 5']} tick={{ fill: '#7d7a79' }} tickFormatter={customTooltipFormatter} />
               <Tooltip formatter={customTooltipFormatter} />
               <Legend verticalAlign='top' height={36} formatter={customLegendFormatter} wrapperStyle={{ color: '#7d7a79' }} />
               <Bar name='Clientes nuevos' dataKey='clientesNuevos' fill='#4673bf'>
                 <LabelList dataKey='clientesNuevos' position='top' fill='#7d7a79' formatter={customTooltipFormatter} />
               </Bar>
-
-              <Line name='Avance del mes' dataKey='porcentajeMes' stroke='#fd0001'>
-                <LabelList dataKey='porcentajeMes' position='insideBottomLeft' fill='#7d7a79' formatter={customTooltipFormatter} />
-              </Line>
             </ComposedChart>
           </ResponsiveContainer>
         </div>
