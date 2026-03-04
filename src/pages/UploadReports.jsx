@@ -206,18 +206,34 @@ const UploadReports = ({ toFixed, department, convertExcelDateToReadable, extrac
 
         // Bonos resultados
 
-        // 1,2% Recaudo - Recaudo > 100% + Venta >100%
-        if (el.porcentajeVentas > 100 && el.porcentajeRecaudo > 100) {
-          el.bonoResultado += (el.totalRecaudo * 0.012)
+        // * Primer Bono
+        if (el.porcentajeRecaudo >= 100) {
+          el.bonoResultado += el.totalRecaudo * 0.01
+        }
+        if (el.porcentajeRecaudo >= 90 && el.porcentajeRecaudo < 100) {
+          el.bonoResultado += el.totalRecaudo * 0.006
         }
 
-        // 0,1% Recaudo - Por cada cliente nuevo
-        if (el.clientesNuevos > 0) {
-          el.bonoResultado += ((el.totalRecaudo * 0.001) * el.clientesNuevos)
+        // * Segundo Bono
+        if (el.porcentajeVentas >= 100) {
+          el.bonoResultado += el.totalRecaudo * 0.01
+        }
+        if (el.porcentajeRecaudo >= 90 && el.porcentajeRecaudo < 100) {
+          el.bonoResultado += el.totalRecaudo * 0.006
         }
 
-        el.comisionTotal = (el.comisionVenta + combinedData.comisionRecaudo + el.bonoResultado) || 0
+        // * Tercer Bono
+        if (el.totalVentasPortafolio >= el.metaPortafolio) {
+          el.bonoResultado += el.totalRecaudo * 0.01
+        }
+
+        // * Cuarto Bono
+        if (el.porcentajeClientesAtendidosDelPortafolio >= 100) {
+          el.bonoResultado += el.totalRecaudo * 0.01
+        }
+
         el.comisionRecaudo = combinedData.comisionRecaudo
+        el.comisionTotal = (el.comisionVenta + combinedData.comisionRecaudo + el.bonoResultado) || 0
       }
     })
   }
