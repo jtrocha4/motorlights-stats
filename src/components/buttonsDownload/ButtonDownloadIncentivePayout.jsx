@@ -524,8 +524,6 @@ const ButtonDownloadIncentivePayout = ({ title, data, convertExcelDateToReadable
         }
       })
 
-      // const firstBonus = sellerData[seller].map(el => el.totalRecaudo * 0.02)
-
       // * 2. gana el 1% del recaudo si cumple al 100% (la venta)  si cumple del 90 al 100% se gana el 0,6% del recaudo.  Ambos se pagan por el recaudo pero debo tener en cuenta si cumplió la venta
 
       let secondBonus = 0
@@ -537,16 +535,6 @@ const ButtonDownloadIncentivePayout = ({ title, data, convertExcelDateToReadable
           secondBonus = el.totalRecaudo * 0.006
         }
       })
-
-      /*
-      sellerData[seller].forEach(el => {
-        if (el.porcentajeVentas > 100 && el.porcentajeRecaudo > 100) {
-          secondBonus = el.totalRecaudo * 0.012
-        } else {
-          secondBonus = 0
-        }
-      })
-      */
 
       // * 3. se calcula meta de rotación con el 3% de la meta de venta,  debemos tener un campo donde podamos poner un listado de productos y que el software consulte este listado y revise si la venta de los productos cumplió la meta (ese 3% que se calculó)  en caso de cumplirlo se gana el 1% del recaudo
 

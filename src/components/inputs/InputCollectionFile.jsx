@@ -93,7 +93,8 @@ const InputCollectionFile = ({ label, toFixed, salesGoalBySeller, collectionGoal
               commission = collectionBonus
             }
 
-            resultBonus = firstBonus
+            // resultBonus = firstBonus
+            resultBonus = 0
 
             collectionData[currentSeller] = sellerSales
             sellerCollection.push({
