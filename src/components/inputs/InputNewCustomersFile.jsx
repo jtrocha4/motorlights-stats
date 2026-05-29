@@ -101,17 +101,27 @@ const InputNewCustomersFile = ({ label }) => {
         if (venta !== undefined) {
           venta.forEach(({ cliente }) => {
             clientesNuevos.forEach(({ nombre }) => {
-            /*
+              /*
             *Comparación de clientes:
             Se realiza esta lógica debido a que el nombre del cliente no tiene el mismo formato
             en los distintos informes. En Venta Items está como "Nombres Apellidos" y
             en Costos como "Apellidos Nombres".
             */
 
+              let sameCustomer
+
               const splitCliente = cliente.split(' ')
               const splitNombre = nombre.split(' ')
 
-              const sameCustomer = splitCliente.every(el => splitNombre.includes(el))
+              if (nombre.toLowerCase().includes('sas') || nombre.toLowerCase().includes('s.a.s') || nombre.toLowerCase().includes('sa') || nombre.toLowerCase().includes('s.a.')) {
+                const regexSAS = /^s\.?a\.?s\.?$/i
+                const clienteFiltrado = splitCliente.filter(item => !regexSAS.test(item))
+                const nombreFiltrado = splitNombre.filter(item => !regexSAS.test(item))
+
+                sameCustomer = clienteFiltrado.every(el => nombreFiltrado.includes(el))
+              } else {
+                sameCustomer = splitCliente.every(el => splitNombre.includes(el))
+              }
 
               if (sameCustomer) {
                 if (newCustomersWithSales[vendedor]) {
@@ -136,6 +146,7 @@ const InputNewCustomersFile = ({ label }) => {
         }
 
         el.clientesNuevosConVentas = total
+        el.clientesNuevosConVentasDetalle = newCustomersWithSales[vendedor]
       })
     }
   }
