@@ -218,7 +218,7 @@ const UploadReports = ({ toFixed, department, convertExcelDateToReadable, extrac
         if (el.porcentajeVentas >= 100) {
           el.bonoResultado += el.totalRecaudo * 0.01
         }
-        if (el.porcentajeRecaudo >= 90 && el.porcentajeRecaudo < 100) {
+        if (el.porcentajeVentas >= 90 && el.porcentajeVentas < 100) {
           el.bonoResultado += el.totalRecaudo * 0.006
         }
 
