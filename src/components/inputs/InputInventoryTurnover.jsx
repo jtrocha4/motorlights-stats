@@ -9,9 +9,8 @@ const InputInventoryTurnover = ({ label, extractIdNumber, extractText }) => {
 
   const { newInventoryTurnover, setNewInventoryTurnover } = useContext(DataContext)
 
-  const handleReadCostFile = (event) => {
+  const handleReadInventoryFile = (event) => {
     const file = event.target.files[0]
-    // eslint-disable-next-line no-undef
     const reader = new FileReader()
 
     reader.onload = (e) => {
@@ -20,7 +19,13 @@ const InputInventoryTurnover = ({ label, extractIdNumber, extractText }) => {
       const sheetName = workbook.SheetNames[0]
       const worksheet = workbook.Sheets[sheetName]
       const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 })
-      setExcelDataInventoryTurnover(jsonData)
+
+      // Elimina filas vacías (arrays sin ningún valor útil)
+      const cleanedData = jsonData.filter(row =>
+        row.length > 0 && row.some(cell => cell !== undefined && cell !== null && cell !== '')
+      )
+
+      setExcelDataInventoryTurnover(cleanedData)
     }
     reader.readAsArrayBuffer(file)
   }
@@ -36,9 +41,14 @@ const InputInventoryTurnover = ({ label, extractIdNumber, extractText }) => {
     return inventoryTurnoverFileToModel(inventoryTurnover)
   }
 
-  const reportHeader = excelDataInventoryTurnover[2]
-  const reportRows = excelDataInventoryTurnover.slice(3)
+  const reportHeaderIndex = excelDataInventoryTurnover.findIndex(row =>
+    row.includes('Descripcion_')
+  )
+  const reportHeader = reportHeaderIndex !== -1 ? excelDataInventoryTurnover[reportHeaderIndex] : []
+  const reportRows = reportHeaderIndex !== -1 ? excelDataInventoryTurnover.slice(reportHeaderIndex + 1) : []
   const formattedDataInventoryTurnover = formatDataCost(reportHeader, reportRows)
+
+  console.log({ reportHeader })
 
   // const extractInventoryTurnoverData = (formattedData) => {
   //   const newInventory = formattedData
@@ -67,8 +77,6 @@ const InputInventoryTurnover = ({ label, extractIdNumber, extractText }) => {
     setNewInventoryTurnover(newInventory)
   }
 
-  console.log(newInventoryTurnover)
-
   useEffect(() => {
     extractInventoryTurnoverData(formattedDataInventoryTurnover)
   }, [excelDataInventoryTurnover])
@@ -76,7 +84,7 @@ const InputInventoryTurnover = ({ label, extractIdNumber, extractText }) => {
   return (
     <>
       <label className='form-label'>{label}</label>
-      <input className='form-control' type='file' accept='.xls , .xlsx' onChange={handleReadCostFile} />
+      <input className='form-control' type='file' accept='.xls , .xlsx' onChange={handleReadInventoryFile} />
     </>
   )
 }
