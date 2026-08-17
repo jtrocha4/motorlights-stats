@@ -301,7 +301,7 @@ const InputCostFile = ({ label, toFixed, salesGoalBySeller, collectionGoalBySell
         }
       }
     })
-
+    // Vendedores que no tuvieron ninguna venta en el periodo
     if (sale.length) {
       const sellerSales = sale.map(({ vendedor }) => vendedor)
       const filter = sellers.filter(({ identificacion }) => !sellerSales.includes(identificacion))
@@ -324,7 +324,7 @@ const InputCostFile = ({ label, toFixed, salesGoalBySeller, collectionGoalBySell
           totalVentasPortafolio: 0,
           porcentajeVentasPortafolio: 0,
           vendedor: identificacion,
-          ventasPendiente: 0,
+          ventasPendiente: getSalesGoal(identificacion, salesGoalBySeller),
           comisionTotal: 0,
           margen: 0,
           porcentajeMargen: 0,
