@@ -108,6 +108,8 @@ const InputNewCustomersFile = ({ label }) => {
             en Costos como "Apellidos Nombres".
             */
 
+              // TODO: Si es posible realizar esta relación con el informe de Venta Items, donde si se tiene el id del cliente.
+
               let sameCustomer
 
               const splitCliente = cliente.split(' ')

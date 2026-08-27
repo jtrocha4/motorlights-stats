@@ -226,10 +226,12 @@ const InputCostFile = ({ label, toFixed, salesGoalBySeller, collectionGoalBySell
             })
 
             saleData[currentSeller].forEach(({ cliente, ventas }) => {
-              if (portfolioClients[currentSeller]) {
+              console.log(typeof ventas)
+              if (!portfolioClients[currentSeller]) {
+                portfolioClients[currentSeller] = new Set()
+              }
+              if (ventas > 0) {
                 portfolioClients[currentSeller].add(cliente)
-              } else {
-                portfolioClients[currentSeller] = new Set([cliente])
               }
             })
 
@@ -250,7 +252,10 @@ const InputCostFile = ({ label, toFixed, salesGoalBySeller, collectionGoalBySell
                 metaRecaudoSinIva: collectionTarget,
                 metaVentas: goalSale,
                 metaClientesDePortafolio: portfolioClientsGoal,
+
                 totalClientesAtendidosDelPortafolio: portfolioClients[currentSeller].size || 0,
+                ClientesAtendidosDelPortafolio: portfolioClients[currentSeller],
+
                 porcentajeClientesAtendidosDelPortafolio: percetagePortfolioClients,
                 porcentajeMargen: percentageMargin,
                 porcentajeRecaudo: 0,
