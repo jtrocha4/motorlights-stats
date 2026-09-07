@@ -192,9 +192,15 @@ const InputCostFile = ({ label, toFixed, salesGoalBySeller, collectionGoalBySell
             const totalPortfolioSales = { [currentSeller]: 0 }
 
             // * Ventas por productos del portafolio
+
+            console.log(inventoryTurnover)
+
             saleData[currentSeller].forEach(({ idProducto, producto, ventas, fecha }) => {
               inventoryTurnover.forEach(({ codigo, categoriaMotos, categoriaCarros }) => {
                 if (idProducto === codigo) {
+                  // Los siguientes condicionales se utilizan para contar unicamente las "ventas del portafolio" marcado con la linea de categoria carro al vendedor Orlando, y el resto de ventas que viene siendo la categoria moto, se le cuenta al resto de vendedores.
+
+                  // TODO: cambiar la logica, utilizando una etiqueta de categoriaPortafolio asociada al vendedor
                   if (currentSeller === 'ORLANDO DAVID LASTRA TRESPALACIOS' && categoriaCarros === true) {
                     totalPortfolioSales[currentSeller] += ventas
                     if (!portfolioSales[currentSeller][codigo]) {
@@ -226,7 +232,6 @@ const InputCostFile = ({ label, toFixed, salesGoalBySeller, collectionGoalBySell
             })
 
             saleData[currentSeller].forEach(({ cliente, ventas }) => {
-              console.log(typeof ventas)
               if (!portfolioClients[currentSeller]) {
                 portfolioClients[currentSeller] = new Set()
               }
