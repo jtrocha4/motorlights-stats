@@ -9,6 +9,8 @@ const InputInventoryTurnover = ({ label, extractIdNumber, extractText }) => {
 
   const { newInventoryTurnover, setNewInventoryTurnover } = useContext(DataContext)
 
+  const TARGET_SHEET_NAME = 'PRODUCTOS ROTACION'
+
   const handleReadInventoryFile = (event) => {
     const file = event.target.files[0]
     const reader = new FileReader()
@@ -16,7 +18,24 @@ const InputInventoryTurnover = ({ label, extractIdNumber, extractText }) => {
     reader.onload = (e) => {
       const fileContent = e.target.result
       const workbook = XLSX.read(new Uint8Array(fileContent), { type: 'array' })
-      const sheetName = workbook.SheetNames[0]
+
+      let sheetName = workbook.SheetNames.includes(TARGET_SHEET_NAME)
+        ? TARGET_SHEET_NAME
+        : null
+
+      if (!sheetName) {
+        const sheetsMeta = workbook.Workbook?.Sheets || []
+        sheetName = workbook.SheetNames.find((name, index) => {
+          const meta = sheetsMeta[index]
+          return !meta || meta.Hidden === 0
+        })
+      }
+
+      if (!sheetName) {
+        console.error('No se encontró ninguna hoja válida (ni por nombre, ni visible) en el archivo')
+        return
+      }
+
       const worksheet = workbook.Sheets[sheetName]
       const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 })
 
@@ -50,18 +69,20 @@ const InputInventoryTurnover = ({ label, extractIdNumber, extractText }) => {
 
   console.log({ reportHeader })
 
-  // const extractInventoryTurnoverData = (formattedData) => {
-  //   const newInventory = formattedData
-  //     .filter(row => row.producto !== undefined && row.motos !== undefined && row.carros !== undefined && (row.motos.includes('ROTACION') || row.carros.includes('CARROS')))
-  //     .map(row => ({
-  //       codigo: extractIdNumber(row.producto),
-  //       nombre: extractText(row.producto),
-  //       motos: row.motos.includes('ROTACION'),
-  //       carro: row.carros.includes('CARROS')
-  //     }))
+  /*
+  const extractInventoryTurnoverData = (formattedData) => {
+    const newInventory = formattedData
+      .filter(row => row.producto !== undefined && row.motos !== undefined && row.carros !== undefined && (row.motos.includes('ROTACION') || row.carros.includes('CARROS')))
+      .map(row => ({
+        codigo: extractIdNumber(row.producto),
+        nombre: extractText(row.producto),
+        motos: row.motos.includes('ROTACION'),
+        carro: row.carros.includes('CARROS')
+      }))
 
-  //   setNewInventoryTurnover(newInventory)
-  // }
+    setNewInventoryTurnover(newInventory)
+  }
+  */
 
   const extractInventoryTurnoverData = (formattedData) => {
     const newInventory = formattedData
@@ -80,6 +101,8 @@ const InputInventoryTurnover = ({ label, extractIdNumber, extractText }) => {
   useEffect(() => {
     extractInventoryTurnoverData(formattedDataInventoryTurnover)
   }, [excelDataInventoryTurnover])
+
+  console.log(newInventoryTurnover)
 
   return (
     <>
